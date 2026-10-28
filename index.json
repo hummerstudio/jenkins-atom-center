@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-28T17:54:57Z",
+  "generatedAt": "2026-10-28T18:15:29Z",
   "atoms": [
     {
       "atomCode": "example-greeter",
       "name": "示例问候插件",
       "channels": {
-        "stable": "1.0.0"
+        "stable": "1.0.1"
       },
       "versions": [
         {
@@ -47,6 +47,65 @@
               }
             }
           }
+        },
+        {
+          "version": "1.0.1",
+          "publishedAt": "2026-10-28T18:15:29Z",
+          "package": {
+            "file": "packages/example-greeter/example-greeter-1.0.1.zip",
+            "sha256": "59ecfb82bbd00c486e2155eea581720f41fc80ff9eb12e8f694de6d78b84491c"
+          },
+          "task": {
+            "atomCode": "example-greeter",
+            "name": "示例问候插件",
+            "execution": {
+              "language": "java",
+              "target": "$bk_java_path -cp example.jar:jenkins-atom-sdk.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "msg": {
+                "label": "问候语",
+                "type": "vuex-input",
+                "default": "hello"
+              },
+              "count": {
+                "label": "次数",
+                "type": "vuex-input-number",
+                "default": "1"
+              }
+            },
+            "output": {
+              "greeting": {
+                "type": "string"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "secrets": {
+                "deployToken": "demo-token"
+              }
+            }
+          },
+          "meta": {
+            "name": "示例问候插件",
+            "summary": "最小可运行示例：两个输入，一个输出",
+            "author": "唐莫盈",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-demo",
+            "license": "MIT",
+            "tags": [
+              "demo",
+              "starter"
+            ],
+            "description": "packages/example-greeter/1.0.1/README.md",
+            "icon": "packages/example-greeter/1.0.1/icon.svg",
+            "screenshots": [
+              "packages/example-greeter/1.0.1/overview.png"
+            ],
+            "changelog": {
+              "1.0.1": "补充说明、图标与截图",
+              "1.0.0": "首个版本"
+            }
+          }
         }
       ]
     },
@@ -54,7 +113,7 @@
       "atomCode": "outputs-demo",
       "name": "Outputs demo",
       "channels": {
-        "stable": "1.0.0"
+        "stable": "1.0.1"
       },
       "versions": [
         {
@@ -78,6 +137,48 @@
               "protocol": "jenkins-1"
             }
           }
+        },
+        {
+          "version": "1.0.1",
+          "publishedAt": "2026-10-28T18:15:28Z",
+          "package": {
+            "file": "packages/outputs-demo/outputs-demo-1.0.1.zip",
+            "sha256": "138d32e870f46f90a9545bee280bf49df2564564c44b5a3843c03a394ab12514"
+          },
+          "task": {
+            "atomCode": "outputs-demo",
+            "name": "Outputs demo",
+            "execution": {
+              "packagePath": "outputs-demo.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp outputs-demo.jar NativeAtom"
+            },
+            "input": {},
+            "output": {},
+            "x-jenkins": {
+              "protocol": "jenkins-1"
+            }
+          },
+          "meta": {
+            "name": "Outputs demo",
+            "summary": "演示三类输出：环境变量、报告、归档制品",
+            "author": "唐莫盈",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-demo",
+            "license": "MIT",
+            "tags": [
+              "demo",
+              "outputs"
+            ],
+            "description": "packages/outputs-demo/1.0.1/README.md",
+            "icon": "packages/outputs-demo/1.0.1/icon.svg",
+            "screenshots": [
+              "packages/outputs-demo/1.0.1/overview.png"
+            ],
+            "changelog": {
+              "1.0.1": "补充说明、图标与截图",
+              "1.0.0": "首个版本"
+            }
+          }
         }
       ]
     },
@@ -85,7 +186,7 @@
       "atomCode": "sdk-demo",
       "name": "SDK 能力演示",
       "channels": {
-        "stable": "1.0.0"
+        "stable": "1.0.1"
       },
       "versions": [
         {
@@ -190,6 +291,135 @@
               "requires": {
                 "runner": ">=0.1.0"
               }
+            }
+          },
+          "requires": {
+            "runner": ">=0.1.0"
+          }
+        },
+        {
+          "version": "1.0.1",
+          "publishedAt": "2026-10-28T18:15:29Z",
+          "package": {
+            "file": "packages/sdk-demo/sdk-demo-1.0.1.zip",
+            "sha256": "b602bf06607b48410dbb6d75700f805dd3481a3297ce105a272b4cb088474f2a"
+          },
+          "task": {
+            "atomCode": "sdk-demo",
+            "name": "SDK 能力演示",
+            "version": "1.0.0",
+            "execution": {
+              "packagePath": "jenkins-atom-demo.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp jenkins-atom-demo.jar:jenkins-atom-sdk.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "mode": {
+                "label": "演示模式",
+                "type": "selector",
+                "default": "params",
+                "options": [
+                  "params",
+                  "binding",
+                  "secrets",
+                  "outputs",
+                  "logs",
+                  "json",
+                  "failure",
+                  "error",
+                  "throw"
+                ],
+                "required": true
+              },
+              "msg": {
+                "label": "消息",
+                "type": "vuex-input",
+                "default": "hello atom",
+                "required": true
+              },
+              "count": {
+                "label": "次数",
+                "type": "vuex-input-number",
+                "default": "2"
+              },
+              "dryRun": {
+                "label": "空跑",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "tags": {
+                "label": "标签",
+                "type": "vuex-input",
+                "default": "a,b"
+              },
+              "reportDir": {
+                "label": "报告目录",
+                "type": "vuex-input",
+                "default": "out/report"
+              },
+              "image_name": {
+                "label": "镜像名（snake_case 键）",
+                "type": "vuex-input",
+                "default": "nginx:1.25"
+              },
+              "jsonText": {
+                "label": "JSON 文本",
+                "type": "textarea",
+                "default": "{\"name\":\"atom\",\"count\":3,\"nested\":{\"ok\":true},\"list\":[1,2,3]}"
+              }
+            },
+            "output": {
+              "msg": {
+                "type": "string",
+                "description": "回显的消息"
+              },
+              "secretEcho": {
+                "type": "string",
+                "isSensitive": true,
+                "description": "演示敏感出参"
+              },
+              "files": {
+                "type": "artifact",
+                "description": "演示制品"
+              },
+              "report": {
+                "type": "report",
+                "description": "演示内置报告"
+              },
+              "external": {
+                "type": "report",
+                "description": "演示外链报告"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "secrets": {
+                "deployToken": "demo-token"
+              },
+              "requires": {
+                "runner": ">=0.1.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "SDK 能力演示",
+            "summary": "一个原子演示 SDK 的全部能力：输入、输出、报告、制品与脚本",
+            "author": "唐莫盈",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-demo",
+            "license": "MIT",
+            "tags": [
+              "demo",
+              "sdk",
+              "reference"
+            ],
+            "description": "packages/sdk-demo/1.0.1/README.md",
+            "icon": "packages/sdk-demo/1.0.1/icon.svg",
+            "screenshots": [
+              "packages/sdk-demo/1.0.1/overview.png"
+            ],
+            "changelog": {
+              "1.0.1": "补充说明、图标与截图",
+              "1.0.0": "首个版本"
             }
           },
           "requires": {

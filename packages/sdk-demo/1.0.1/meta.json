@@ -1,0 +1,21 @@
+{
+  "name": "SDK 能力演示",
+  "summary": "一个原子演示 SDK 的全部能力：输入、输出、报告、制品与脚本",
+  "description": "README.md",
+  "author": "唐莫盈",
+  "homepage": "https://github.com/hummerstudio/jenkins-atom-demo",
+  "license": "MIT",
+  "tags": [
+    "demo",
+    "sdk",
+    "reference"
+  ],
+  "icon": "icon.svg",
+  "screenshots": [
+    "overview.png"
+  ],
+  "changelog": {
+    "1.0.1": "补充说明、图标与截图",
+    "1.0.0": "首个版本"
+  }
+}
