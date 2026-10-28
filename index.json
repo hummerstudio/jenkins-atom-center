@@ -1,5 +1,37 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-28T00:00:00Z",
-  "atoms": []
+  "generatedAt": "2026-10-28T15:16:31Z",
+  "atoms": [
+    {
+      "atomCode": "outputs-demo",
+      "name": "Outputs demo",
+      "channels": {
+        "stable": "1.0.0"
+      },
+      "versions": [
+        {
+          "version": "1.0.0",
+          "publishedAt": "2026-10-28T15:16:31Z",
+          "package": {
+            "file": "packages/outputs-demo/outputs-demo-1.0.0.zip",
+            "sha256": "aa977f5c22228051dc71fb360f5b9f097b427ce1a41f7d8a494f89b5eacf92ca"
+          },
+          "task": {
+            "atomCode": "outputs-demo",
+            "name": "Outputs demo",
+            "execution": {
+              "packagePath": "outputs-demo.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp outputs-demo.jar NativeAtom"
+            },
+            "input": {},
+            "output": {},
+            "x-jenkins": {
+              "protocol": "jenkins-1"
+            }
+          }
+        }
+      ]
+    }
+  ]
 }
