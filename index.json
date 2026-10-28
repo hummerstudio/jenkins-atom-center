@@ -1,7 +1,55 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-28T15:16:31Z",
+  "generatedAt": "2026-10-28T17:54:57Z",
   "atoms": [
+    {
+      "atomCode": "example-greeter",
+      "name": "示例问候插件",
+      "channels": {
+        "stable": "1.0.0"
+      },
+      "versions": [
+        {
+          "version": "1.0.0",
+          "publishedAt": "2026-10-28T17:54:57Z",
+          "package": {
+            "file": "packages/example-greeter/example-greeter-1.0.0.zip",
+            "sha256": "4c6eb87bb723af03b66a62e6666f334e8683e06f2d55eecfc7eeb5940c13a09d"
+          },
+          "task": {
+            "atomCode": "example-greeter",
+            "name": "示例问候插件",
+            "execution": {
+              "language": "java",
+              "target": "$bk_java_path -cp example.jar:jenkins-atom-sdk.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "msg": {
+                "label": "问候语",
+                "type": "vuex-input",
+                "default": "hello"
+              },
+              "count": {
+                "label": "次数",
+                "type": "vuex-input-number",
+                "default": "1"
+              }
+            },
+            "output": {
+              "greeting": {
+                "type": "string"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "secrets": {
+                "deployToken": "demo-token"
+              }
+            }
+          }
+        }
+      ]
+    },
     {
       "atomCode": "outputs-demo",
       "name": "Outputs demo",
@@ -29,6 +77,123 @@
             "x-jenkins": {
               "protocol": "jenkins-1"
             }
+          }
+        }
+      ]
+    },
+    {
+      "atomCode": "sdk-demo",
+      "name": "SDK 能力演示",
+      "channels": {
+        "stable": "1.0.0"
+      },
+      "versions": [
+        {
+          "version": "1.0.0",
+          "publishedAt": "2026-10-28T17:54:56Z",
+          "package": {
+            "file": "packages/sdk-demo/sdk-demo-1.0.0.zip",
+            "sha256": "8aa9267e4117cbe830853f34bc30597756346ff3e15ce3cdbedc026143f474bb"
+          },
+          "task": {
+            "atomCode": "sdk-demo",
+            "name": "SDK 能力演示",
+            "version": "1.0.0",
+            "execution": {
+              "packagePath": "jenkins-atom-demo.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp jenkins-atom-demo.jar:jenkins-atom-sdk.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "mode": {
+                "label": "演示模式",
+                "type": "selector",
+                "default": "params",
+                "options": [
+                  "params",
+                  "binding",
+                  "secrets",
+                  "outputs",
+                  "logs",
+                  "json",
+                  "failure",
+                  "error",
+                  "throw"
+                ],
+                "required": true
+              },
+              "msg": {
+                "label": "消息",
+                "type": "vuex-input",
+                "default": "hello atom",
+                "required": true
+              },
+              "count": {
+                "label": "次数",
+                "type": "vuex-input-number",
+                "default": "2"
+              },
+              "dryRun": {
+                "label": "空跑",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "tags": {
+                "label": "标签",
+                "type": "vuex-input",
+                "default": "a,b"
+              },
+              "reportDir": {
+                "label": "报告目录",
+                "type": "vuex-input",
+                "default": "out/report"
+              },
+              "image_name": {
+                "label": "镜像名（snake_case 键）",
+                "type": "vuex-input",
+                "default": "nginx:1.25"
+              },
+              "jsonText": {
+                "label": "JSON 文本",
+                "type": "textarea",
+                "default": "{\"name\":\"atom\",\"count\":3,\"nested\":{\"ok\":true},\"list\":[1,2,3]}"
+              }
+            },
+            "output": {
+              "msg": {
+                "type": "string",
+                "description": "回显的消息"
+              },
+              "secretEcho": {
+                "type": "string",
+                "isSensitive": true,
+                "description": "演示敏感出参"
+              },
+              "files": {
+                "type": "artifact",
+                "description": "演示制品"
+              },
+              "report": {
+                "type": "report",
+                "description": "演示内置报告"
+              },
+              "external": {
+                "type": "report",
+                "description": "演示外链报告"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "secrets": {
+                "deployToken": "demo-token"
+              },
+              "requires": {
+                "runner": ">=0.1.0"
+              }
+            }
+          },
+          "requires": {
+            "runner": ">=0.1.0"
           }
         }
       ]
