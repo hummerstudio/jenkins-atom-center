@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-29T12:28:57Z",
+  "generatedAt": "2026-10-29T12:33:00Z",
   "atoms": [
     {
       "atomCode": "ant",
@@ -856,7 +856,7 @@
       "publisher": "hummerstudio",
       "name": "Docker build",
       "channels": {
-        "stable": "1.0.0"
+        "stable": "1.0.1"
       },
       "versions": [
         {
@@ -928,6 +928,130 @@
                 "type": "vuex-input",
                 "default": "",
                 "isSensitive": true
+              }
+            },
+            "output": {
+              "imageId": {
+                "type": "string",
+                "description": "镜像 id"
+              },
+              "image": {
+                "type": "string",
+                "description": "主镜像名:tag"
+              },
+              "tags": {
+                "type": "string",
+                "description": "全部标签"
+              },
+              "pushed": {
+                "type": "string",
+                "description": "是否推送"
+              },
+              "count": {
+                "type": "string",
+                "description": "推送标签数"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              },
+              "secrets": {
+                "registryUser": "",
+                "registryPassword": ""
+              }
+            }
+          },
+          "meta": {
+            "name": "Docker build",
+            "summary": "Builds, tags and optionally pushes an image with the docker CLI.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-docker-build",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "docker-build"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        },
+        {
+          "version": "1.0.1",
+          "publishedAt": "2026-10-29T12:33:00Z",
+          "package": {
+            "file": "packages/hummerstudio/docker-build/1.0.1/docker-build-1.0.1.zip",
+            "sha256": "1ab656cc60bc78f64461f1059c990535ba915bb9513ab62a1c5a4980c15f97c7"
+          },
+          "task": {
+            "atomCode": "docker-build",
+            "name": "Docker build",
+            "version": "1.0.1",
+            "description": "Builds, tags and optionally pushes an image with the docker CLI.",
+            "execution": {
+              "packagePath": "docker-build.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp docker-build.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "image": {
+                "label": "镜像名（含 registry 前缀）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "dockerfile": {
+                "label": "Dockerfile 路径",
+                "type": "vuex-input",
+                "default": "Dockerfile"
+              },
+              "context": {
+                "label": "构建上下文",
+                "type": "vuex-input",
+                "default": "."
+              },
+              "tags": {
+                "label": "标签（逗号分隔）",
+                "type": "vuex-input",
+                "default": "latest"
+              },
+              "platform": {
+                "label": "平台（如 linux/amd64）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "buildArgs": {
+                "label": "build-arg（空格分隔 KEY=value）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "extraArgs": {
+                "label": "其它 docker build 参数",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "push": {
+                "label": "构建后推送",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "registryUser": {
+                "label": "registry 用户名（凭据 id）",
+                "type": "vuex-input",
+                "default": "",
+                "isSensitive": true
+              },
+              "registryPassword": {
+                "label": "registry 密码（凭据 id）",
+                "type": "vuex-input",
+                "default": "",
+                "isSensitive": true
+              },
+              "dockerBinary": {
+                "label": "docker 可执行文件（留空用 PATH 里的 docker）",
+                "type": "vuex-input",
+                "default": "docker"
               }
             },
             "output": {
