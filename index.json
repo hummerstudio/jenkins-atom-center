@@ -1,7 +1,88 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-28T18:15:29Z",
+  "generatedAt": "2026-10-29T05:57:31Z",
   "atoms": [
+    {
+      "atomCode": "build-name-setter",
+      "publisher": "hummerstudio",
+      "name": "Build name and description setter",
+      "channels": {
+        "stable": "1.0.0"
+      },
+      "versions": [
+        {
+          "version": "1.0.0",
+          "publishedAt": "2026-10-29T05:57:31Z",
+          "package": {
+            "file": "packages/hummerstudio/build-name-setter/1.0.0/build-name-setter-1.0.0.zip",
+            "sha256": "082904187e10bada853dec253142037f2fd117eee54ad3ddabbf5a0f6270748c"
+          },
+          "task": {
+            "atomCode": "build-name-setter",
+            "name": "Build name and description setter",
+            "version": "1.0.0",
+            "description": "Renames the running build and sets its description, optionally taking the name from a regex over the console log.",
+            "execution": {
+              "packagePath": "build-name-setter.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp build-name-setter.jar BuildNameSetter"
+            },
+            "input": {
+              "displayName": {
+                "label": "构建名模板（支持 ${BUILD_NUMBER}、${GIT_COMMIT} 等环境变量）",
+                "type": "vuex-input",
+                "default": "#${BUILD_NUMBER}"
+              },
+              "description": {
+                "label": "构建描述（同样支持环境变量，可留空）",
+                "type": "textarea",
+                "default": ""
+              },
+              "fromLog": {
+                "label": "从日志取名用的正则（留空则只用模板）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "matchTemplate": {
+                "label": "命中正则后使用的模板（%MATCH% 为捕获组一，留空则整段替换构建名）",
+                "type": "vuex-input",
+                "default": ""
+              }
+            },
+            "output": {
+              "displayName": {
+                "type": "string",
+                "description": "最终写入的构建名"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "context": [
+                "log"
+              ],
+              "requires": {
+                "runner": ">=0.3.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "Build name and description setter",
+            "summary": "把 build-name-setter 插件变成一个原子：模板改名、日志正则取名、写描述。",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-build-name-setter",
+            "license": "MIT",
+            "tags": [
+              "build",
+              "metadata",
+              "official-port"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.3.0"
+          }
+        }
+      ]
+    },
     {
       "atomCode": "example-greeter",
       "name": "示例问候插件",
@@ -178,6 +259,66 @@
               "1.0.1": "补充说明、图标与截图",
               "1.0.0": "首个版本"
             }
+          }
+        }
+      ]
+    },
+    {
+      "atomCode": "rebuild",
+      "publisher": "hummerstudio",
+      "name": "Rebuild",
+      "channels": {
+        "stable": "1.0.0"
+      },
+      "versions": [
+        {
+          "version": "1.0.0",
+          "publishedAt": "2026-10-29T05:57:20Z",
+          "package": {
+            "file": "packages/hummerstudio/rebuild/1.0.0/rebuild-1.0.0.zip",
+            "sha256": "07d0e14e837229b7ffe7492b233a125cf108eba2998894778ff649ed8ff649ff"
+          },
+          "task": {
+            "atomCode": "rebuild",
+            "name": "Rebuild",
+            "version": "1.0.0",
+            "description": "Puts a Rebuild entry on every build page; pressing it starts the same job with the parameters that build ran with.",
+            "execution": {
+              "language": "none",
+              "target": "echo 'rebuild is a build-page surface: it declares ui.json and never runs as a step'"
+            },
+            "input": {},
+            "output": {},
+            "x-jenkins": {
+              "protocol": "jenkins-1"
+            }
+          },
+          "ui": {
+            "schema": 1,
+            "surfaces": [
+              {
+                "id": "rebuild",
+                "where": "run",
+                "title": "Rebuild",
+                "icon": "symbol-play",
+                "blocks": [
+                  {
+                    "kind": "text",
+                    "text": "Rebuild {job} #{build.number} with the parameters it ran with."
+                  },
+                  {
+                    "kind": "action",
+                    "label": "Rebuild",
+                    "action": {
+                      "kind": "build",
+                      "params": {
+                        "from": "build"
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
           }
         }
       ]
