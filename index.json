@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-29T13:11:07Z",
+  "generatedAt": "2026-10-29T13:49:26Z",
   "atoms": [
     {
       "atomCode": "ant",
@@ -230,7 +230,7 @@
       "publisher": "hummerstudio",
       "name": "Artifact size",
       "channels": {
-        "stable": "1.0.0"
+        "stable": "1.0.1"
       },
       "versions": [
         {
@@ -244,6 +244,93 @@
             "atomCode": "artifact-size",
             "name": "Artifact size",
             "version": "1.0.0",
+            "description": "Sums what the build produced, shows the largest files, and can gate on a budget.",
+            "execution": {
+              "packagePath": "artifact-size.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp artifact-size.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "pattern": {
+                "label": "产物 glob（逗号分隔）",
+                "type": "vuex-input",
+                "default": "**/*.jar, **/*.war, **/*.zip, **/*.tar.gz"
+              },
+              "outputDir": {
+                "label": "HTML 输出目录",
+                "type": "vuex-input",
+                "default": "out/artifact-size"
+              },
+              "maxMb": {
+                "label": "总大小上限（MB，0 = 不检查）",
+                "type": "vuex-input",
+                "default": "0"
+              },
+              "topN": {
+                "label": "表格显示前 N 个",
+                "type": "vuex-input-number",
+                "default": "20"
+              }
+            },
+            "output": {
+              "files": {
+                "type": "string",
+                "description": "文件数"
+              },
+              "totalBytes": {
+                "type": "string",
+                "description": "总字节"
+              },
+              "totalHuman": {
+                "type": "string",
+                "description": "人类可读总量"
+              },
+              "totalMb": {
+                "type": "string",
+                "description": "总 MB"
+              },
+              "largest": {
+                "type": "string",
+                "description": "最大文件"
+              },
+              "report": {
+                "type": "report",
+                "description": "构建页内嵌报告"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "Artifact size",
+            "summary": "Sums what the build produced, shows the largest files, and can gate on a budget.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-artifact-size",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "artifact-size"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        },
+        {
+          "version": "1.0.1",
+          "publishedAt": "2026-10-29T13:47:21Z",
+          "package": {
+            "file": "packages/hummerstudio/artifact-size/1.0.1/artifact-size-1.0.1.zip",
+            "sha256": "544f81c18cb6359208515ef288fe768c68d0e906ad4a9b082baf4691281a336d"
+          },
+          "task": {
+            "atomCode": "artifact-size",
+            "name": "Artifact size",
+            "version": "1.0.1",
             "description": "Sums what the build produced, shows the largest files, and can gate on a budget.",
             "execution": {
               "packagePath": "artifact-size.jar",
@@ -550,7 +637,7 @@
       "publisher": "hummerstudio",
       "name": "Static analysis report",
       "channels": {
-        "stable": "1.0.0"
+        "stable": "1.0.1"
       },
       "versions": [
         {
@@ -630,6 +717,312 @@
             "tags": [
               "official-port",
               "checkstyle-report"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        },
+        {
+          "version": "1.0.1",
+          "publishedAt": "2026-10-29T13:47:26Z",
+          "package": {
+            "file": "packages/hummerstudio/checkstyle-report/1.0.1/checkstyle-report-1.0.1.zip",
+            "sha256": "13756b5e1037adc25de2ac8d1bdb58a9dd9f96f84f99ad6cf8763c24fe3f32e7"
+          },
+          "task": {
+            "atomCode": "checkstyle-report",
+            "name": "Static analysis report",
+            "version": "1.0.1",
+            "description": "Reads checkstyle, PMD or SpotBugs XML, counts by severity and publishes it.",
+            "execution": {
+              "packagePath": "checkstyle-report.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp checkstyle-report.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "pattern": {
+                "label": "报告 glob（逗号分隔）",
+                "type": "vuex-input",
+                "default": "**/checkstyle-result.xml, **/pmd.xml, **/spotbugsXml.xml"
+              },
+              "label": {
+                "label": "报告名称",
+                "type": "vuex-input",
+                "default": "Static analysis"
+              },
+              "outputDir": {
+                "label": "HTML 输出目录",
+                "type": "vuex-input",
+                "default": "out/static-analysis"
+              },
+              "maxErrors": {
+                "label": "允许的 error 数（超过则失败）",
+                "type": "vuex-input-number",
+                "default": "0"
+              }
+            },
+            "output": {
+              "total": {
+                "type": "string",
+                "description": "问题总数"
+              },
+              "errors": {
+                "type": "string",
+                "description": "error 级"
+              },
+              "warnings": {
+                "type": "string",
+                "description": "warning 级"
+              },
+              "infos": {
+                "type": "string",
+                "description": "info 级"
+              },
+              "report": {
+                "type": "report",
+                "description": "构建页内嵌报告"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "Static analysis report",
+            "summary": "Reads checkstyle, PMD or SpotBugs XML, counts by severity and publishes it.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-checkstyle-report",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "checkstyle-report"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        }
+      ]
+    },
+    {
+      "atomCode": "cmake-build",
+      "publisher": "hummerstudio",
+      "name": "CMake build",
+      "channels": {
+        "stable": "1.0.0"
+      },
+      "versions": [
+        {
+          "version": "1.0.0",
+          "publishedAt": "2026-10-29T13:49:05Z",
+          "package": {
+            "file": "packages/hummerstudio/cmake-build/1.0.0/cmake-build-1.0.0.zip",
+            "sha256": "bd0409830fa7f1235b722b9cafc22728eed915fada0fe9e80c6d9251d3a69534"
+          },
+          "task": {
+            "atomCode": "cmake-build",
+            "name": "CMake build",
+            "version": "1.0.0",
+            "description": "Configures with cmake and builds a target, the same shape as the maven and gradle atoms.",
+            "execution": {
+              "packagePath": "cmake-build.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp cmake-build.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "source": {
+                "label": "源码目录",
+                "type": "vuex-input",
+                "default": "."
+              },
+              "buildDir": {
+                "label": "构建目录",
+                "type": "vuex-input",
+                "default": "build"
+              },
+              "generator": {
+                "label": "生成器（如 Ninja）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "buildType": {
+                "label": "构建类型",
+                "type": "selector",
+                "default": "Release",
+                "options": [
+                  "Release",
+                  "Debug",
+                  "RelWithDebInfo",
+                  "MinSizeRel"
+                ]
+              },
+              "target": {
+                "label": "目标（留空 = all）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "configureArgs": {
+                "label": "configure 额外参数",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "buildArgs": {
+                "label": "build 额外参数",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "jobs": {
+                "label": "并行度（0 = 工具默认）",
+                "type": "vuex-input-number",
+                "default": "0"
+              },
+              "clean": {
+                "label": "先删构建目录",
+                "type": "checkbox",
+                "default": "false"
+              }
+            },
+            "output": {
+              "buildDir": {
+                "type": "string",
+                "description": "构建目录"
+              },
+              "buildType": {
+                "type": "string",
+                "description": "构建类型"
+              },
+              "binaries": {
+                "type": "string",
+                "description": "产物数"
+              },
+              "build": {
+                "type": "artifact",
+                "description": "归档的构建目录"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "CMake build",
+            "summary": "Configures with cmake and builds a target, the same shape as the maven and gradle atoms.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-cmake-build",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "cmake-build"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        }
+      ]
+    },
+    {
+      "atomCode": "code-stats",
+      "publisher": "hummerstudio",
+      "name": "Code statistics",
+      "channels": {
+        "stable": "1.0.0"
+      },
+      "versions": [
+        {
+          "version": "1.0.0",
+          "publishedAt": "2026-10-29T13:47:53Z",
+          "package": {
+            "file": "packages/hummerstudio/code-stats/1.0.0/code-stats-1.0.0.zip",
+            "sha256": "6c8d41ed359ffb0a8c01c909c89689299768bf6c5d250996965ca2c15d036ab8"
+          },
+          "task": {
+            "atomCode": "code-stats",
+            "name": "Code statistics",
+            "version": "1.0.0",
+            "description": "Counts lines, code and comments by language in the workspace.",
+            "execution": {
+              "packagePath": "code-stats.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp code-stats.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "includes": {
+                "label": "统计哪些文件（glob，逗号分隔）",
+                "type": "vuex-input",
+                "default": "**/*.java, **/*.py, **/*.js, **/*.ts, **/*.go, **/*.rs, **/*.c, **/*.cpp, **/*.h, **/*.kt, **/*.sh, **/*.yml, **/*.xml, **/*.md"
+              },
+              "excludes": {
+                "label": "排除（glob，逗号分隔）",
+                "type": "vuex-input",
+                "default": "**/target/**, **/build/**, **/node_modules/**, **/.git/**, **/dist/**, **/out/**"
+              },
+              "label": {
+                "label": "报告名称",
+                "type": "vuex-input",
+                "default": "Code statistics"
+              },
+              "outputDir": {
+                "label": "HTML 输出目录",
+                "type": "vuex-input",
+                "default": "out/code-stats"
+              },
+              "maxFiles": {
+                "label": "文件数上限（0 = 不检查）",
+                "type": "vuex-input-number",
+                "default": "0"
+              }
+            },
+            "output": {
+              "files": {
+                "type": "string",
+                "description": "文件数"
+              },
+              "lines": {
+                "type": "string",
+                "description": "总行数"
+              },
+              "code": {
+                "type": "string",
+                "description": "代码行"
+              },
+              "comments": {
+                "type": "string",
+                "description": "注释行"
+              },
+              "blanks": {
+                "type": "string",
+                "description": "空行"
+              },
+              "report": {
+                "type": "report",
+                "description": "构建页内嵌报告"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              },
+              "context": []
+            }
+          },
+          "meta": {
+            "name": "Code statistics",
+            "summary": "Counts lines, code and comments by language in the workspace.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-code-stats",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "code-stats"
             ]
           },
           "requires": {
@@ -762,7 +1155,7 @@
       "publisher": "hummerstudio",
       "name": "Coverage report",
       "channels": {
-        "stable": "1.0.0"
+        "stable": "1.0.1"
       },
       "versions": [
         {
@@ -843,6 +1236,295 @@
             "tags": [
               "official-port",
               "coverage-upload"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        },
+        {
+          "version": "1.0.1",
+          "publishedAt": "2026-10-29T13:47:43Z",
+          "package": {
+            "file": "packages/hummerstudio/coverage-upload/1.0.1/coverage-upload-1.0.1.zip",
+            "sha256": "7c7cd745ddff7b0be7ad11cba21a9343caf383bb3854f5e2f69342a9195989fb"
+          },
+          "task": {
+            "atomCode": "coverage-upload",
+            "name": "Coverage report",
+            "version": "1.0.1",
+            "description": "Reads JaCoCo or Cobertura XML, shows the numbers and gates the build on a threshold.",
+            "execution": {
+              "packagePath": "coverage-upload.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp coverage-upload.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "pattern": {
+                "label": "报告文件 glob（逗号分隔）",
+                "type": "vuex-input",
+                "default": "**/jacoco.xml, **/cobertura-coverage.xml, **/coverage.xml"
+              },
+              "label": {
+                "label": "报告名称",
+                "type": "vuex-input",
+                "default": "Coverage"
+              },
+              "outputDir": {
+                "label": "HTML 输出目录",
+                "type": "vuex-input",
+                "default": "out/coverage"
+              },
+              "minLine": {
+                "label": "行覆盖率下限（%，0 = 不检查）",
+                "type": "vuex-input",
+                "default": "0"
+              },
+              "minBranch": {
+                "label": "分支覆盖率下限（%，0 = 不检查）",
+                "type": "vuex-input",
+                "default": "0"
+              }
+            },
+            "output": {
+              "lineCoverage": {
+                "type": "string",
+                "description": "行覆盖率（保留两位）"
+              },
+              "branchCoverage": {
+                "type": "string",
+                "description": "分支覆盖率"
+              },
+              "files": {
+                "type": "string",
+                "description": "解析的报告数"
+              },
+              "report": {
+                "type": "report",
+                "description": "构建页内嵌报告"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "Coverage report",
+            "summary": "Reads JaCoCo or Cobertura XML, shows the numbers and gates the build on a threshold.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-coverage-upload",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "coverage-upload"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        }
+      ]
+    },
+    {
+      "atomCode": "dependency-check-report",
+      "publisher": "hummerstudio",
+      "name": "Dependency vulnerabilities",
+      "channels": {
+        "stable": "1.0.0"
+      },
+      "versions": [
+        {
+          "version": "1.0.0",
+          "publishedAt": "2026-10-29T13:48:24Z",
+          "package": {
+            "file": "packages/hummerstudio/dependency-check-report/1.0.0/dependency-check-report-1.0.0.zip",
+            "sha256": "f0f64f62cf5611646b1b5ce385bea006797e7c60b3f9d9ef8b3039dc0db948c1"
+          },
+          "task": {
+            "atomCode": "dependency-check-report",
+            "name": "Dependency vulnerabilities",
+            "version": "1.0.0",
+            "description": "Reads an OWASP dependency-check XML report and gates on critical/high findings.",
+            "execution": {
+              "packagePath": "dependency-check-report.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp dependency-check-report.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "pattern": {
+                "label": "报告 glob",
+                "type": "vuex-input",
+                "default": "**/dependency-check-report.xml"
+              },
+              "label": {
+                "label": "报告名称",
+                "type": "vuex-input",
+                "default": "Dependencies"
+              },
+              "outputDir": {
+                "label": "HTML 输出目录",
+                "type": "vuex-input",
+                "default": "out/dependencies"
+              },
+              "maxCritical": {
+                "label": "允许的 critical 数",
+                "type": "vuex-input-number",
+                "default": "0"
+              },
+              "maxHigh": {
+                "label": "允许的 high 数（-1 = 不检查）",
+                "type": "vuex-input-number",
+                "default": "-1"
+              },
+              "maxTotal": {
+                "label": "允许的漏洞总数（-1 = 不检查）",
+                "type": "vuex-input-number",
+                "default": "-1"
+              }
+            },
+            "output": {
+              "dependencies": {
+                "type": "string",
+                "description": "依赖数"
+              },
+              "vulnerabilities": {
+                "type": "string",
+                "description": "漏洞数"
+              },
+              "critical": {
+                "type": "string",
+                "description": "critical 数"
+              },
+              "high": {
+                "type": "string",
+                "description": "high 数"
+              },
+              "medium": {
+                "type": "string",
+                "description": "medium 数"
+              },
+              "report": {
+                "type": "report",
+                "description": "构建页内嵌报告"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "Dependency vulnerabilities",
+            "summary": "Reads an OWASP dependency-check XML report and gates on critical/high findings.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-dependency-check-report",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "dependency-check-report"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        }
+      ]
+    },
+    {
+      "atomCode": "disk-usage",
+      "publisher": "hummerstudio",
+      "name": "Disk usage",
+      "channels": {
+        "stable": "1.0.0"
+      },
+      "versions": [
+        {
+          "version": "1.0.0",
+          "publishedAt": "2026-10-29T13:49:15Z",
+          "package": {
+            "file": "packages/hummerstudio/disk-usage/1.0.0/disk-usage-1.0.0.zip",
+            "sha256": "d7c1cc2604befa5395f702e427553e1c81eebf399428be6439672bc39052ee98"
+          },
+          "task": {
+            "atomCode": "disk-usage",
+            "name": "Disk usage",
+            "version": "1.0.0",
+            "description": "Measures the workspace and extra paths, by top-level directory, with an optional budget.",
+            "execution": {
+              "packagePath": "disk-usage.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp disk-usage.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "label": {
+                "label": "报告名称",
+                "type": "vuex-input",
+                "default": "Disk usage"
+              },
+              "outDir": {
+                "label": "HTML 输出目录",
+                "type": "vuex-input",
+                "default": "out/disk"
+              },
+              "extraPaths": {
+                "label": "额外统计的绝对路径（逗号分隔）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "maxMb": {
+                "label": "预算（MB，0 = 不检查）",
+                "type": "vuex-input",
+                "default": "0"
+              },
+              "topN": {
+                "label": "最大文件列表条数",
+                "type": "vuex-input-number",
+                "default": "15"
+              }
+            },
+            "output": {
+              "bytes": {
+                "type": "string",
+                "description": "总字节"
+              },
+              "human": {
+                "type": "string",
+                "description": "人类可读"
+              },
+              "files": {
+                "type": "string",
+                "description": "文件数"
+              },
+              "mb": {
+                "type": "string",
+                "description": "总 MB"
+              },
+              "report": {
+                "type": "report",
+                "description": "构建页内嵌报告"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "Disk usage",
+            "summary": "Measures the workspace and extra paths, by top-level directory, with an optional budget.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-disk-usage",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "disk-usage"
             ]
           },
           "requires": {
@@ -2268,11 +2950,224 @@
       ]
     },
     {
+      "atomCode": "json-tool",
+      "publisher": "hummerstudio",
+      "name": "JSON read / write",
+      "channels": {
+        "stable": "1.0.0"
+      },
+      "versions": [
+        {
+          "version": "1.0.0",
+          "publishedAt": "2026-10-29T13:48:45Z",
+          "package": {
+            "file": "packages/hummerstudio/json-tool/1.0.0/json-tool-1.0.0.zip",
+            "sha256": "689659572f15b0a1b7270ff4121f0c46875136973cc86ccf486979178b6ec770"
+          },
+          "task": {
+            "atomCode": "json-tool",
+            "name": "JSON read / write",
+            "version": "1.0.0",
+            "description": "Reads a value out of a JSON file into variables, writes one, or merges another file into it.",
+            "execution": {
+              "packagePath": "json-tool.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp json-tool.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "operation": {
+                "label": "操作",
+                "type": "selector",
+                "default": "read",
+                "options": [
+                  "read",
+                  "write",
+                  "merge"
+                ]
+              },
+              "file": {
+                "label": "文件（workspace 相对）",
+                "type": "vuex-input",
+                "default": "package.json"
+              },
+              "path": {
+                "label": "字段路径（a.b.c；read 留空 = 全文）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "value": {
+                "label": "写入的值",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "asNumber": {
+                "label": "按数字写入",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "from": {
+                "label": "merge 的来源文件",
+                "type": "vuex-input",
+                "default": ""
+              }
+            },
+            "output": {
+              "value": {
+                "type": "string",
+                "description": "读到的值"
+              },
+              "type": {
+                "type": "string",
+                "description": "值类型"
+              },
+              "count": {
+                "type": "string",
+                "description": "展开的键数"
+              },
+              "merged": {
+                "type": "string",
+                "description": "合并的键数"
+              },
+              "file": {
+                "type": "string",
+                "description": "写的文件"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "JSON read / write",
+            "summary": "Reads a value out of a JSON file into variables, writes one, or merges another file into it.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-json-tool",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "json-tool"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        }
+      ]
+    },
+    {
+      "atomCode": "jtl-report",
+      "publisher": "hummerstudio",
+      "name": "JMeter report",
+      "channels": {
+        "stable": "1.0.0"
+      },
+      "versions": [
+        {
+          "version": "1.0.0",
+          "publishedAt": "2026-10-29T13:48:14Z",
+          "package": {
+            "file": "packages/hummerstudio/jtl-report/1.0.0/jtl-report-1.0.0.zip",
+            "sha256": "2b3bcabc6e21434170b077e6bd31517db77c88190b44f61830a69722652254be"
+          },
+          "task": {
+            "atomCode": "jtl-report",
+            "name": "JMeter report",
+            "version": "1.0.0",
+            "description": "Turns a .jtl into latency percentiles and an error rate, per label and overall.",
+            "execution": {
+              "packagePath": "jtl-report.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp jtl-report.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "pattern": {
+                "label": "jtl 文件 glob",
+                "type": "vuex-input",
+                "default": "**/*.jtl"
+              },
+              "label": {
+                "label": "报告名称",
+                "type": "vuex-input",
+                "default": "Load test"
+              },
+              "outputDir": {
+                "label": "HTML 输出目录",
+                "type": "vuex-input",
+                "default": "out/jtl"
+              },
+              "maxErrorPercent": {
+                "label": "错误率上限（%，0 = 不检查）",
+                "type": "vuex-input",
+                "default": "0"
+              }
+            },
+            "output": {
+              "samples": {
+                "type": "string",
+                "description": "样本数"
+              },
+              "errors": {
+                "type": "string",
+                "description": "错误数"
+              },
+              "errorPercent": {
+                "type": "string",
+                "description": "错误率"
+              },
+              "avgMs": {
+                "type": "string",
+                "description": "平均耗时"
+              },
+              "p90Ms": {
+                "type": "string",
+                "description": "p90"
+              },
+              "p99Ms": {
+                "type": "string",
+                "description": "p99"
+              },
+              "maxMs": {
+                "type": "string",
+                "description": "最大耗时"
+              },
+              "report": {
+                "type": "report",
+                "description": "构建页内嵌报告"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "JMeter report",
+            "summary": "Turns a .jtl into latency percentiles and an error rate, per label and overall.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-jtl-report",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "jtl-report"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        }
+      ]
+    },
+    {
       "atomCode": "junit-report",
       "publisher": "hummerstudio",
       "name": "JUnit test report",
       "channels": {
-        "stable": "1.0.0"
+        "stable": "1.0.1"
       },
       "versions": [
         {
@@ -2286,6 +3181,93 @@
             "atomCode": "junit-report",
             "name": "JUnit test report",
             "version": "1.0.0",
+            "description": "Summarises the JUnit XML a build produced and publishes it as an HTML report on the build page.",
+            "execution": {
+              "packagePath": "junit-report.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp junit-report.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "pattern": {
+                "label": "报告文件（workspace 相对 glob，如 **/surefire-reports/*.xml）",
+                "type": "vuex-input",
+                "default": "**/surefire-reports/*.xml"
+              },
+              "label": {
+                "label": "报告名称",
+                "type": "vuex-input",
+                "default": "Test results"
+              },
+              "outputDir": {
+                "label": "生成的 HTML 放哪里（workspace 相对）",
+                "type": "vuex-input",
+                "default": "out/junit"
+              },
+              "failOnFailure": {
+                "label": "有失败用例就让构建失败",
+                "type": "checkbox",
+                "default": "false"
+              }
+            },
+            "output": {
+              "total": {
+                "type": "string",
+                "description": "用例总数"
+              },
+              "failed": {
+                "type": "string",
+                "description": "失败数"
+              },
+              "errors": {
+                "type": "string",
+                "description": "错误数"
+              },
+              "skipped": {
+                "type": "string",
+                "description": "跳过数"
+              },
+              "durationSeconds": {
+                "type": "string",
+                "description": "用例耗时合计（秒）"
+              },
+              "report": {
+                "type": "report",
+                "description": "构建页内嵌的 HTML 报告"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "JUnit test report",
+            "summary": "把 junit 插件变成一个原子：解析 JUnit XML、汇总、发布 HTML 报告。",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-junit-report",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "junit"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        },
+        {
+          "version": "1.0.1",
+          "publishedAt": "2026-10-29T13:47:16Z",
+          "package": {
+            "file": "packages/hummerstudio/junit-report/1.0.1/junit-report-1.0.1.zip",
+            "sha256": "9b1c1e9785facf58021300a03b9f8e5b6945606a7ad26a6debc70a54d114e837"
+          },
+          "task": {
+            "atomCode": "junit-report",
+            "name": "JUnit test report",
+            "version": "1.0.1",
             "description": "Summarises the JUnit XML a build produced and publishes it as an HTML report on the build page.",
             "execution": {
               "packagePath": "junit-report.jar",
@@ -3373,6 +4355,142 @@
       ]
     },
     {
+      "atomCode": "s3-upload",
+      "publisher": "hummerstudio",
+      "name": "S3 upload",
+      "channels": {
+        "stable": "1.0.0"
+      },
+      "versions": [
+        {
+          "version": "1.0.0",
+          "publishedAt": "2026-10-29T13:49:26Z",
+          "package": {
+            "file": "packages/hummerstudio/s3-upload/1.0.0/s3-upload-1.0.0.zip",
+            "sha256": "b38ccc6048efaf5367aa2b90278981c6f5721db02c2c48defb53f702534b8901"
+          },
+          "task": {
+            "atomCode": "s3-upload",
+            "name": "S3 upload",
+            "version": "1.0.0",
+            "description": "Uploads a workspace directory to S3 (or anything with an S3 endpoint) with the AWS CLI.",
+            "execution": {
+              "packagePath": "s3-upload.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp s3-upload.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "bucket": {
+                "label": "Bucket",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "source": {
+                "label": "要上传的目录（workspace 相对）",
+                "type": "vuex-input",
+                "default": "dist"
+              },
+              "prefix": {
+                "label": "对象前缀",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "region": {
+                "label": "区域",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "endpointUrl": {
+                "label": "自定义 endpoint（MinIO / R2 / OSS）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "profile": {
+                "label": "AWS profile",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "recursive": {
+                "label": "递归上传",
+                "type": "checkbox",
+                "default": "true"
+              },
+              "delete": {
+                "label": "删除目标端多余的对象",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "awsAccessKeyId": {
+                "label": "AWS_ACCESS_KEY_ID（凭据 id）",
+                "type": "vuex-input",
+                "default": "",
+                "isSensitive": true
+              },
+              "awsSecretAccessKey": {
+                "label": "AWS_SECRET_ACCESS_KEY（凭据 id）",
+                "type": "vuex-input",
+                "default": "",
+                "isSensitive": true
+              },
+              "awsSessionToken": {
+                "label": "AWS_SESSION_TOKEN（凭据 id，可选）",
+                "type": "vuex-input",
+                "default": "",
+                "isSensitive": true
+              }
+            },
+            "output": {
+              "uri": {
+                "type": "string",
+                "description": "s3://bucket/prefix"
+              },
+              "bucket": {
+                "type": "string",
+                "description": "bucket"
+              },
+              "prefix": {
+                "type": "string",
+                "description": "前缀"
+              },
+              "uploadedLines": {
+                "type": "string",
+                "description": "上传记录行数"
+              },
+              "location": {
+                "type": "report",
+                "description": "S3 控制台链接"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              },
+              "secrets": {
+                "awsAccessKeyId": "",
+                "awsSecretAccessKey": "",
+                "awsSessionToken": ""
+              }
+            }
+          },
+          "meta": {
+            "name": "S3 upload",
+            "summary": "Uploads a workspace directory to S3 (or anything with an S3 endpoint) with the AWS CLI.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-s3-upload",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "s3-upload"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        }
+      ]
+    },
+    {
       "atomCode": "sdk-demo",
       "name": "SDK 能力演示",
       "channels": {
@@ -3847,11 +4965,208 @@
       ]
     },
     {
+      "atomCode": "tap-report",
+      "publisher": "hummerstudio",
+      "name": "TAP / CTest report",
+      "channels": {
+        "stable": "1.0.0"
+      },
+      "versions": [
+        {
+          "version": "1.0.0",
+          "publishedAt": "2026-10-29T13:48:04Z",
+          "package": {
+            "file": "packages/hummerstudio/tap-report/1.0.0/tap-report-1.0.0.zip",
+            "sha256": "903261d91f6910b21d0bf52efff952d66fe4e554118a5ed5bfa1d970bdfb6c7f"
+          },
+          "task": {
+            "atomCode": "tap-report",
+            "name": "TAP / CTest report",
+            "version": "1.0.0",
+            "description": "Reads TAP and CTest XML, counts pass/fail/skip and publishes the list.",
+            "execution": {
+              "packagePath": "tap-report.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp tap-report.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "pattern": {
+                "label": "报告文件 glob",
+                "type": "vuex-input",
+                "default": "**/*.tap, **/Testing/**/Test.xml, **/test-results/*.tap"
+              },
+              "label": {
+                "label": "报告名称",
+                "type": "vuex-input",
+                "default": "Test results (TAP)"
+              },
+              "outputDir": {
+                "label": "HTML 输出目录",
+                "type": "vuex-input",
+                "default": "out/tap"
+              },
+              "failOnFailure": {
+                "label": "有失败用例就让构建失败",
+                "type": "checkbox",
+                "default": "false"
+              }
+            },
+            "output": {
+              "total": {
+                "type": "string",
+                "description": "用例数"
+              },
+              "passed": {
+                "type": "string",
+                "description": "通过"
+              },
+              "failed": {
+                "type": "string",
+                "description": "失败"
+              },
+              "skipped": {
+                "type": "string",
+                "description": "跳过"
+              },
+              "report": {
+                "type": "report",
+                "description": "构建页内嵌报告"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "TAP / CTest report",
+            "summary": "Reads TAP and CTest XML, counts pass/fail/skip and publishes the list.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-tap-report",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "tap-report"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        }
+      ]
+    },
+    {
+      "atomCode": "task-scanner",
+      "publisher": "hummerstudio",
+      "name": "Outstanding tasks",
+      "channels": {
+        "stable": "1.0.0"
+      },
+      "versions": [
+        {
+          "version": "1.0.0",
+          "publishedAt": "2026-10-29T13:48:55Z",
+          "package": {
+            "file": "packages/hummerstudio/task-scanner/1.0.0/task-scanner-1.0.0.zip",
+            "sha256": "fe1e2f50e8493fbd5477a8757e0b2f84feb1f16c4721b82ea072a25f18c34cc6"
+          },
+          "task": {
+            "atomCode": "task-scanner",
+            "name": "Outstanding tasks",
+            "version": "1.0.0",
+            "description": "Finds TODO/FIXME/XXX/HACK markers and can fail once they exceed a budget.",
+            "execution": {
+              "packagePath": "task-scanner.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp task-scanner.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "includes": {
+                "label": "扫描哪些文件（glob）",
+                "type": "vuex-input",
+                "default": "**/*.java, **/*.kt, **/*.js, **/*.ts, **/*.py, **/*.go, **/*.rs, **/*.c, **/*.cpp, **/*.h, **/*.sh, **/*.rb, **/*.php, **/*.cs"
+              },
+              "excludes": {
+                "label": "排除（glob）",
+                "type": "vuex-input",
+                "default": "**/target/**, **/build/**, **/node_modules/**, **/.git/**, **/dist/**, **/out/**"
+              },
+              "markers": {
+                "label": "标记词（逗号分隔）",
+                "type": "vuex-input",
+                "default": "TODO, FIXME, XXX, HACK"
+              },
+              "label": {
+                "label": "报告名称",
+                "type": "vuex-input",
+                "default": "Outstanding tasks"
+              },
+              "outputDir": {
+                "label": "HTML 输出目录",
+                "type": "vuex-input",
+                "default": "out/tasks"
+              },
+              "maxMarkers": {
+                "label": "标记上限（-1 = 不检查）",
+                "type": "vuex-input-number",
+                "default": "-1"
+              }
+            },
+            "output": {
+              "markers": {
+                "type": "string",
+                "description": "标记数"
+              },
+              "files": {
+                "type": "string",
+                "description": "扫描的文件数"
+              },
+              "todo": {
+                "type": "string",
+                "description": "TODO 数"
+              },
+              "fixme": {
+                "type": "string",
+                "description": "FIXME 数"
+              },
+              "report": {
+                "type": "report",
+                "description": "构建页内嵌报告"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              },
+              "context": []
+            }
+          },
+          "meta": {
+            "name": "Outstanding tasks",
+            "summary": "Finds TODO/FIXME/XXX/HACK markers and can fail once they exceed a budget.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-task-scanner",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "task-scanner"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        }
+      ]
+    },
+    {
       "atomCode": "text-finder",
       "publisher": "hummerstudio",
       "name": "Find text in log",
       "channels": {
-        "stable": "1.0.1"
+        "stable": "1.0.2"
       },
       "versions": [
         {
@@ -4016,6 +5331,89 @@
           "requires": {
             "runner": ">=0.4.0"
           }
+        },
+        {
+          "version": "1.0.2",
+          "publishedAt": "2026-10-29T13:47:31Z",
+          "package": {
+            "file": "packages/hummerstudio/text-finder/1.0.2/text-finder-1.0.2.zip",
+            "sha256": "77ad53ac4689d70102ae9fe19827405eff31b287a4a8aec4028a2606708bd60d"
+          },
+          "task": {
+            "atomCode": "text-finder",
+            "name": "Find text in log",
+            "version": "1.0.2",
+            "description": "Searches the build log or workspace files and can fail the build on a match or on a missing match.",
+            "execution": {
+              "packagePath": "text-finder.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp text-finder.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "pattern": {
+                "label": "正则（逗号分隔多个）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "useBuildLog": {
+                "label": "搜索构建日志",
+                "type": "checkbox",
+                "default": "true"
+              },
+              "files": {
+                "label": "此外搜索这些文件（glob，逗号分隔）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "failWhenMatch": {
+                "label": "命中就让构建失败",
+                "type": "checkbox",
+                "default": "true"
+              },
+              "failWhenMissing": {
+                "label": "没命中就让构建失败",
+                "type": "checkbox",
+                "default": "false"
+              }
+            },
+            "output": {
+              "matches": {
+                "type": "string",
+                "description": "命中行数"
+              },
+              "linesScanned": {
+                "type": "string",
+                "description": "扫描行数"
+              },
+              "firstMatch": {
+                "type": "string",
+                "description": "第一条命中"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              },
+              "context": [
+                "log"
+              ]
+            }
+          },
+          "meta": {
+            "name": "Find text in log",
+            "summary": "Searches the build log or workspace files and can fail the build on a match or on a missing match.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-text-finder",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "text-finder"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
         }
       ]
     },
@@ -4024,7 +5422,7 @@
       "publisher": "hummerstudio",
       "name": "Clean workspace",
       "channels": {
-        "stable": "1.0.0"
+        "stable": "1.0.1"
       },
       "versions": [
         {
@@ -4095,6 +5493,186 @@
             "tags": [
               "official-port",
               "ws-cleanup"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        },
+        {
+          "version": "1.0.1",
+          "publishedAt": "2026-10-29T13:47:37Z",
+          "package": {
+            "file": "packages/hummerstudio/ws-cleanup/1.0.1/ws-cleanup-1.0.1.zip",
+            "sha256": "6a54f51bf5e048ba3b4eb188eda63eb434e3393af213ea23f3497fec25bbbb25"
+          },
+          "task": {
+            "atomCode": "ws-cleanup",
+            "name": "Clean workspace",
+            "version": "1.0.1",
+            "description": "Deletes what a glob matches inside the workspace and keeps what another glob protects (.git and .atoms are never touched).",
+            "execution": {
+              "packagePath": "ws-cleanup.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp ws-cleanup.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "patterns": {
+                "label": "要删的（逗号分隔 glob，相对 workspace，如 **/target, **/*.log）",
+                "type": "vuex-input",
+                "default": "**/target, **/build"
+              },
+              "keep": {
+                "label": "要保留的（逗号分隔 glob，优先级高于删除）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "dryRun": {
+                "label": "只统计不删除",
+                "type": "checkbox",
+                "default": "false"
+              }
+            },
+            "output": {
+              "deletedFiles": {
+                "type": "string",
+                "description": "删除的文件数"
+              },
+              "deletedDirs": {
+                "type": "string",
+                "description": "顺带清掉的空目录数"
+              },
+              "freedBytes": {
+                "type": "string",
+                "description": "释放的字节数"
+              },
+              "freedHuman": {
+                "type": "string",
+                "description": "人类可读的释放量"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "Clean workspace",
+            "summary": "把 ws-cleanup 插件变成一个原子：按 glob 删除 workspace，keep 优先，.git/.atoms 永不触碰。",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-ws-cleanup",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "ws-cleanup"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        }
+      ]
+    },
+    {
+      "atomCode": "zip-artifacts",
+      "publisher": "hummerstudio",
+      "name": "Zip / unzip",
+      "channels": {
+        "stable": "1.0.0"
+      },
+      "versions": [
+        {
+          "version": "1.0.0",
+          "publishedAt": "2026-10-29T13:48:34Z",
+          "package": {
+            "file": "packages/hummerstudio/zip-artifacts/1.0.0/zip-artifacts-1.0.0.zip",
+            "sha256": "7fe165be8b085379bf085a17babeb1c080a8d0108c974efa6032af680d925eb1"
+          },
+          "task": {
+            "atomCode": "zip-artifacts",
+            "name": "Zip / unzip",
+            "version": "1.0.0",
+            "description": "Packs files into a zip in the workspace, or unpacks an archive with zip-slip protection.",
+            "execution": {
+              "packagePath": "zip-artifacts.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp zip-artifacts.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "operation": {
+                "label": "操作",
+                "type": "selector",
+                "default": "zip",
+                "options": [
+                  "zip",
+                  "unzip"
+                ]
+              },
+              "archive": {
+                "label": "归档文件路径（workspace 相对）",
+                "type": "vuex-input",
+                "default": "artifacts.zip"
+              },
+              "includes": {
+                "label": "打包哪些文件（glob）",
+                "type": "vuex-input",
+                "default": "**/*"
+              },
+              "excludes": {
+                "label": "排除（glob）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "target": {
+                "label": "解压到哪个目录",
+                "type": "vuex-input",
+                "default": "unpacked"
+              }
+            },
+            "output": {
+              "archive": {
+                "type": "string",
+                "description": "归档路径"
+              },
+              "files": {
+                "type": "string",
+                "description": "打包的文件数"
+              },
+              "bytes": {
+                "type": "string",
+                "description": "字节数"
+              },
+              "human": {
+                "type": "string",
+                "description": "人类可读大小"
+              },
+              "entries": {
+                "type": "string",
+                "description": "解压的条目数"
+              },
+              "target": {
+                "type": "string",
+                "description": "解压目录"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "Zip / unzip",
+            "summary": "Packs files into a zip in the workspace, or unpacks an archive with zip-slip protection.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-zip-artifacts",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "zip-artifacts"
             ]
           },
           "requires": {
