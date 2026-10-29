@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-29T12:33:00Z",
+  "generatedAt": "2026-10-29T13:11:07Z",
   "atoms": [
     {
       "atomCode": "ant",
@@ -856,7 +856,7 @@
       "publisher": "hummerstudio",
       "name": "Docker build",
       "channels": {
-        "stable": "1.0.1"
+        "stable": "1.0.2"
       },
       "versions": [
         {
@@ -989,6 +989,130 @@
             "atomCode": "docker-build",
             "name": "Docker build",
             "version": "1.0.1",
+            "description": "Builds, tags and optionally pushes an image with the docker CLI.",
+            "execution": {
+              "packagePath": "docker-build.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp docker-build.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "image": {
+                "label": "镜像名（含 registry 前缀）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "dockerfile": {
+                "label": "Dockerfile 路径",
+                "type": "vuex-input",
+                "default": "Dockerfile"
+              },
+              "context": {
+                "label": "构建上下文",
+                "type": "vuex-input",
+                "default": "."
+              },
+              "tags": {
+                "label": "标签（逗号分隔）",
+                "type": "vuex-input",
+                "default": "latest"
+              },
+              "platform": {
+                "label": "平台（如 linux/amd64）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "buildArgs": {
+                "label": "build-arg（空格分隔 KEY=value）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "extraArgs": {
+                "label": "其它 docker build 参数",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "push": {
+                "label": "构建后推送",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "registryUser": {
+                "label": "registry 用户名（凭据 id）",
+                "type": "vuex-input",
+                "default": "",
+                "isSensitive": true
+              },
+              "registryPassword": {
+                "label": "registry 密码（凭据 id）",
+                "type": "vuex-input",
+                "default": "",
+                "isSensitive": true
+              },
+              "dockerBinary": {
+                "label": "docker 可执行文件（留空用 PATH 里的 docker）",
+                "type": "vuex-input",
+                "default": "docker"
+              }
+            },
+            "output": {
+              "imageId": {
+                "type": "string",
+                "description": "镜像 id"
+              },
+              "image": {
+                "type": "string",
+                "description": "主镜像名:tag"
+              },
+              "tags": {
+                "type": "string",
+                "description": "全部标签"
+              },
+              "pushed": {
+                "type": "string",
+                "description": "是否推送"
+              },
+              "count": {
+                "type": "string",
+                "description": "推送标签数"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              },
+              "secrets": {
+                "registryUser": "",
+                "registryPassword": ""
+              }
+            }
+          },
+          "meta": {
+            "name": "Docker build",
+            "summary": "Builds, tags and optionally pushes an image with the docker CLI.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-docker-build",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "docker-build"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        },
+        {
+          "version": "1.0.2",
+          "publishedAt": "2026-10-29T13:11:07Z",
+          "package": {
+            "file": "packages/hummerstudio/docker-build/1.0.2/docker-build-1.0.2.zip",
+            "sha256": "5e8382d583998384ce5cb19420b57b189950fe883e83d6bf9cddd42d16849017"
+          },
+          "task": {
+            "atomCode": "docker-build",
+            "name": "Docker build",
+            "version": "1.0.2",
             "description": "Builds, tags and optionally pushes an image with the docker CLI.",
             "execution": {
               "packagePath": "docker-build.jar",
@@ -2847,7 +2971,7 @@
       "publisher": "hummerstudio",
       "name": "Node.js",
       "channels": {
-        "stable": "1.0.0"
+        "stable": "1.0.2"
       },
       "versions": [
         {
@@ -2861,6 +2985,84 @@
             "atomCode": "node",
             "name": "Node.js",
             "version": "1.0.0",
+            "description": "Puts a Node installation on PATH for the following steps and optionally runs one command.",
+            "execution": {
+              "packagePath": "node.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp node.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "nodeHome": {
+                "label": "Node 安装目录（留空从 PATH 找）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "command": {
+                "label": "要执行的命令（留空只准备环境）",
+                "type": "textarea",
+                "default": ""
+              },
+              "prependPath": {
+                "label": "把 node 目录加到 PATH 前面",
+                "type": "checkbox",
+                "default": "true"
+              }
+            },
+            "output": {
+              "NODE_HOME": {
+                "type": "string",
+                "description": "Node 安装目录"
+              },
+              "NODE_VERSION": {
+                "type": "string",
+                "description": "node 版本"
+              },
+              "nodeVersion": {
+                "type": "string",
+                "description": "node 版本（小写别名）"
+              },
+              "npmVersion": {
+                "type": "string",
+                "description": "npm 版本"
+              },
+              "PATH": {
+                "type": "string",
+                "description": "拼好的 PATH"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "Node.js",
+            "summary": "Puts a Node installation on PATH for the following steps and optionally runs one command.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-node",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "node"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        },
+        {
+          "version": "1.0.2",
+          "publishedAt": "2026-10-29T13:10:35Z",
+          "package": {
+            "file": "packages/hummerstudio/node/1.0.2/node-1.0.2.zip",
+            "sha256": "75d6546906380ae61a58e76b154956e92a22410ea9329903d87863a4f43a9311"
+          },
+          "task": {
+            "atomCode": "node",
+            "name": "Node.js",
+            "version": "1.0.2",
             "description": "Puts a Node installation on PATH for the following steps and optionally runs one command.",
             "execution": {
               "packagePath": "node.jar",
@@ -3421,7 +3623,7 @@
       "publisher": "hummerstudio",
       "name": "SonarQube scan",
       "channels": {
-        "stable": "1.0.0"
+        "stable": "1.0.1"
       },
       "versions": [
         {
@@ -3532,6 +3734,115 @@
           "requires": {
             "runner": ">=0.4.0"
           }
+        },
+        {
+          "version": "1.0.1",
+          "publishedAt": "2026-10-29T13:11:01Z",
+          "package": {
+            "file": "packages/hummerstudio/sonar-scan/1.0.1/sonar-scan-1.0.1.zip",
+            "sha256": "4d1cc1e5f64efd1c96d0b0f9ee1ba9899c2b9241de7a1695015db440d21f8788"
+          },
+          "task": {
+            "atomCode": "sonar-scan",
+            "name": "SonarQube scan",
+            "version": "1.0.1",
+            "description": "Runs sonar-scanner and, unless told not to, holds the build until the quality gate answers.",
+            "execution": {
+              "packagePath": "sonar-scan.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp sonar-scan.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "projectKey": {
+                "label": "项目 key（必填）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "hostUrl": {
+                "label": "SonarQube 地址",
+                "type": "vuex-input",
+                "default": "https://sonarcloud.io"
+              },
+              "scanner": {
+                "label": "scanner 命令",
+                "type": "vuex-input",
+                "default": "sonar-scanner"
+              },
+              "sources": {
+                "label": "源码目录",
+                "type": "vuex-input",
+                "default": "."
+              },
+              "exclusions": {
+                "label": "排除规则（sonar.exclusions）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "extraArgs": {
+                "label": "额外 -D 参数（空格分隔）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "waitForQualityGate": {
+                "label": "等待质量门禁结果",
+                "type": "checkbox",
+                "default": "true"
+              },
+              "gateTimeoutSeconds": {
+                "label": "等待超时（秒）",
+                "type": "vuex-input-number",
+                "default": "300"
+              },
+              "failOnGate": {
+                "label": "门禁未通过让构建失败",
+                "type": "checkbox",
+                "default": "true"
+              },
+              "sonarToken": {
+                "label": "SonarQube Token（凭据 id，Secret text）",
+                "type": "vuex-input",
+                "default": "",
+                "isSensitive": true
+              }
+            },
+            "output": {
+              "dashboardUrl": {
+                "type": "string",
+                "description": "SonarQube 项目看板地址"
+              },
+              "taskId": {
+                "type": "string",
+                "description": "计算引擎任务 id"
+              },
+              "qualityGate": {
+                "type": "string",
+                "description": "OK / ERROR / UNKNOWN"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              },
+              "secrets": {
+                "sonarToken": ""
+              }
+            }
+          },
+          "meta": {
+            "name": "SonarQube scan",
+            "summary": "Runs sonar-scanner and, unless told not to, holds the build until the quality gate answers.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-sonar-scan",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "sonar-scan"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
         }
       ]
     },
@@ -3540,7 +3851,7 @@
       "publisher": "hummerstudio",
       "name": "Find text in log",
       "channels": {
-        "stable": "1.0.0"
+        "stable": "1.0.1"
       },
       "versions": [
         {
@@ -3606,6 +3917,89 @@
               "requires": {
                 "runner": ">=0.4.0"
               }
+            }
+          },
+          "meta": {
+            "name": "Find text in log",
+            "summary": "Searches the build log or workspace files and can fail the build on a match or on a missing match.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-text-finder",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "text-finder"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        },
+        {
+          "version": "1.0.1",
+          "publishedAt": "2026-10-29T13:10:41Z",
+          "package": {
+            "file": "packages/hummerstudio/text-finder/1.0.1/text-finder-1.0.1.zip",
+            "sha256": "8eec2d07c57fa3acb565c37339be34b8fcc1aaa492c5c7979a5e4180f0577b57"
+          },
+          "task": {
+            "atomCode": "text-finder",
+            "name": "Find text in log",
+            "version": "1.0.1",
+            "description": "Searches the build log or workspace files and can fail the build on a match or on a missing match.",
+            "execution": {
+              "packagePath": "text-finder.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp text-finder.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "pattern": {
+                "label": "正则（逗号分隔多个）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "useBuildLog": {
+                "label": "搜索构建日志",
+                "type": "checkbox",
+                "default": "true"
+              },
+              "files": {
+                "label": "此外搜索这些文件（glob，逗号分隔）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "failWhenMatch": {
+                "label": "命中就让构建失败",
+                "type": "checkbox",
+                "default": "true"
+              },
+              "failWhenMissing": {
+                "label": "没命中就让构建失败",
+                "type": "checkbox",
+                "default": "false"
+              }
+            },
+            "output": {
+              "matches": {
+                "type": "string",
+                "description": "命中行数"
+              },
+              "linesScanned": {
+                "type": "string",
+                "description": "扫描行数"
+              },
+              "firstMatch": {
+                "type": "string",
+                "description": "第一条命中"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              },
+              "context": [
+                "log"
+              ]
             }
           },
           "meta": {
