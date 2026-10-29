@@ -25,11 +25,16 @@ Publish an atom with `tools/publish-atom.sh` from `jenkins-atom-plugin`; the scr
 
 ## 签名密钥
 
-索引由 `index.json.sig` 签名，公钥在 `keys/`：
+索引由 `index.json.sig` 签名。**官方中心的公钥内置在插件里**（`AtomOfficialKeys`），管理员不需要填写任何东西：
+插件只对这个中心 URL（`AtomNames.DEFAULT_CENTER_URL`）使用内置公钥，指向别处的同一份索引不会被自动信任。
 
-- `atom-center-2026` — 第一把钥匙，仅用于最初的示例原子；**私钥已不可得**（只保留公钥）。
-- `atom-center-2026b` — 当前签名密钥（`keys/atom-center-2026b.pub.b64` 即 Jenkins 全局配置里要填的值）。
+| keyId | 用途 |
+|---|---|
+| `atom-center-2026` | 最初的示例原子；私钥已不可得，仍保留以便老镜像继续验签 |
+| `atom-center-2026b` | 当前签名密钥（`keys/atom-center-2026b.pub.b64`） |
 
-换钥匙意味着客户端要显式信任新公钥：`Manage Jenkins -> Atom Center -> 设置 -> 可信密钥` 里加一行
-`atom-center-2026b=<b64>`。索引重签后，只信任旧钥匙的实例会拒绝刷新（并继续使用本地已验签的旧副本），
-这是设计上的行为，不是故障。
+**自建/私有中心**才需要在 `Manage Jenkins -> Atom Center -> 设置 -> 受信任公钥` 里填 `keyId=base64`，一行一把；
+这是私服的信任根，官方中心用不到。
+
+换钥匙意味着新版本插件内置新公钥：升级前实例继续用手里那把内置公钥验旧索引（不刷新、不报错），
+升级后自动接受新签名。私服换钥匙则要自己改配置。
