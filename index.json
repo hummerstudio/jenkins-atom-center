@@ -1,7 +1,88 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-29T05:57:31Z",
+  "generatedAt": "2026-10-29T06:04:50Z",
   "atoms": [
+    {
+      "atomCode": "ant",
+      "publisher": "hummerstudio",
+      "name": "Ant",
+      "channels": {
+        "stable": "1.0.0"
+      },
+      "versions": [
+        {
+          "version": "1.0.0",
+          "publishedAt": "2026-10-29T06:04:42Z",
+          "package": {
+            "file": "packages/hummerstudio/ant/1.0.0/ant-1.0.0.zip",
+            "sha256": "71e6c0cbe083767fce1c90c40fc980ad788ccd2eb60a132f6cc8caf4ff2baec7"
+          },
+          "task": {
+            "atomCode": "ant",
+            "name": "Ant",
+            "version": "1.0.0",
+            "description": "把 ant 插件变成一个原子：跑 ant target，退出码即构建结果。",
+            "execution": {
+              "packagePath": "ant.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp ant.jar AntAtom"
+            },
+            "input": {
+              "goals": {
+                "label": "target（空格分隔，如 clean dist）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "options": {
+                "label": "额外参数（如 -DskipTests=true）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "home": {
+                "label": "ant 安装目录（留空则用 PATH 或 $ANT_HOME）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "failOnError": {
+                "label": "非零退出码视为构建失败",
+                "type": "checkbox",
+                "default": "true"
+              }
+            },
+            "output": {
+              "exitCode": {
+                "type": "string",
+                "description": "ant 的退出码"
+              },
+              "durationMs": {
+                "type": "string",
+                "description": "耗时（毫秒）"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.3.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "Ant",
+            "summary": "把 ant 插件变成一个原子：跑 ant target，退出码即构建结果。",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-ant",
+            "license": "MIT",
+            "tags": [
+              "build-tool",
+              "official-port"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.3.0"
+          }
+        }
+      ]
+    },
     {
       "atomCode": "build-name-setter",
       "publisher": "hummerstudio",
@@ -186,6 +267,444 @@
               "1.0.1": "补充说明、图标与截图",
               "1.0.0": "首个版本"
             }
+          }
+        }
+      ]
+    },
+    {
+      "atomCode": "gradle",
+      "publisher": "hummerstudio",
+      "name": "Gradle",
+      "channels": {
+        "stable": "1.0.0"
+      },
+      "versions": [
+        {
+          "version": "1.0.0",
+          "publishedAt": "2026-10-29T06:04:47Z",
+          "package": {
+            "file": "packages/hummerstudio/gradle/1.0.0/gradle-1.0.0.zip",
+            "sha256": "d1fc5f2637b98c06908e4590c8fd2761859d2340c49a8d2ec9f7ba2232dde42c"
+          },
+          "task": {
+            "atomCode": "gradle",
+            "name": "Gradle",
+            "version": "1.0.0",
+            "description": "把 gradle 插件变成一个原子：跑 gradle tasks，退出码即构建结果。",
+            "execution": {
+              "packagePath": "gradle.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp gradle.jar GradleAtom"
+            },
+            "input": {
+              "goals": {
+                "label": "tasks（如 clean build）",
+                "type": "vuex-input",
+                "default": "build"
+              },
+              "options": {
+                "label": "额外参数（如 --no-daemon -Pci）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "home": {
+                "label": "gradle 安装目录（留空则用 PATH 或 $GRADLE_HOME）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "failOnError": {
+                "label": "非零退出码视为构建失败",
+                "type": "checkbox",
+                "default": "true"
+              }
+            },
+            "output": {
+              "exitCode": {
+                "type": "string",
+                "description": "gradle 的退出码"
+              },
+              "durationMs": {
+                "type": "string",
+                "description": "耗时（毫秒）"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.3.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "Gradle",
+            "summary": "把 gradle 插件变成一个原子：跑 gradle tasks，退出码即构建结果。",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-gradle",
+            "license": "MIT",
+            "tags": [
+              "build-tool",
+              "official-port"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.3.0"
+          }
+        }
+      ]
+    },
+    {
+      "atomCode": "http-request",
+      "publisher": "hummerstudio",
+      "name": "HTTP request",
+      "channels": {
+        "stable": "1.0.0"
+      },
+      "versions": [
+        {
+          "version": "1.0.0",
+          "publishedAt": "2026-10-29T06:04:40Z",
+          "package": {
+            "file": "packages/hummerstudio/http-request/1.0.0/http-request-1.0.0.zip",
+            "sha256": "31d7fc04c008265aeca5d3851c3d6747ae5cd2f35c8af8df647ff8d7f1217d96"
+          },
+          "task": {
+            "atomCode": "http-request",
+            "name": "HTTP request",
+            "version": "1.0.0",
+            "description": "Calls an HTTP endpoint from the build and exposes status, headers and body to later steps.",
+            "execution": {
+              "packagePath": "http-request.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp http-request.jar HttpRequestAtom"
+            },
+            "input": {
+              "url": {
+                "label": "URL（支持 ${BUILD_NUMBER} 等环境变量）",
+                "type": "vuex-input",
+                "required": true
+              },
+              "method": {
+                "label": "方法",
+                "type": "selector",
+                "default": "GET",
+                "options": [
+                  "GET",
+                  "POST",
+                  "PUT",
+                  "PATCH",
+                  "DELETE",
+                  "HEAD"
+                ]
+              },
+              "headers": {
+                "label": "请求头（每行一个 Name: value）",
+                "type": "textarea",
+                "default": ""
+              },
+              "body": {
+                "label": "请求体（留空则不发送）",
+                "type": "textarea",
+                "default": ""
+              },
+              "expectStatus": {
+                "label": "期望状态码（如 200 或 2xx，留空＝2xx）",
+                "type": "vuex-input",
+                "default": "2xx"
+              },
+              "saveTo": {
+                "label": "把响应体保存到（workspace 相对路径，可留空）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "printBody": {
+                "label": "把响应体打到构建日志",
+                "type": "checkbox",
+                "default": "true"
+              },
+              "timeoutSeconds": {
+                "label": "超时（秒）",
+                "type": "vuex-input-number",
+                "default": "60"
+              },
+              "token": {
+                "label": "Bearer token（Jenkins 凭据 id）",
+                "type": "vuex-input",
+                "isSensitive": true,
+                "default": ""
+              },
+              "user": {
+                "label": "Basic 用户名",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "password": {
+                "label": "Basic 密码（Jenkins 凭据 id）",
+                "type": "vuex-input",
+                "isSensitive": true,
+                "default": ""
+              }
+            },
+            "output": {
+              "status": {
+                "type": "string",
+                "description": "HTTP 状态码"
+              },
+              "body": {
+                "type": "string",
+                "description": "响应体（最多 256 KiB，完整内容见 savedFile）"
+              },
+              "headers": {
+                "type": "string",
+                "description": "响应头，每行一个"
+              },
+              "durationMs": {
+                "type": "string",
+                "description": "耗时（毫秒）"
+              },
+              "savedFile": {
+                "type": "artifact",
+                "description": "保存到 workspace 的响应体"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "secrets": {
+                "token": "",
+                "password": ""
+              },
+              "requires": {
+                "runner": ">=0.3.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "HTTP request",
+            "summary": "把 http_request 插件变成一个原子：调接口、带凭据、把响应体/状态码交给下游。",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-http-request",
+            "license": "MIT",
+            "tags": [
+              "http",
+              "integration",
+              "official-port"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.3.0"
+          }
+        }
+      ]
+    },
+    {
+      "atomCode": "mail",
+      "publisher": "hummerstudio",
+      "name": "Send email",
+      "channels": {
+        "stable": "1.0.0"
+      },
+      "versions": [
+        {
+          "version": "1.0.0",
+          "publishedAt": "2026-10-29T06:04:50Z",
+          "package": {
+            "file": "packages/hummerstudio/mail/1.0.0/mail-1.0.0.zip",
+            "sha256": "c0c77c2526d3169825b53430556f96120282e45631ebd7cc1c8d1e3f01aefa6f"
+          },
+          "task": {
+            "atomCode": "mail",
+            "name": "Send email",
+            "version": "1.0.0",
+            "description": "Sends a templated email from the build over SMTP, with optional HTML body and attachments (mailer + the common part of email-ext).",
+            "execution": {
+              "packagePath": "mail.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp mail.jar MailAtom"
+            },
+            "input": {
+              "to": {
+                "label": "收件人（逗号分隔，支持 ${ENV}）",
+                "type": "vuex-input",
+                "required": true
+              },
+              "cc": {
+                "label": "抄送（可选）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "from": {
+                "label": "发件人（留空则用 SMTP 用户名）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "subject": {
+                "label": "主题（支持 ${ENV}）",
+                "type": "vuex-input",
+                "default": "[Jenkins] ${JOB_NAME} #${BUILD_NUMBER}"
+              },
+              "body": {
+                "label": "正文（支持 ${ENV}）",
+                "type": "textarea",
+                "default": ""
+              },
+              "html": {
+                "label": "正文是 HTML",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "attachments": {
+                "label": "附件（workspace 相对路径，逗号分隔）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "smtpHost": {
+                "label": "SMTP 主机",
+                "type": "vuex-input",
+                "required": true
+              },
+              "smtpPort": {
+                "label": "SMTP 端口",
+                "type": "vuex-input-number",
+                "default": "587"
+              },
+              "tls": {
+                "label": "强制 TLS（STARTTLS/SMTPS）",
+                "type": "checkbox",
+                "default": "true"
+              },
+              "user": {
+                "label": "SMTP 用户名（Jenkins 凭据 id）",
+                "type": "vuex-input",
+                "isSensitive": true,
+                "default": ""
+              },
+              "password": {
+                "label": "SMTP 密码（Jenkins 凭据 id）",
+                "type": "vuex-input",
+                "isSensitive": true,
+                "default": ""
+              },
+              "dryRun": {
+                "label": "只生成邮件不发送（调试用）",
+                "type": "checkbox",
+                "default": "false"
+              }
+            },
+            "output": {
+              "recipients": {
+                "type": "string",
+                "description": "实际收件人列表"
+              },
+              "emlFile": {
+                "type": "artifact",
+                "description": "生成的邮件原文（dryRun 或发送后都保留）"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "secrets": {
+                "user": "",
+                "password": ""
+              },
+              "requires": {
+                "runner": ">=0.3.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "Send email",
+            "summary": "把 mailer / email-ext 常用能力变成一个原子：模板主题正文、HTML、附件、SMTP 凭据。",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-mail",
+            "license": "MIT",
+            "tags": [
+              "email",
+              "notification",
+              "official-port"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.3.0"
+          }
+        }
+      ]
+    },
+    {
+      "atomCode": "maven",
+      "publisher": "hummerstudio",
+      "name": "Maven",
+      "channels": {
+        "stable": "1.0.0"
+      },
+      "versions": [
+        {
+          "version": "1.0.0",
+          "publishedAt": "2026-10-29T06:04:45Z",
+          "package": {
+            "file": "packages/hummerstudio/maven/1.0.0/maven-1.0.0.zip",
+            "sha256": "d09853d7d32d3eb9c38f157513c409f4a5a6638a12e055a4d0b50aefb788f457"
+          },
+          "task": {
+            "atomCode": "maven",
+            "name": "Maven",
+            "version": "1.0.0",
+            "description": "把 maven-plugin 变成一个原子：跑 mvn goals，退出码即构建结果。",
+            "execution": {
+              "packagePath": "maven.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp maven.jar MavenAtom"
+            },
+            "input": {
+              "goals": {
+                "label": "goals（如 clean verify）",
+                "type": "vuex-input",
+                "default": "verify"
+              },
+              "options": {
+                "label": "额外参数（如 -DskipTests -Pci）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "home": {
+                "label": "mvn 安装目录（留空则用 PATH 或 $MAVEN_HOME）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "failOnError": {
+                "label": "非零退出码视为构建失败",
+                "type": "checkbox",
+                "default": "true"
+              }
+            },
+            "output": {
+              "exitCode": {
+                "type": "string",
+                "description": "mvn 的退出码"
+              },
+              "durationMs": {
+                "type": "string",
+                "description": "耗时（毫秒）"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.3.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "Maven",
+            "summary": "把 maven-plugin 变成一个原子：跑 mvn goals，退出码即构建结果。",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-maven",
+            "license": "MIT",
+            "tags": [
+              "build-tool",
+              "official-port"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.3.0"
           }
         }
       ]
