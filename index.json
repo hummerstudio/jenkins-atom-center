@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-30T08:32:54Z",
+  "generatedAt": "2026-10-30T09:32:42Z",
   "atoms": [
     {
       "atomCode": "ansible-run",
@@ -353,7 +353,7 @@
       "publisher": "hummerstudio",
       "name": "Artifact size",
       "channels": {
-        "stable": "1.0.1"
+        "stable": "1.1.0"
       },
       "versions": [
         {
@@ -454,6 +454,93 @@
             "atomCode": "artifact-size",
             "name": "Artifact size",
             "version": "1.0.1",
+            "description": "Sums what the build produced, shows the largest files, and can gate on a budget.",
+            "execution": {
+              "packagePath": "artifact-size.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp artifact-size.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "pattern": {
+                "label": "产物 glob（逗号分隔）",
+                "type": "vuex-input",
+                "default": "**/*.jar, **/*.war, **/*.zip, **/*.tar.gz"
+              },
+              "outputDir": {
+                "label": "HTML 输出目录",
+                "type": "vuex-input",
+                "default": "out/artifact-size"
+              },
+              "maxMb": {
+                "label": "总大小上限（MB，0 = 不检查）",
+                "type": "vuex-input",
+                "default": "0"
+              },
+              "topN": {
+                "label": "表格显示前 N 个",
+                "type": "vuex-input-number",
+                "default": "20"
+              }
+            },
+            "output": {
+              "files": {
+                "type": "string",
+                "description": "文件数"
+              },
+              "totalBytes": {
+                "type": "string",
+                "description": "总字节"
+              },
+              "totalHuman": {
+                "type": "string",
+                "description": "人类可读总量"
+              },
+              "totalMb": {
+                "type": "string",
+                "description": "总 MB"
+              },
+              "largest": {
+                "type": "string",
+                "description": "最大文件"
+              },
+              "report": {
+                "type": "report",
+                "description": "构建页内嵌报告"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "Artifact size",
+            "summary": "Sums what the build produced, shows the largest files, and can gate on a budget.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-artifact-size",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "artifact-size"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        },
+        {
+          "version": "1.1.0",
+          "publishedAt": "2026-10-30T09:32:39Z",
+          "package": {
+            "file": "packages/hummerstudio/artifact-size/1.1.0/artifact-size-1.1.0.zip",
+            "sha256": "2de4e36dbd5a34cfbb5e2ed49a767118bd9d387af3a267b76adf1852ddfaa930"
+          },
+          "task": {
+            "atomCode": "artifact-size",
+            "name": "Artifact size",
+            "version": "1.1.0",
             "description": "Sums what the build produced, shows the largest files, and can gate on a budget.",
             "execution": {
               "packagePath": "artifact-size.jar",
@@ -2690,7 +2777,7 @@
       "publisher": "hummerstudio",
       "name": "Files tool",
       "channels": {
-        "stable": "1.1.0"
+        "stable": "1.2.0"
       },
       "versions": [
         {
@@ -2807,6 +2894,109 @@
             "atomCode": "files-tool",
             "name": "Files tool",
             "version": "1.1.0",
+            "description": "pipeline-utility-steps 的文件部分：touch / sha256 / find / readCSV。",
+            "execution": {
+              "packagePath": "files-tool.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp files-tool.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "operation": {
+                "label": "操作",
+                "type": "selector",
+                "default": "sha256",
+                "options": [
+                  "touch",
+                  "sha256",
+                  "find",
+                  "readcsv"
+                ]
+              },
+              "files": {
+                "label": "touch 的文件（逗号分隔）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "pattern": {
+                "label": "匹配的文件（glob，逗号分隔）",
+                "type": "vuex-input",
+                "default": "**/*.jar"
+              },
+              "output": {
+                "label": "sha256 写到哪个文件",
+                "type": "vuex-input",
+                "default": "checksums.sha256"
+              },
+              "file": {
+                "label": "readcsv 的 CSV 文件",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "column": {
+                "label": "readcsv 的列名（留空取第一列）",
+                "type": "vuex-input",
+                "default": ""
+              }
+            },
+            "output": {
+              "count": {
+                "type": "string",
+                "description": "数量"
+              },
+              "files": {
+                "type": "string",
+                "description": "匹配的文件"
+              },
+              "first": {
+                "type": "string",
+                "description": "第一个值"
+              },
+              "values": {
+                "type": "string",
+                "description": "CSV 列值"
+              },
+              "output": {
+                "type": "string",
+                "description": "sha256 输出文件"
+              },
+              "checksums": {
+                "type": "artifact",
+                "description": "归档的校验和文件"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "Files tool",
+            "summary": "pipeline-utility-steps 的文件部分：touch / sha256 / find / readCSV。",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-files-tool",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "pipeline-utility-steps"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        },
+        {
+          "version": "1.2.0",
+          "publishedAt": "2026-10-30T09:32:40Z",
+          "package": {
+            "file": "packages/hummerstudio/files-tool/1.2.0/files-tool-1.2.0.zip",
+            "sha256": "4cdbf328e2ebabfcf5cd37e35ddb60ed23087570512043afa8815ea03f9ba5cd"
+          },
+          "task": {
+            "atomCode": "files-tool",
+            "name": "Files tool",
+            "version": "1.2.0",
             "description": "pipeline-utility-steps 的文件部分：touch / sha256 / find / readCSV。",
             "execution": {
               "packagePath": "files-tool.jar",
@@ -4099,7 +4289,7 @@
       "publisher": "hummerstudio",
       "name": "JUnit test report",
       "channels": {
-        "stable": "1.2.0"
+        "stable": "1.3.0"
       },
       "versions": [
         {
@@ -4388,6 +4578,107 @@
             "atomCode": "junit-report",
             "name": "JUnit test report",
             "version": "1.2.0",
+            "description": "Summarises the JUnit XML a build produced and publishes it as an HTML report on the build page.",
+            "execution": {
+              "packagePath": "junit-report.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp junit-report.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "testResults": {
+                "label": "测试报告 XML（glob，逗号分隔）",
+                "type": "vuex-input",
+                "default": "**/surefire-reports/*.xml"
+              },
+              "label": {
+                "label": "报告名称",
+                "type": "vuex-input",
+                "default": "Test results"
+              },
+              "outputDir": {
+                "label": "生成的 HTML 放哪里",
+                "type": "vuex-input",
+                "default": "out/junit"
+              },
+              "allowEmptyResults": {
+                "label": "没有匹配到报告不算失败",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "skipMarkingUnstable": {
+                "label": "有失败用例时不把构建标为 UNSTABLE",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "failOnFailure": {
+                "label": "有失败用例就让这一步失败（比 UNSTABLE 更强）",
+                "type": "checkbox",
+                "default": "false"
+              }
+            },
+            "output": {
+              "total": {
+                "type": "string",
+                "description": "用例总数"
+              },
+              "failed": {
+                "type": "string",
+                "description": "失败数"
+              },
+              "errors": {
+                "type": "string",
+                "description": "错误数"
+              },
+              "skipped": {
+                "type": "string",
+                "description": "跳过数"
+              },
+              "durationSeconds": {
+                "type": "string",
+                "description": "用例耗时合计（秒）"
+              },
+              "report": {
+                "type": "report",
+                "description": "构建页内嵌的 HTML 报告"
+              },
+              "buildResult": {
+                "type": "string",
+                "description": "请求的构建结果（UNSTABLE 时由 runner 施加）"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "JUnit test report",
+            "summary": "把 junit 插件变成一个原子：解析 JUnit XML、汇总、发布 HTML 报告。",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-junit-report",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "junit"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        },
+        {
+          "version": "1.3.0",
+          "publishedAt": "2026-10-30T09:32:41Z",
+          "package": {
+            "file": "packages/hummerstudio/junit-report/1.3.0/junit-report-1.3.0.zip",
+            "sha256": "c4a3ef16e3c2e310cd7ddec33972423a37696d31a0e7cfaa1dcab60794be9606"
+          },
+          "task": {
+            "atomCode": "junit-report",
+            "name": "JUnit test report",
+            "version": "1.3.0",
             "description": "Summarises the JUnit XML a build produced and publishes it as an HTML report on the build page.",
             "execution": {
               "packagePath": "junit-report.jar",
@@ -7504,7 +7795,7 @@
       "publisher": "hummerstudio",
       "name": "Clean workspace",
       "channels": {
-        "stable": "1.1.0"
+        "stable": "1.2.0"
       },
       "versions": [
         {
@@ -7666,6 +7957,90 @@
             "atomCode": "ws-cleanup",
             "name": "Clean workspace",
             "version": "1.1.0",
+            "description": "Deletes what a glob matches inside the workspace and keeps what another glob protects (.git and .atoms are never touched).",
+            "execution": {
+              "packagePath": "ws-cleanup.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp ws-cleanup.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "patterns": {
+                "label": "要删的（逗号分隔 glob，相对 workspace，如 **/target, **/*.log）",
+                "type": "vuex-input",
+                "default": "**/target, **/build"
+              },
+              "keep": {
+                "label": "要保留的（逗号分隔 glob，优先级高于删除）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "dryRun": {
+                "label": "只统计不删除",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "deleteDirs": {
+                "label": "连同目录一起删除",
+                "type": "checkbox",
+                "default": "true"
+              },
+              "notFailBuild": {
+                "label": "删除失败不红构建（置为 UNSTABLE）",
+                "type": "checkbox",
+                "default": "false"
+              }
+            },
+            "output": {
+              "deletedFiles": {
+                "type": "string",
+                "description": "删除的文件数"
+              },
+              "deletedDirs": {
+                "type": "string",
+                "description": "顺带清掉的空目录数"
+              },
+              "freedBytes": {
+                "type": "string",
+                "description": "释放的字节数"
+              },
+              "freedHuman": {
+                "type": "string",
+                "description": "人类可读的释放量"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "Clean workspace",
+            "summary": "把 ws-cleanup 插件变成一个原子：按 glob 删除 workspace，keep 优先，.git/.atoms 永不触碰。",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-ws-cleanup",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "ws-cleanup"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        },
+        {
+          "version": "1.2.0",
+          "publishedAt": "2026-10-30T09:32:42Z",
+          "package": {
+            "file": "packages/hummerstudio/ws-cleanup/1.2.0/ws-cleanup-1.2.0.zip",
+            "sha256": "031ee8bdbf87e7ed034e40e7eccadfd58a1ed9a43b16b02ce994d89b86f1d4db"
+          },
+          "task": {
+            "atomCode": "ws-cleanup",
+            "name": "Clean workspace",
+            "version": "1.2.0",
             "description": "Deletes what a glob matches inside the workspace and keeps what another glob protects (.git and .atoms are never touched).",
             "execution": {
               "packagePath": "ws-cleanup.jar",
