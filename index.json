@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-30T03:51:27Z",
+  "generatedAt": "2026-10-30T06:52:28Z",
   "atoms": [
     {
       "atomCode": "ansible-run",
@@ -1061,7 +1061,7 @@
       "publisher": "hummerstudio",
       "name": "CMake build",
       "channels": {
-        "stable": "1.0.0"
+        "stable": "1.2.0"
       },
       "versions": [
         {
@@ -1150,6 +1150,148 @@
               "build": {
                 "type": "artifact",
                 "description": "归档的构建目录"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "CMake build",
+            "summary": "Configures with cmake and builds a target, the same shape as the maven and gradle atoms.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-cmake-build",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "cmake-build"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        },
+        {
+          "version": "1.2.0",
+          "publishedAt": "2026-10-30T06:52:27Z",
+          "package": {
+            "file": "packages/hummerstudio/cmake-build/1.2.0/cmake-build-1.2.0.zip",
+            "sha256": "a36c7adbec1eb4c8a9581a05f5eb9f8209b6babcdd8d54d686e523cd51082d5a"
+          },
+          "task": {
+            "atomCode": "cmake-build",
+            "name": "CMake build",
+            "version": "1.2.0",
+            "description": "Configures with cmake and builds a target, the same shape as the maven and gradle atoms.",
+            "execution": {
+              "packagePath": "cmake-build.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp cmake-build.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "source": {
+                "label": "源码目录",
+                "type": "vuex-input",
+                "default": "."
+              },
+              "buildDir": {
+                "label": "构建目录",
+                "type": "vuex-input",
+                "default": "build"
+              },
+              "generator": {
+                "label": "生成器（如 Ninja）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "buildType": {
+                "label": "构建类型",
+                "type": "selector",
+                "default": "Release",
+                "options": [
+                  "Release",
+                  "Debug",
+                  "RelWithDebInfo",
+                  "MinSizeRel"
+                ]
+              },
+              "target": {
+                "label": "目标（留空 = all）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "configureArgs": {
+                "label": "configure 额外参数",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "buildArgs": {
+                "label": "build 额外参数",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "jobs": {
+                "label": "并行度（0 = 工具默认）",
+                "type": "vuex-input-number",
+                "default": "0"
+              },
+              "clean": {
+                "label": "先删构建目录",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "runTests": {
+                "label": "构建后跑 ctest",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "testArgs": {
+                "label": "ctest 额外参数（如 --output-junit reports/ctest.xml）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "failOnTestFailure": {
+                "label": "有测试失败就让这一步失败",
+                "type": "checkbox",
+                "default": "true"
+              },
+              "outputJunit": {
+                "label": "同时写出 JUnit 报告（留空则只看 testArgs）",
+                "type": "vuex-input",
+                "default": ""
+              }
+            },
+            "output": {
+              "buildDir": {
+                "type": "string",
+                "description": "构建目录"
+              },
+              "buildType": {
+                "type": "string",
+                "description": "构建类型"
+              },
+              "binaries": {
+                "type": "string",
+                "description": "产物数"
+              },
+              "build": {
+                "type": "artifact",
+                "description": "归档的构建目录"
+              },
+              "testsPassed": {
+                "type": "string",
+                "description": "通过的测试数"
+              },
+              "testsFailed": {
+                "type": "string",
+                "description": "失败的测试数"
+              },
+              "junitReport": {
+                "type": "string",
+                "description": "JUnit 报告的完整路径"
               }
             },
             "x-jenkins": {
@@ -2548,7 +2690,7 @@
       "publisher": "hummerstudio",
       "name": "Files tool",
       "channels": {
-        "stable": "1.0.0"
+        "stable": "1.1.0"
       },
       "versions": [
         {
@@ -2562,6 +2704,109 @@
             "atomCode": "files-tool",
             "name": "Files tool",
             "version": "1.0.0",
+            "description": "pipeline-utility-steps 的文件部分：touch / sha256 / find / readCSV。",
+            "execution": {
+              "packagePath": "files-tool.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp files-tool.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "operation": {
+                "label": "操作",
+                "type": "selector",
+                "default": "sha256",
+                "options": [
+                  "touch",
+                  "sha256",
+                  "find",
+                  "readcsv"
+                ]
+              },
+              "files": {
+                "label": "touch 的文件（逗号分隔）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "pattern": {
+                "label": "匹配的文件（glob，逗号分隔）",
+                "type": "vuex-input",
+                "default": "**/*.jar"
+              },
+              "output": {
+                "label": "sha256 写到哪个文件",
+                "type": "vuex-input",
+                "default": "checksums.sha256"
+              },
+              "file": {
+                "label": "readcsv 的 CSV 文件",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "column": {
+                "label": "readcsv 的列名（留空取第一列）",
+                "type": "vuex-input",
+                "default": ""
+              }
+            },
+            "output": {
+              "count": {
+                "type": "string",
+                "description": "数量"
+              },
+              "files": {
+                "type": "string",
+                "description": "匹配的文件"
+              },
+              "first": {
+                "type": "string",
+                "description": "第一个值"
+              },
+              "values": {
+                "type": "string",
+                "description": "CSV 列值"
+              },
+              "output": {
+                "type": "string",
+                "description": "sha256 输出文件"
+              },
+              "checksums": {
+                "type": "artifact",
+                "description": "归档的校验和文件"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "Files tool",
+            "summary": "pipeline-utility-steps 的文件部分：touch / sha256 / find / readCSV。",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-files-tool",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "pipeline-utility-steps"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        },
+        {
+          "version": "1.1.0",
+          "publishedAt": "2026-10-30T06:52:26Z",
+          "package": {
+            "file": "packages/hummerstudio/files-tool/1.1.0/files-tool-1.1.0.zip",
+            "sha256": "bf52093a87d7b1c10a5454167518703d80d9e9ae0964017112d95723a6e47ec4"
+          },
+          "task": {
+            "atomCode": "files-tool",
+            "name": "Files tool",
+            "version": "1.1.0",
             "description": "pipeline-utility-steps 的文件部分：touch / sha256 / find / readCSV。",
             "execution": {
               "packagePath": "files-tool.jar",
@@ -3725,7 +3970,7 @@
       "publisher": "hummerstudio",
       "name": "JUnit test report",
       "channels": {
-        "stable": "1.1.0"
+        "stable": "1.2.0"
       },
       "versions": [
         {
@@ -3913,6 +4158,107 @@
             "atomCode": "junit-report",
             "name": "JUnit test report",
             "version": "1.1.0",
+            "description": "Summarises the JUnit XML a build produced and publishes it as an HTML report on the build page.",
+            "execution": {
+              "packagePath": "junit-report.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp junit-report.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "testResults": {
+                "label": "测试报告 XML（glob，逗号分隔）",
+                "type": "vuex-input",
+                "default": "**/surefire-reports/*.xml"
+              },
+              "label": {
+                "label": "报告名称",
+                "type": "vuex-input",
+                "default": "Test results"
+              },
+              "outputDir": {
+                "label": "生成的 HTML 放哪里",
+                "type": "vuex-input",
+                "default": "out/junit"
+              },
+              "allowEmptyResults": {
+                "label": "没有匹配到报告不算失败",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "skipMarkingUnstable": {
+                "label": "有失败用例时不把构建标为 UNSTABLE",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "failOnFailure": {
+                "label": "有失败用例就让这一步失败（比 UNSTABLE 更强）",
+                "type": "checkbox",
+                "default": "false"
+              }
+            },
+            "output": {
+              "total": {
+                "type": "string",
+                "description": "用例总数"
+              },
+              "failed": {
+                "type": "string",
+                "description": "失败数"
+              },
+              "errors": {
+                "type": "string",
+                "description": "错误数"
+              },
+              "skipped": {
+                "type": "string",
+                "description": "跳过数"
+              },
+              "durationSeconds": {
+                "type": "string",
+                "description": "用例耗时合计（秒）"
+              },
+              "report": {
+                "type": "report",
+                "description": "构建页内嵌的 HTML 报告"
+              },
+              "buildResult": {
+                "type": "string",
+                "description": "请求的构建结果（UNSTABLE 时由 runner 施加）"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "JUnit test report",
+            "summary": "把 junit 插件变成一个原子：解析 JUnit XML、汇总、发布 HTML 报告。",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-junit-report",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "junit"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        },
+        {
+          "version": "1.2.0",
+          "publishedAt": "2026-10-30T06:52:23Z",
+          "package": {
+            "file": "packages/hummerstudio/junit-report/1.2.0/junit-report-1.2.0.zip",
+            "sha256": "b981c79aa117171507fe6c2db24a62be5730a1221dc91030b129debe779c4032"
+          },
+          "task": {
+            "atomCode": "junit-report",
+            "name": "JUnit test report",
+            "version": "1.2.0",
             "description": "Summarises the JUnit XML a build produced and publishes it as an HTML report on the build page.",
             "execution": {
               "packagePath": "junit-report.jar",
@@ -4870,7 +5216,7 @@
       "publisher": "hummerstudio",
       "name": "Node.js",
       "channels": {
-        "stable": "1.0.2"
+        "stable": "1.1.0"
       },
       "versions": [
         {
@@ -5005,6 +5351,93 @@
               "PATH": {
                 "type": "string",
                 "description": "拼好的 PATH"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "Node.js",
+            "summary": "Puts a Node installation on PATH for the following steps and optionally runs one command.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-node",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "node"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        },
+        {
+          "version": "1.1.0",
+          "publishedAt": "2026-10-30T06:52:24Z",
+          "package": {
+            "file": "packages/hummerstudio/node/1.1.0/node-1.1.0.zip",
+            "sha256": "ad847d7fb09ceb9c36a97498bc8e7f70cb9ccb1fa04150072430b25b877e8f1e"
+          },
+          "task": {
+            "atomCode": "node",
+            "name": "Node.js",
+            "version": "1.1.0",
+            "description": "Puts a Node installation on PATH for the following steps and optionally runs one command.",
+            "execution": {
+              "packagePath": "node.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp node.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "nodeHome": {
+                "label": "Node 安装目录（留空从 PATH 找）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "command": {
+                "label": "要执行的命令（留空只准备环境）",
+                "type": "textarea",
+                "default": ""
+              },
+              "prependPath": {
+                "label": "把 node 目录加到 PATH 前面",
+                "type": "checkbox",
+                "default": "true"
+              },
+              "failOnCommandError": {
+                "label": "命令失败就让这一步失败",
+                "type": "checkbox",
+                "default": "true"
+              }
+            },
+            "output": {
+              "NODE_HOME": {
+                "type": "string",
+                "description": "Node 安装目录"
+              },
+              "NODE_VERSION": {
+                "type": "string",
+                "description": "node 版本"
+              },
+              "nodeVersion": {
+                "type": "string",
+                "description": "node 版本（小写别名）"
+              },
+              "npmVersion": {
+                "type": "string",
+                "description": "npm 版本"
+              },
+              "PATH": {
+                "type": "string",
+                "description": "拼好的 PATH"
+              },
+              "exitCode": {
+                "type": "string",
+                "description": "命令的退出码"
               }
             },
             "x-jenkins": {
@@ -5314,6 +5747,119 @@
             "summary": "python -m build 出 sdist/wheel，可选 twine 上传（凭据走环境变量）。",
             "author": "hummerstudio",
             "homepage": "https://github.com/hummerstudio/jenkins-atom-python-build",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "python"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        }
+      ]
+    },
+    {
+      "atomCode": "python-env",
+      "publisher": "hummerstudio",
+      "name": "Python environment",
+      "channels": {
+        "stable": "1.0.0"
+      },
+      "versions": [
+        {
+          "version": "1.0.0",
+          "publishedAt": "2026-10-30T06:52:28Z",
+          "package": {
+            "file": "packages/hummerstudio/python-env/1.0.0/python-env-1.0.0.zip",
+            "sha256": "80abf9ccedc20e5afce67e7e8cd6ce0e3ab3a01ac31f9f009ecb4cb942c0b84e"
+          },
+          "task": {
+            "atomCode": "python-env",
+            "name": "Python environment",
+            "version": "1.0.0",
+            "description": "Creates a virtualenv, installs what the project needs, and runs one command in it.",
+            "execution": {
+              "packagePath": "python-env.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp python-env.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "python": {
+                "label": "基础解释器（留空用 PATH 里的 python3）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "venv": {
+                "label": "虚拟环境目录",
+                "type": "vuex-input",
+                "default": ".venv"
+              },
+              "requirements": {
+                "label": "requirements.txt（可选）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "packages": {
+                "label": "额外安装的包（逗号分隔）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "indexUrl": {
+                "label": "自定义 pip 源",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "upgradePip": {
+                "label": "先升级 pip",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "command": {
+                "label": "在虚拟环境里执行的命令（留空只准备环境）",
+                "type": "textarea",
+                "default": ""
+              },
+              "failOnCommandError": {
+                "label": "命令失败就让这一步失败",
+                "type": "checkbox",
+                "default": "true"
+              }
+            },
+            "output": {
+              "VIRTUAL_ENV": {
+                "type": "string",
+                "description": "虚拟环境目录（同名环境变量）"
+              },
+              "PATH": {
+                "type": "string",
+                "description": "把虚拟环境的 bin 放到最前面的 PATH"
+              },
+              "pythonVersion": {
+                "type": "string",
+                "description": "解释器版本"
+              },
+              "pipVersion": {
+                "type": "string",
+                "description": "pip 版本"
+              },
+              "exitCode": {
+                "type": "string",
+                "description": "命令退出码"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "Python environment",
+            "summary": "Creates a virtualenv, installs requirements, runs a command in it.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-python-env",
             "license": "MIT",
             "tags": [
               "official-port",
