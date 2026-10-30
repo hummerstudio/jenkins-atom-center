@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-29T13:49:26Z",
+  "generatedAt": "2026-10-30T01:58:39Z",
   "atoms": [
     {
       "atomCode": "ant",
@@ -3167,7 +3167,7 @@
       "publisher": "hummerstudio",
       "name": "JUnit test report",
       "channels": {
-        "stable": "1.0.1"
+        "stable": "1.1.0"
       },
       "versions": [
         {
@@ -3320,6 +3320,107 @@
               "report": {
                 "type": "report",
                 "description": "构建页内嵌的 HTML 报告"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "JUnit test report",
+            "summary": "把 junit 插件变成一个原子：解析 JUnit XML、汇总、发布 HTML 报告。",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-junit-report",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "junit"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        },
+        {
+          "version": "1.1.0",
+          "publishedAt": "2026-10-30T01:58:17Z",
+          "package": {
+            "file": "packages/hummerstudio/junit-report/1.1.0/junit-report-1.1.0.zip",
+            "sha256": "1983ced45b3bbd1d459e684ad87806e1340b4bca71042fb4f7fc7238b790380f"
+          },
+          "task": {
+            "atomCode": "junit-report",
+            "name": "JUnit test report",
+            "version": "1.1.0",
+            "description": "Summarises the JUnit XML a build produced and publishes it as an HTML report on the build page.",
+            "execution": {
+              "packagePath": "junit-report.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp junit-report.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "testResults": {
+                "label": "测试报告 XML（glob，逗号分隔）",
+                "type": "vuex-input",
+                "default": "**/surefire-reports/*.xml"
+              },
+              "label": {
+                "label": "报告名称",
+                "type": "vuex-input",
+                "default": "Test results"
+              },
+              "outputDir": {
+                "label": "生成的 HTML 放哪里",
+                "type": "vuex-input",
+                "default": "out/junit"
+              },
+              "allowEmptyResults": {
+                "label": "没有匹配到报告不算失败",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "skipMarkingUnstable": {
+                "label": "有失败用例时不把构建标为 UNSTABLE",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "failOnFailure": {
+                "label": "有失败用例就让这一步失败（比 UNSTABLE 更强）",
+                "type": "checkbox",
+                "default": "false"
+              }
+            },
+            "output": {
+              "total": {
+                "type": "string",
+                "description": "用例总数"
+              },
+              "failed": {
+                "type": "string",
+                "description": "失败数"
+              },
+              "errors": {
+                "type": "string",
+                "description": "错误数"
+              },
+              "skipped": {
+                "type": "string",
+                "description": "跳过数"
+              },
+              "durationSeconds": {
+                "type": "string",
+                "description": "用例耗时合计（秒）"
+              },
+              "report": {
+                "type": "report",
+                "description": "构建页内嵌的 HTML 报告"
+              },
+              "buildResult": {
+                "type": "string",
+                "description": "请求的构建结果（UNSTABLE 时由 runner 施加）"
               }
             },
             "x-jenkins": {
@@ -4969,7 +5070,7 @@
       "publisher": "hummerstudio",
       "name": "TAP / CTest report",
       "channels": {
-        "stable": "1.0.0"
+        "stable": "1.1.0"
       },
       "versions": [
         {
@@ -5007,6 +5108,94 @@
               },
               "failOnFailure": {
                 "label": "有失败用例就让构建失败",
+                "type": "checkbox",
+                "default": "false"
+              }
+            },
+            "output": {
+              "total": {
+                "type": "string",
+                "description": "用例数"
+              },
+              "passed": {
+                "type": "string",
+                "description": "通过"
+              },
+              "failed": {
+                "type": "string",
+                "description": "失败"
+              },
+              "skipped": {
+                "type": "string",
+                "description": "跳过"
+              },
+              "report": {
+                "type": "report",
+                "description": "构建页内嵌报告"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "TAP / CTest report",
+            "summary": "Reads TAP and CTest XML, counts pass/fail/skip and publishes the list.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-tap-report",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "tap-report"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        },
+        {
+          "version": "1.1.0",
+          "publishedAt": "2026-10-30T01:58:39Z",
+          "package": {
+            "file": "packages/hummerstudio/tap-report/1.1.0/tap-report-1.1.0.zip",
+            "sha256": "007f5cd56b7a4103de39d765123e335428faa5d127c88f0cefcfaa7a7b34d14e"
+          },
+          "task": {
+            "atomCode": "tap-report",
+            "name": "TAP / CTest report",
+            "version": "1.1.0",
+            "description": "Reads TAP and CTest XML, counts pass/fail/skip and publishes the list.",
+            "execution": {
+              "packagePath": "tap-report.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp tap-report.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "pattern": {
+                "label": "报告文件 glob",
+                "type": "vuex-input",
+                "default": "**/*.tap, **/Testing/**/Test.xml, **/test-results/*.tap"
+              },
+              "label": {
+                "label": "报告名称",
+                "type": "vuex-input",
+                "default": "Test results (TAP)"
+              },
+              "outputDir": {
+                "label": "HTML 输出目录",
+                "type": "vuex-input",
+                "default": "out/tap"
+              },
+              "failOnFailure": {
+                "label": "有失败用例就让构建失败",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "skipMarkingUnstable": {
+                "label": "有失败用例时不把构建标为 UNSTABLE",
                 "type": "checkbox",
                 "default": "false"
               }
@@ -5166,7 +5355,7 @@
       "publisher": "hummerstudio",
       "name": "Find text in log",
       "channels": {
-        "stable": "1.0.2"
+        "stable": "1.1.0"
       },
       "versions": [
         {
@@ -5414,6 +5603,94 @@
           "requires": {
             "runner": ">=0.4.0"
           }
+        },
+        {
+          "version": "1.1.0",
+          "publishedAt": "2026-10-30T01:58:24Z",
+          "package": {
+            "file": "packages/hummerstudio/text-finder/1.1.0/text-finder-1.1.0.zip",
+            "sha256": "b9ad4eed22322cbcb2a10c6509f4c1f8019fbd559d9254e703ce49cb959048f3"
+          },
+          "task": {
+            "atomCode": "text-finder",
+            "name": "Find text in log",
+            "version": "1.1.0",
+            "description": "Searches the build log or workspace files and can fail the build on a match or on a missing match.",
+            "execution": {
+              "packagePath": "text-finder.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp text-finder.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "regexp": {
+                "label": "正则（逗号分隔多个）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "useBuildLog": {
+                "label": "搜索构建日志",
+                "type": "checkbox",
+                "default": "true"
+              },
+              "fileSet": {
+                "label": "此外搜索这些文件（glob，逗号分隔）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "buildResult": {
+                "label": "命中时把构建置为",
+                "type": "selector",
+                "default": "FAILURE",
+                "options": [
+                  "FAILURE",
+                  "UNSTABLE",
+                  "SUCCESS"
+                ]
+              },
+              "failWhenMissing": {
+                "label": "没命中就让这一步失败",
+                "type": "checkbox",
+                "default": "false"
+              }
+            },
+            "output": {
+              "matches": {
+                "type": "string",
+                "description": "命中行数"
+              },
+              "linesScanned": {
+                "type": "string",
+                "description": "扫描行数"
+              },
+              "firstMatch": {
+                "type": "string",
+                "description": "第一条命中"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              },
+              "context": [
+                "log"
+              ]
+            }
+          },
+          "meta": {
+            "name": "Find text in log",
+            "summary": "Searches the build log or workspace files and can fail the build on a match or on a missing match.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-text-finder",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "text-finder"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
         }
       ]
     },
@@ -5422,7 +5699,7 @@
       "publisher": "hummerstudio",
       "name": "Clean workspace",
       "channels": {
-        "stable": "1.0.1"
+        "stable": "1.1.0"
       },
       "versions": [
         {
@@ -5529,6 +5806,90 @@
               },
               "dryRun": {
                 "label": "只统计不删除",
+                "type": "checkbox",
+                "default": "false"
+              }
+            },
+            "output": {
+              "deletedFiles": {
+                "type": "string",
+                "description": "删除的文件数"
+              },
+              "deletedDirs": {
+                "type": "string",
+                "description": "顺带清掉的空目录数"
+              },
+              "freedBytes": {
+                "type": "string",
+                "description": "释放的字节数"
+              },
+              "freedHuman": {
+                "type": "string",
+                "description": "人类可读的释放量"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "Clean workspace",
+            "summary": "把 ws-cleanup 插件变成一个原子：按 glob 删除 workspace，keep 优先，.git/.atoms 永不触碰。",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-ws-cleanup",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "ws-cleanup"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        },
+        {
+          "version": "1.1.0",
+          "publishedAt": "2026-10-30T01:58:31Z",
+          "package": {
+            "file": "packages/hummerstudio/ws-cleanup/1.1.0/ws-cleanup-1.1.0.zip",
+            "sha256": "2b01f769be86ba46e7ce97c77f7172b941adb88d1fadf3d902f5475cae5689e7"
+          },
+          "task": {
+            "atomCode": "ws-cleanup",
+            "name": "Clean workspace",
+            "version": "1.1.0",
+            "description": "Deletes what a glob matches inside the workspace and keeps what another glob protects (.git and .atoms are never touched).",
+            "execution": {
+              "packagePath": "ws-cleanup.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp ws-cleanup.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "patterns": {
+                "label": "要删的（逗号分隔 glob，相对 workspace，如 **/target, **/*.log）",
+                "type": "vuex-input",
+                "default": "**/target, **/build"
+              },
+              "keep": {
+                "label": "要保留的（逗号分隔 glob，优先级高于删除）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "dryRun": {
+                "label": "只统计不删除",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "deleteDirs": {
+                "label": "连同目录一起删除",
+                "type": "checkbox",
+                "default": "true"
+              },
+              "notFailBuild": {
+                "label": "删除失败不红构建（置为 UNSTABLE）",
                 "type": "checkbox",
                 "default": "false"
               }
