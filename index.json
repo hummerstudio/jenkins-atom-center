@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-31T23:31:39Z",
+  "generatedAt": "2026-10-31T23:36:16Z",
   "atoms": [
     {
       "atomCode": "allure-report",
@@ -9844,6 +9844,149 @@
             "tags": [
               "official-port",
               "s3-upload"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        }
+      ]
+    },
+    {
+      "atomCode": "sbom-gate",
+      "publisher": "hummerstudio",
+      "name": "SBOM gate",
+      "channels": {
+        "stable": "1.0.0"
+      },
+      "versions": [
+        {
+          "version": "1.0.0",
+          "publishedAt": "2026-10-31T23:36:16Z",
+          "package": {
+            "file": "packages/hummerstudio/sbom-gate/1.0.0/sbom-gate-1.0.0.zip",
+            "sha256": "b58f575740f3a0c27b1cb9aa7b94a5391337976a13bbca76132c1dc78bf3b3c5"
+          },
+          "task": {
+            "atomCode": "sbom-gate",
+            "name": "SBOM gate",
+            "version": "1.0.0",
+            "description": "Uploads an SBOM to Dependency-Track and gates the build on the findings it reports.",
+            "execution": {
+              "packagePath": "sbom-gate.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp sbom-gate.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "dtUrl": {
+                "label": "Dependency-Track 地址",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "apiKey": {
+                "label": "API Key",
+                "type": "password",
+                "default": ""
+              },
+              "projectUuid": {
+                "label": "项目 UUID（与 projectName 二选一）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "projectName": {
+                "label": "项目名",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "projectVersion": {
+                "label": "项目版本",
+                "type": "vuex-input",
+                "default": "latest"
+              },
+              "bomFile": {
+                "label": "SBOM 文件（glob）",
+                "type": "vuex-input",
+                "default": "**/bom.json"
+              },
+              "autoCreate": {
+                "label": "项目不存在时自动创建",
+                "type": "checkbox",
+                "default": "true"
+              },
+              "maxCritical": {
+                "label": "允许的 critical 数（-1 不卡）",
+                "type": "vuex-input",
+                "default": "-1"
+              },
+              "maxHigh": {
+                "label": "允许的 high 数（-1 不卡）",
+                "type": "vuex-input",
+                "default": "-1"
+              },
+              "maxMedium": {
+                "label": "允许的 medium 数（-1 不卡）",
+                "type": "vuex-input",
+                "default": "-1"
+              },
+              "maxLow": {
+                "label": "允许的 low 数（-1 不卡）",
+                "type": "vuex-input",
+                "default": "-1"
+              },
+              "waitSeconds": {
+                "label": "等待分析完成的上限（秒）",
+                "type": "vuex-input",
+                "default": "120"
+              },
+              "timeoutSeconds": {
+                "label": "单次请求超时（秒）",
+                "type": "vuex-input",
+                "default": "60"
+              }
+            },
+            "output": {
+              "projectUuid": {
+                "type": "string",
+                "description": "项目 UUID"
+              },
+              "critical": {
+                "type": "string",
+                "description": "critical 漏洞数"
+              },
+              "high": {
+                "type": "string",
+                "description": "high 漏洞数"
+              },
+              "medium": {
+                "type": "string",
+                "description": "medium 漏洞数"
+              },
+              "low": {
+                "type": "string",
+                "description": "low 漏洞数"
+              },
+              "bom": {
+                "type": "string",
+                "description": "上传的 SBOM 文件"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "SBOM gate",
+            "summary": "Uploads an SBOM to Dependency-Track and gates the build on the findings it reports.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-sbom-gate",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "security",
+              "sbom"
             ]
           },
           "requires": {

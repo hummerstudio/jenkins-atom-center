@@ -1,0 +1,12 @@
+{
+  "name": "SBOM gate",
+  "summary": "Uploads an SBOM to Dependency-Track and gates the build on the findings it reports.",
+  "author": "hummerstudio",
+  "license": "MIT",
+  "tags": [
+    "official-port",
+    "security",
+    "sbom"
+  ],
+  "homepage": "https://github.com/hummerstudio/jenkins-atom-sbom-gate"
+}
