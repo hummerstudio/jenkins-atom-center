@@ -1,0 +1,12 @@
+{
+  "name": "Upload to Google Cloud Storage",
+  "summary": "Uploads build outputs to a GCS bucket using a service account.",
+  "author": "hummerstudio",
+  "license": "MIT",
+  "tags": [
+    "official-port",
+    "gcp",
+    "storage"
+  ],
+  "homepage": "https://github.com/hummerstudio/jenkins-atom-gcs-upload"
+}

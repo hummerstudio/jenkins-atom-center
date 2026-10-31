@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-31T03:47:20Z",
+  "generatedAt": "2026-10-31T04:25:25Z",
   "atoms": [
     {
       "atomCode": "ansible-run",
@@ -3709,6 +3709,134 @@
             "tags": [
               "official-port",
               "pipeline-utility-steps"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        }
+      ]
+    },
+    {
+      "atomCode": "gcs-upload",
+      "publisher": "hummerstudio",
+      "name": "Upload to Google Cloud Storage",
+      "channels": {
+        "stable": "1.0.0"
+      },
+      "versions": [
+        {
+          "version": "1.0.0",
+          "publishedAt": "2026-10-31T04:25:25Z",
+          "package": {
+            "file": "packages/hummerstudio/gcs-upload/1.0.0/gcs-upload-1.0.0.zip",
+            "sha256": "26efa59b8842e119ace60cacf536c6789ddcab8e7837a615af2c7b9e61ae3e20"
+          },
+          "task": {
+            "atomCode": "gcs-upload",
+            "name": "Upload to Google Cloud Storage",
+            "version": "1.0.0",
+            "description": "Uploads build outputs to a GCS bucket using a service account.",
+            "execution": {
+              "packagePath": "gcs-upload.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp gcs-upload.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "bucket": {
+                "label": "Bucket",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "clientEmail": {
+                "label": "服务账号邮箱",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "privateKey": {
+                "label": "服务账号私钥（PEM）",
+                "type": "password",
+                "default": ""
+              },
+              "files": {
+                "label": "要上传的文件（逗号分隔的 glob）",
+                "type": "vuex-input",
+                "default": "**/*.jar"
+              },
+              "objectPrefix": {
+                "label": "对象前缀（留空则保留相对路径）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "contentType": {
+                "label": "Content-Type（留空按扩展名）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "tokenUrl": {
+                "label": "token 端点（测试时可指向本地）",
+                "type": "vuex-input",
+                "default": "https://oauth2.googleapis.com/token"
+              },
+              "uploadUrl": {
+                "label": "存储端点",
+                "type": "vuex-input",
+                "default": "https://storage.googleapis.com"
+              },
+              "timeoutSeconds": {
+                "label": "超时（秒）",
+                "type": "vuex-input",
+                "default": "120"
+              },
+              "failOnError": {
+                "label": "上传失败就让这一步失败",
+                "type": "checkbox",
+                "default": "true"
+              }
+            },
+            "output": {
+              "uploaded": {
+                "type": "string",
+                "description": "成功上传的对象数"
+              },
+              "failed": {
+                "type": "string",
+                "description": "失败数（failOnError=false 时才可能非零）"
+              },
+              "bytes": {
+                "type": "string",
+                "description": "上传字节数"
+              },
+              "bucket": {
+                "type": "string",
+                "description": "bucket 名"
+              },
+              "first": {
+                "type": "string",
+                "description": "第一个对象（selfLink 或 gs:// 路径）"
+              },
+              "urls": {
+                "type": "string",
+                "description": "全部对象（最多 20 行）"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "Upload to Google Cloud Storage",
+            "summary": "Uploads build outputs to a GCS bucket using a service account.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-gcs-upload",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "gcp",
+              "storage"
             ]
           },
           "requires": {
