@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-30T10:28:20Z",
+  "generatedAt": "2026-10-31T02:52:27Z",
   "atoms": [
     {
       "atomCode": "ansible-run",
@@ -963,6 +963,135 @@
           },
           "requires": {
             "runner": ">=0.3.0"
+          }
+        }
+      ]
+    },
+    {
+      "atomCode": "chat-notify",
+      "publisher": "hummerstudio",
+      "name": "Chat notification",
+      "channels": {
+        "stable": "1.0.0"
+      },
+      "versions": [
+        {
+          "version": "1.0.0",
+          "publishedAt": "2026-10-31T02:52:26Z",
+          "package": {
+            "file": "packages/hummerstudio/chat-notify/1.0.0/chat-notify-1.0.0.zip",
+            "sha256": "bc937bf094fc43c197f1b9798dfde8ff6ca95d4cd0adbef6b5b47cddc2fecb83"
+          },
+          "task": {
+            "atomCode": "chat-notify",
+            "name": "Chat notification",
+            "version": "1.0.0",
+            "description": "Posts one message to Slack, Teams, Google Chat, DingTalk, WeCom, Discord, Mattermost or Rocket.Chat.",
+            "execution": {
+              "packagePath": "chat-notify.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp chat-notify.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "provider": {
+                "label": "服务",
+                "type": "vuex-input",
+                "default": "slack"
+              },
+              "webhookUrl": {
+                "label": "Webhook 地址",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "accessToken": {
+                "label": "钉钉 access_token（webhookUrl 留空时使用）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "secret": {
+                "label": "钉钉加签密钥",
+                "type": "password",
+                "default": ""
+              },
+              "text": {
+                "label": "消息内容",
+                "type": "textarea",
+                "default": ""
+              },
+              "channel": {
+                "label": "频道（Slack 可选）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "username": {
+                "label": "显示名（Discord 可选）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "avatarUrl": {
+                "label": "头像地址（Discord 可选）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "markdown": {
+                "label": "企业微信用 markdown 消息",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "timeoutSeconds": {
+                "label": "超时（秒）",
+                "type": "vuex-input",
+                "default": "30"
+              },
+              "failOnError": {
+                "label": "发送失败就让这一步失败",
+                "type": "checkbox",
+                "default": "true"
+              }
+            },
+            "output": {
+              "provider": {
+                "type": "string",
+                "description": "实际使用的服务"
+              },
+              "statusCode": {
+                "type": "string",
+                "description": "HTTP 状态码"
+              },
+              "accepted": {
+                "type": "string",
+                "description": "服务是否接受了消息"
+              },
+              "response": {
+                "type": "string",
+                "description": "响应体摘要"
+              },
+              "payloadBytes": {
+                "type": "string",
+                "description": "报文长度"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "Chat notification",
+            "summary": "Posts one message to Slack, Teams, Google Chat, DingTalk, WeCom, Discord, Mattermost or Rocket.Chat.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-chat-notify",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "notification",
+              "chat"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
           }
         }
       ]
@@ -7435,6 +7564,126 @@
             "tags": [
               "official-port",
               "task-scanner"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        }
+      ]
+    },
+    {
+      "atomCode": "telegram-notify",
+      "publisher": "hummerstudio",
+      "name": "Telegram notification",
+      "channels": {
+        "stable": "1.0.0"
+      },
+      "versions": [
+        {
+          "version": "1.0.0",
+          "publishedAt": "2026-10-31T02:52:27Z",
+          "package": {
+            "file": "packages/hummerstudio/telegram-notify/1.0.0/telegram-notify-1.0.0.zip",
+            "sha256": "5d61bed40f295a929456799435248d3d906da98c65a6e407dda031b02d628d39"
+          },
+          "task": {
+            "atomCode": "telegram-notify",
+            "name": "Telegram notification",
+            "version": "1.0.0",
+            "description": "Sends a message through a Telegram bot and reports the message id.",
+            "execution": {
+              "packagePath": "telegram-notify.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp telegram-notify.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "token": {
+                "label": "Bot Token",
+                "type": "password",
+                "default": ""
+              },
+              "chatId": {
+                "label": "Chat ID",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "text": {
+                "label": "消息内容",
+                "type": "textarea",
+                "default": ""
+              },
+              "threadId": {
+                "label": "话题 ID（群组话题可选）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "parseMode": {
+                "label": "解析模式（MarkdownV2 / HTML，留空为纯文本）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "silent": {
+                "label": "静默发送",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "disablePreview": {
+                "label": "不展开链接预览",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "apiBase": {
+                "label": "API 地址",
+                "type": "vuex-input",
+                "default": "https://api.telegram.org"
+              },
+              "timeoutSeconds": {
+                "label": "超时（秒）",
+                "type": "vuex-input",
+                "default": "30"
+              },
+              "failOnError": {
+                "label": "发送失败就让这一步失败",
+                "type": "checkbox",
+                "default": "true"
+              }
+            },
+            "output": {
+              "messageId": {
+                "type": "string",
+                "description": "Telegram 返回的消息 id"
+              },
+              "statusCode": {
+                "type": "string",
+                "description": "HTTP 状态码"
+              },
+              "sent": {
+                "type": "string",
+                "description": "是否真的发出去了"
+              },
+              "response": {
+                "type": "string",
+                "description": "响应体摘要"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "Telegram notification",
+            "summary": "Sends a message through a Telegram bot and reports the message id.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-telegram-notify",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "notification",
+              "telegram"
             ]
           },
           "requires": {
