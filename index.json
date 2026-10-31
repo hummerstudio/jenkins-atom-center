@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-31T14:25:10Z",
+  "generatedAt": "2026-10-31T15:21:18Z",
   "atoms": [
     {
       "atomCode": "allure-report",
@@ -11012,7 +11012,7 @@
       "publisher": "hummerstudio",
       "name": "Read from Vault",
       "channels": {
-        "stable": "1.0.0"
+        "stable": "1.1.0"
       },
       "versions": [
         {
@@ -11087,6 +11087,135 @@
               "（动态）": {
                 "type": "string",
                 "description": "每个键原样成为出参，点/横线会另给一个 UPPER_SNAKE 别名"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "Read from Vault",
+            "summary": "Reads a KV secret from HashiCorp Vault and exports its values.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-vault-read",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "vault",
+              "secrets"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        },
+        {
+          "version": "1.1.0",
+          "publishedAt": "2026-10-31T15:21:18Z",
+          "package": {
+            "file": "packages/hummerstudio/vault-read/1.1.0/vault-read-1.1.0.zip",
+            "sha256": "fd73407e08fa560a917adb5887e7a7c0ff22184191bf72057def780b0e002adc"
+          },
+          "task": {
+            "atomCode": "vault-read",
+            "name": "Vault read/write",
+            "version": "1.1.0",
+            "description": "Reads a KV secret from HashiCorp Vault, or writes one (KV v2 with check-and-set).",
+            "execution": {
+              "packagePath": "vault-read.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp vault-read.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "action": {
+                "label": "动作（read 读 / write 写）",
+                "type": "vuex-input",
+                "default": "read"
+              },
+              "addr": {
+                "label": "Vault 地址",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "token": {
+                "label": "Token",
+                "type": "password",
+                "default": ""
+              },
+              "path": {
+                "label": "密钥路径（不含 data/）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "mount": {
+                "label": "挂载点",
+                "type": "vuex-input",
+                "default": "secret"
+              },
+              "kvVersion": {
+                "label": "KV 版本（1 或 2）",
+                "type": "vuex-input",
+                "default": "2"
+              },
+              "namespace": {
+                "label": "Namespace（企业版）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "keys": {
+                "label": "只取这些键（逗号分隔，留空取全部）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "failOnMissingKey": {
+                "label": "键不存在就让这一步失败",
+                "type": "checkbox",
+                "default": "true"
+              },
+              "data": {
+                "label": "要写入的内容（每行 key=value，或一个 JSON 对象；值写 @文件名 表示取工作区里的文件）",
+                "type": "textarea",
+                "default": ""
+              },
+              "cas": {
+                "label": "CAS 版本（仅 KV v2；留空=不校验，0=只新建，N=当前必须还是第 N 版）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "verifyAfterWrite": {
+                "label": "写完回读并比对",
+                "type": "checkbox",
+                "default": "true"
+              },
+              "timeoutSeconds": {
+                "label": "超时（秒）",
+                "type": "vuex-input",
+                "default": "30"
+              }
+            },
+            "output": {
+              "action": {
+                "type": "string",
+                "description": "read 或 write"
+              },
+              "keyCount": {
+                "type": "string",
+                "description": "读/写涉及到的键数"
+              },
+              "version": {
+                "type": "string",
+                "description": "KV v2 的版本号（写入后的新版本；读取时的当前版本）"
+              },
+              "verified": {
+                "type": "string",
+                "description": "写入后回读一致时为 true"
+              },
+              "（动态）": {
+                "type": "string",
+                "description": "读取时每个键原样成为出参，点/横线会另给一个 UPPER_SNAKE 别名"
               }
             },
             "x-jenkins": {
