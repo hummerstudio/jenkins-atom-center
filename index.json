@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-31T21:26:07Z",
+  "generatedAt": "2026-10-31T22:29:00Z",
   "atoms": [
     {
       "atomCode": "allure-report",
@@ -9980,7 +9980,7 @@
       "publisher": "hummerstudio",
       "name": "SonarQube quality gate",
       "channels": {
-        "stable": "1.0.0"
+        "stable": "1.1.0"
       },
       "versions": [
         {
@@ -10053,6 +10053,138 @@
               "conditions": {
                 "type": "string",
                 "description": "未达标条件的说明，一行一个"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "SonarQube quality gate",
+            "summary": "Reads the quality gate for a project and fails when it is red, naming the failing conditions.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-sonar-gate",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "sonar",
+              "quality"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        },
+        {
+          "version": "1.1.0",
+          "publishedAt": "2026-10-31T22:29:00Z",
+          "package": {
+            "file": "packages/hummerstudio/sonar-gate/1.1.0/sonar-gate-1.1.0.zip",
+            "sha256": "95486b0772dfeaa90aaad4ad768c312e27c5320322582a34688d916e14301605"
+          },
+          "task": {
+            "atomCode": "sonar-gate",
+            "name": "SonarQube quality gate",
+            "version": "1.1.0",
+            "description": "Reads the quality gate for a project, optionally waiting for this build's analysis to finish, then fails the step or marks the build unstable.",
+            "execution": {
+              "packagePath": "sonar-gate.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp sonar-gate.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "sonarUrl": {
+                "label": "SonarQube 地址",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "token": {
+                "label": "访问令牌",
+                "type": "password",
+                "default": ""
+              },
+              "projectKey": {
+                "label": "项目 Key",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "branch": {
+                "label": "分支（可选）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "pullRequest": {
+                "label": "Pull Request 号（可选）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "failOnWarning": {
+                "label": "WARN 也让这一步失败",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "timeoutSeconds": {
+                "label": "超时（秒）",
+                "type": "vuex-input",
+                "default": "60"
+              },
+              "waitForAnalysis": {
+                "label": "先等这次的分析跑完（CE 任务）",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "waitTimeoutSeconds": {
+                "label": "等分析的超时（秒，默认 300）",
+                "type": "vuex-input",
+                "default": "300"
+              },
+              "pollIntervalSeconds": {
+                "label": "查分析的间隔（秒，默认 10）",
+                "type": "vuex-input",
+                "default": "10"
+              },
+              "buildStatus": {
+                "label": "门禁红了怎么办（FAILURE / UNSTABLE）",
+                "type": "vuex-input",
+                "default": "FAILURE"
+              },
+              "componentKey": {
+                "label": "分析组件 Key（默认同项目 Key）",
+                "type": "vuex-input",
+                "default": ""
+              }
+            },
+            "output": {
+              "gateStatus": {
+                "type": "string",
+                "description": "OK / WARN / ERROR"
+              },
+              "passed": {
+                "type": "string",
+                "description": "门禁是否通过"
+              },
+              "failingConditions": {
+                "type": "string",
+                "description": "未达标的条件数"
+              },
+              "conditions": {
+                "type": "string",
+                "description": "未达标条件的说明，一行一个"
+              },
+              "buildStatus": {
+                "type": "string",
+                "description": "FAILURE / UNSTABLE"
+              },
+              "ceTaskStatus": {
+                "type": "string",
+                "description": "等待到的分析任务状态（没等则为空）"
+              },
+              "message": {
+                "type": "string",
+                "description": "门禁红的说明（此时 steps 仍为 success 的 UNSTABLE 场景会带）"
               }
             },
             "x-jenkins": {
