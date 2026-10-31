@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-31T17:23:52Z",
+  "generatedAt": "2026-10-31T19:12:39Z",
   "atoms": [
     {
       "atomCode": "allure-report",
@@ -10822,6 +10822,146 @@
           "requires": {
             "runner": ">=0.4.0"
           }
+        }
+      ]
+    },
+    {
+      "atomCode": "testng-report",
+      "publisher": "hummerstudio",
+      "name": "TestNG report",
+      "channels": {
+        "stable": "1.0.0"
+      },
+      "versions": [
+        {
+          "version": "1.0.0",
+          "publishedAt": "2026-10-31T19:12:39Z",
+          "package": {
+            "file": "packages/hummerstudio/testng-report/1.0.0/testng-report-1.0.0.zip",
+            "sha256": "57db1dd3d7ee7025cd4e99c7020326f1d81a3af6e558dab2ea2c283643392f18"
+          },
+          "task": {
+            "atomCode": "testng-report",
+            "name": "TestNG report",
+            "version": "1.0.0",
+            "description": "解析 TestNG 的 testng-results.xml，按 testng 插件的阈值规则给构建定级（UNSTABLE/FAILURE），并发布自包含 HTML 报告。",
+            "execution": {
+              "packagePath": "testng-report.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp testng-report.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "reportFilenamePattern": {
+                "label": "TestNG XML（glob，可用 , ; 分隔多个）",
+                "type": "vuex-input",
+                "default": "**/testng-results.xml"
+              },
+              "label": {
+                "label": "报告名称",
+                "type": "vuex-input",
+                "default": "TestNG results"
+              },
+              "outputDir": {
+                "label": "生成的 HTML 放哪里",
+                "type": "vuex-input",
+                "default": "out/testng"
+              },
+              "thresholdMode": {
+                "label": "阈值模式（1=用例个数，2=百分比）",
+                "type": "vuex-input",
+                "default": "2"
+              },
+              "failedFails": {
+                "label": "失败用例数/百分比 超过多少判 FAILURE（默认 100）",
+                "type": "vuex-input",
+                "default": "100"
+              },
+              "failedSkips": {
+                "label": "跳过用例数/百分比 超过多少判 FAILURE（默认 100）",
+                "type": "vuex-input",
+                "default": "100"
+              },
+              "unstableFails": {
+                "label": "失败用例数/百分比 超过多少判 UNSTABLE（默认 0）",
+                "type": "vuex-input",
+                "default": "0"
+              },
+              "unstableSkips": {
+                "label": "跳过用例数/百分比 超过多少判 UNSTABLE（默认 100）",
+                "type": "vuex-input",
+                "default": "100"
+              },
+              "failureOnFailedTestConfig": {
+                "label": "配置方法（@Before/@After）失败即判 FAILURE",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "failIfNoReports": {
+                "label": "没有匹配到报告时让步骤失败（插件本身是继续）",
+                "type": "checkbox",
+                "default": "false"
+              }
+            },
+            "output": {
+              "total": {
+                "type": "string",
+                "description": "用例总数（不含配置方法）"
+              },
+              "passed": {
+                "type": "string",
+                "description": "通过数"
+              },
+              "failed": {
+                "type": "string",
+                "description": "失败数"
+              },
+              "skipped": {
+                "type": "string",
+                "description": "跳过数"
+              },
+              "failedConfigMethods": {
+                "type": "string",
+                "description": "失败的配置方法数"
+              },
+              "skippedConfigMethods": {
+                "type": "string",
+                "description": "跳过的配置方法数"
+              },
+              "durationSeconds": {
+                "type": "string",
+                "description": "用例耗时合计（秒，非墙钟）"
+              },
+              "verdict": {
+                "type": "string",
+                "description": "NONE / UNSTABLE / FAILURE"
+              },
+              "report": {
+                "type": "report",
+                "description": "构建页内嵌的 HTML 报告"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "TestNG report",
+            "summary": "把 testng 插件变成一个原子：解析 testng-results.xml、按同一套阈值判 UNSTABLE/FAILURE、发布 HTML 报告。",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-testng-report",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "testng"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          },
+          "notes": "testng-plugin as an atom: counts from test-method elements, plugin threshold semantics"
         }
       ]
     },
