@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-31T04:25:25Z",
+  "generatedAt": "2026-10-31T04:36:35Z",
   "atoms": [
     {
       "atomCode": "ansible-run",
@@ -4826,6 +4826,145 @@
       ]
     },
     {
+      "atomCode": "jira-issue",
+      "publisher": "hummerstudio",
+      "name": "JIRA issue",
+      "channels": {
+        "stable": "1.0.0"
+      },
+      "versions": [
+        {
+          "version": "1.0.0",
+          "publishedAt": "2026-10-31T04:36:35Z",
+          "package": {
+            "file": "packages/hummerstudio/jira-issue/1.0.0/jira-issue-1.0.0.zip",
+            "sha256": "f75c0e4c0ef0af6efd76da6d07011e8c2e2e10c25164794eaa332114dc06706f"
+          },
+          "task": {
+            "atomCode": "jira-issue",
+            "name": "JIRA issue",
+            "version": "1.0.0",
+            "description": "Creates an issue, comments on one, or moves it through a workflow.",
+            "execution": {
+              "packagePath": "jira-issue.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp jira-issue.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "baseUrl": {
+                "label": "JIRA 地址",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "username": {
+                "label": "用户名（留空则用 Bearer token）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "token": {
+                "label": "密码 / 访问令牌",
+                "type": "password",
+                "default": ""
+              },
+              "action": {
+                "label": "动作（create / comment / transition）",
+                "type": "vuex-input",
+                "default": "create"
+              },
+              "projectKey": {
+                "label": "项目 Key（create）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "issueType": {
+                "label": "问题类型",
+                "type": "vuex-input",
+                "default": "Task"
+              },
+              "summary": {
+                "label": "标题（create）",
+                "type": "textarea",
+                "default": ""
+              },
+              "description": {
+                "label": "描述（create）",
+                "type": "textarea",
+                "default": ""
+              },
+              "fields": {
+                "label": "额外字段（JSON，合并进 fields）",
+                "type": "textarea",
+                "default": ""
+              },
+              "issueKey": {
+                "label": "Issue Key（comment/transition）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "comment": {
+                "label": "评论内容（comment）",
+                "type": "textarea",
+                "default": ""
+              },
+              "transition": {
+                "label": "流转名或 id（transition）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "timeoutSeconds": {
+                "label": "超时（秒）",
+                "type": "vuex-input",
+                "default": "30"
+              }
+            },
+            "output": {
+              "action": {
+                "type": "string",
+                "description": "执行的动作"
+              },
+              "issueKey": {
+                "type": "string",
+                "description": "issue key"
+              },
+              "issueUrl": {
+                "type": "string",
+                "description": "issue 链接（create）"
+              },
+              "commentId": {
+                "type": "string",
+                "description": "评论 id（comment）"
+              },
+              "transitionId": {
+                "type": "string",
+                "description": "流转 id（transition）"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "JIRA issue",
+            "summary": "Creates an issue, comments on one, or moves it through a workflow.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-jira-issue",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "jira",
+              "issue-tracker"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        }
+      ]
+    },
+    {
       "atomCode": "json-tool",
       "publisher": "hummerstudio",
       "name": "JSON read / write",
@@ -8892,6 +9031,113 @@
             "tags": [
               "official-port",
               "text-finder"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        }
+      ]
+    },
+    {
+      "atomCode": "vault-read",
+      "publisher": "hummerstudio",
+      "name": "Read from Vault",
+      "channels": {
+        "stable": "1.0.0"
+      },
+      "versions": [
+        {
+          "version": "1.0.0",
+          "publishedAt": "2026-10-31T04:36:34Z",
+          "package": {
+            "file": "packages/hummerstudio/vault-read/1.0.0/vault-read-1.0.0.zip",
+            "sha256": "6ca614981351fdfb8b1a5c0fa42d6cd63162804ad459142cc070f071c8a0be87"
+          },
+          "task": {
+            "atomCode": "vault-read",
+            "name": "Read from Vault",
+            "version": "1.0.0",
+            "description": "Reads a KV secret from HashiCorp Vault and exports its values.",
+            "execution": {
+              "packagePath": "vault-read.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp vault-read.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "addr": {
+                "label": "Vault 地址",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "token": {
+                "label": "Token",
+                "type": "password",
+                "default": ""
+              },
+              "path": {
+                "label": "密钥路径（不含 data/）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "mount": {
+                "label": "挂载点",
+                "type": "vuex-input",
+                "default": "secret"
+              },
+              "kvVersion": {
+                "label": "KV 版本（1 或 2）",
+                "type": "vuex-input",
+                "default": "2"
+              },
+              "namespace": {
+                "label": "Namespace（企业版）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "keys": {
+                "label": "只取这些键（逗号分隔，留空取全部）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "failOnMissingKey": {
+                "label": "键不存在就让这一步失败",
+                "type": "checkbox",
+                "default": "true"
+              },
+              "timeoutSeconds": {
+                "label": "超时（秒）",
+                "type": "vuex-input",
+                "default": "30"
+              }
+            },
+            "output": {
+              "keyCount": {
+                "type": "string",
+                "description": "取到的键数"
+              },
+              "（动态）": {
+                "type": "string",
+                "description": "每个键原样成为出参，点/横线会另给一个 UPPER_SNAKE 别名"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "Read from Vault",
+            "summary": "Reads a KV secret from HashiCorp Vault and exports its values.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-vault-read",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "vault",
+              "secrets"
             ]
           },
           "requires": {

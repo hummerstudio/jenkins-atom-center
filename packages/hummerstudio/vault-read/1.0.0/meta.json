@@ -1,0 +1,12 @@
+{
+  "name": "Read from Vault",
+  "summary": "Reads a KV secret from HashiCorp Vault and exports its values.",
+  "author": "hummerstudio",
+  "license": "MIT",
+  "tags": [
+    "official-port",
+    "vault",
+    "secrets"
+  ],
+  "homepage": "https://github.com/hummerstudio/jenkins-atom-vault-read"
+}
