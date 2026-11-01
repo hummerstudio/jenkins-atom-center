@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-01T00:34:39Z",
+  "generatedAt": "2026-11-01T01:55:41Z",
   "atoms": [
     {
       "atomCode": "allure-report",
@@ -3342,7 +3342,7 @@
       "publisher": "hummerstudio",
       "name": "Commit status",
       "channels": {
-        "stable": "1.0.0"
+        "stable": "1.1.0"
       },
       "versions": [
         {
@@ -3453,6 +3453,153 @@
           "requires": {
             "runner": ">=0.4.0"
           }
+        },
+        {
+          "version": "1.1.0",
+          "publishedAt": "2026-11-01T01:55:41Z",
+          "package": {
+            "file": "packages/hummerstudio/commit-status/1.1.0/commit-status-1.1.0.zip",
+            "sha256": "7e59c57916ba642e59cec84c7ed75dbbed208a4e6f155efc799498cd7c16bf4f"
+          },
+          "task": {
+            "atomCode": "commit-status",
+            "name": "Commit status",
+            "version": "1.1.0",
+            "description": "Posts the build state back to the commit on GitHub, GitLab or Gitea; on GitHub it does what the githubNotify step does (check credential / repository / commit first, report on the sha the API returns) and can also comment on a pull request.",
+            "execution": {
+              "packagePath": "commit-status.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp commit-status.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "provider": {
+                "label": "平台",
+                "type": "selector",
+                "default": "github",
+                "options": [
+                  "github",
+                  "gitlab",
+                  "gitea"
+                ]
+              },
+              "account": {
+                "label": "账号 / 组织（GitHub 必填；repo 写成 owner/name 时可留空）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "repo": {
+                "label": "仓库名（或 owner/name；留空取 GIT_URL）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "sha": {
+                "label": "提交 sha（留空取 GIT_COMMIT）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "state": {
+                "label": "状态（留空按 BUILD_STATUS 推断）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "contextName": {
+                "label": "状态名",
+                "type": "vuex-input",
+                "default": "jenkins/atom"
+              },
+              "description": {
+                "label": "描述（留空自动生成）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "targetUrl": {
+                "label": "详情链接（留空取 BUILD_URL）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "apiUrl": {
+                "label": "API 地址（gitea 必填）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "token": {
+                "label": "Token（凭据 id，Secret text）",
+                "type": "vuex-input",
+                "default": "",
+                "isSensitive": true
+              },
+              "preflight": {
+                "label": "写之前先核对凭据 / 仓库 / 提交（GitHub、Gitea）",
+                "type": "boolean",
+                "default": "true"
+              },
+              "verifyStatus": {
+                "label": "核对接口回显的状态（不是看状态码）",
+                "type": "boolean",
+                "default": "true"
+              },
+              "prNumber": {
+                "label": "PR 编号（留空取 CHANGE_ID）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "prComment": {
+                "label": "PR 评论正文（可选，支持 ${VAR}；插件没有这个功能）",
+                "type": "vuex-input",
+                "default": ""
+              }
+            },
+            "output": {
+              "status": {
+                "type": "string",
+                "description": "HTTP 状态码"
+              },
+              "state": {
+                "type": "string",
+                "description": "映射后的状态"
+              },
+              "sha": {
+                "type": "string",
+                "description": "实际写状态的提交 sha（可能是接口给出的完整 sha）"
+              },
+              "verified": {
+                "type": "string",
+                "description": "接口回显的状态；未开启校验为 not-checked"
+              },
+              "apiUrl": {
+                "type": "string",
+                "description": "实际调用的地址"
+              },
+              "commentId": {
+                "type": "string",
+                "description": "回读到的 PR 评论 id"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              },
+              "secrets": {
+                "token": ""
+              }
+            }
+          },
+          "meta": {
+            "name": "Commit status",
+            "summary": "Posts the build state back to the commit on GitHub, GitLab or Gitea.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-commit-status",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "commit-status"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          },
+          "notes": "githubNotify preflight + canonical sha + PR comment with read-back"
         }
       ]
     },
