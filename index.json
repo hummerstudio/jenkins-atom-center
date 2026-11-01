@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-01T17:12:52Z",
+  "generatedAt": "2026-11-01T17:23:01Z",
   "atoms": [
     {
       "atomCode": "allure-report",
@@ -11709,7 +11709,7 @@
       "publisher": "hummerstudio",
       "name": "pyenv 环境",
       "channels": {
-        "stable": "1.0.0"
+        "stable": "1.0.1"
       },
       "versions": [
         {
@@ -11776,6 +11776,125 @@
                 "type": "string",
                 "description": "解析到的 python 绝对路径"
               },
+              "version": {
+                "type": "string",
+                "description": "请求的版本"
+              },
+              "versionLine": {
+                "type": "string",
+                "description": "python --version 的输出"
+              },
+              "commandExit": {
+                "type": "string",
+                "description": "命令退出码"
+              },
+              "outputTail": {
+                "type": "string",
+                "description": "命令输出末尾"
+              },
+              "PYTHON": {
+                "type": "string",
+                "description": "导出的环境变量：python 路径"
+              },
+              "PYENV_VERSION": {
+                "type": "string",
+                "description": "导出的环境变量：pyenv 版本"
+              },
+              "PYENV_ROOT": {
+                "type": "string",
+                "description": "导出的环境变量：pyenv 根目录"
+              },
+              "PATH": {
+                "type": "string",
+                "description": "导出的环境变量：含 shims（如有 venv 则含其 bin）"
+              },
+              "VIRTUAL_ENV": {
+                "type": "string",
+                "description": "导出的环境变量：venv 路径（未建则为空）"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "pyenv 环境",
+            "summary": "用 pyenv 准备指定版本的 Python，可选建 venv 并在其中执行一条命令。",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-pyenv",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "python"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        },
+        {
+          "version": "1.0.1",
+          "publishedAt": "2026-11-01T17:23:01Z",
+          "package": {
+            "file": "packages/hummerstudio/pyenv/1.0.1/pyenv-1.0.1.zip",
+            "sha256": "a33236cba90a9cc6374045a966b628603e00d004232d4d524501f8bc60c28385"
+          },
+          "task": {
+            "atomCode": "pyenv",
+            "name": "pyenv 环境",
+            "version": "1.0.1",
+            "description": "用 pyenv 准备指定版本的 Python（必要时安装），可选建 venv 并在其中执行一条命令。",
+            "execution": {
+              "packagePath": "pyenv.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp pyenv.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "version": {
+                "label": "Python 版本（如 3.11.5，或 system）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "pyenvPath": {
+                "label": "pyenv 路径（留空自动在 PATH / ~/.pyenv/bin 找）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "installIfMissing": {
+                "label": "缺失时自动安装",
+                "type": "boolean",
+                "default": "true"
+              },
+              "writeLocal": {
+                "label": "在当前目录写 .python-version",
+                "type": "boolean",
+                "default": "true"
+              },
+              "venvDir": {
+                "label": "额外创建 venv 的目录（留空不建）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "command": {
+                "label": "在该环境中执行的命令（留空只准备环境）",
+                "type": "textarea",
+                "default": ""
+              },
+              "failOnError": {
+                "label": "命令非零退出码判失败",
+                "type": "boolean",
+                "default": "true"
+              },
+              "timeoutSeconds": {
+                "label": "超时（秒）",
+                "type": "vuex-input",
+                "default": "1800"
+              }
+            },
+            "output": {
               "version": {
                 "type": "string",
                 "description": "请求的版本"
