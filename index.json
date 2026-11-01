@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-01T10:33:33Z",
+  "generatedAt": "2026-11-01T10:34:32Z",
   "atoms": [
     {
       "atomCode": "allure-report",
@@ -4499,7 +4499,7 @@
       "publisher": "hummerstudio",
       "name": "Dependency vulnerabilities",
       "channels": {
-        "stable": "1.0.0"
+        "stable": "1.1.0"
       },
       "versions": [
         {
@@ -4549,6 +4549,108 @@
                 "label": "允许的漏洞总数（-1 = 不检查）",
                 "type": "vuex-input-number",
                 "default": "-1"
+              }
+            },
+            "output": {
+              "dependencies": {
+                "type": "string",
+                "description": "依赖数"
+              },
+              "vulnerabilities": {
+                "type": "string",
+                "description": "漏洞数"
+              },
+              "critical": {
+                "type": "string",
+                "description": "critical 数"
+              },
+              "high": {
+                "type": "string",
+                "description": "high 数"
+              },
+              "medium": {
+                "type": "string",
+                "description": "medium 数"
+              },
+              "report": {
+                "type": "report",
+                "description": "构建页内嵌报告"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "Dependency vulnerabilities",
+            "summary": "Reads an OWASP dependency-check XML report and gates on critical/high findings.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-dependency-check-report",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "dependency-check-report"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        },
+        {
+          "version": "1.1.0",
+          "publishedAt": "2026-11-01T10:34:32Z",
+          "package": {
+            "file": "packages/hummerstudio/dependency-check-report/1.1.0/dependency-check-report-1.1.0.zip",
+            "sha256": "fc910b5775ae17aa48f1b321570aadc42ae9de9148399a88b628a0a7795748d3"
+          },
+          "task": {
+            "atomCode": "dependency-check-report",
+            "name": "Dependency vulnerabilities",
+            "version": "1.1.0",
+            "description": "Reads an OWASP dependency-check XML report and gates on critical/high findings.",
+            "execution": {
+              "packagePath": "dependency-check-report.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp dependency-check-report.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "pattern": {
+                "label": "报告 glob",
+                "type": "vuex-input",
+                "default": "**/dependency-check-report.xml"
+              },
+              "label": {
+                "label": "报告名称",
+                "type": "vuex-input",
+                "default": "Dependencies"
+              },
+              "outputDir": {
+                "label": "HTML 输出目录",
+                "type": "vuex-input",
+                "default": "out/dependencies"
+              },
+              "maxCritical": {
+                "label": "允许的 critical 数",
+                "type": "vuex-input-number",
+                "default": "0"
+              },
+              "maxHigh": {
+                "label": "允许的 high 数（-1 = 不检查）",
+                "type": "vuex-input-number",
+                "default": "-1"
+              },
+              "maxTotal": {
+                "label": "允许的漏洞总数（-1 = 不检查）",
+                "type": "vuex-input-number",
+                "default": "-1"
+              },
+              "allowUnreadableReports": {
+                "label": "报告解析失败也继续（默认 false：解析失败即失败）",
+                "type": "boolean",
+                "default": "false"
               }
             },
             "output": {
