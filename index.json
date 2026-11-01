@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-01T03:16:01Z",
+  "generatedAt": "2026-11-01T03:35:34Z",
   "atoms": [
     {
       "atomCode": "allure-report",
@@ -6270,6 +6270,121 @@
               "official-port",
               "scm",
               "git"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        }
+      ]
+    },
+    {
+      "atomCode": "git-push",
+      "publisher": "hummerstudio",
+      "name": "Git push",
+      "channels": {
+        "stable": "1.0.0"
+      },
+      "versions": [
+        {
+          "version": "1.0.0",
+          "publishedAt": "2026-11-01T03:35:34Z",
+          "package": {
+            "file": "packages/hummerstudio/git-push/1.0.0/git-push-1.0.0.zip",
+            "sha256": "c527e67d30b59cd1b89bd307e2440c0add3327448100a572967382ce0e2b9b02"
+          },
+          "task": {
+            "atomCode": "git-push",
+            "name": "Git push",
+            "version": "1.0.0",
+            "description": "Pushes the checked-out branch to a remote and verifies the remote moved.",
+            "execution": {
+              "packagePath": "git-push.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp git-push.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "remote": {
+                "label": "远端（origin 或 URL）",
+                "type": "vuex-input",
+                "default": "origin"
+              },
+              "branch": {
+                "label": "本地分支（留空用当前分支）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "targetBranch": {
+                "label": "远端分支（留空同名）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "force": {
+                "label": "强制推送",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "setUpstream": {
+                "label": "设置上游跟踪",
+                "type": "checkbox",
+                "default": "true"
+              },
+              "followTags": {
+                "label": "一并推送附注标签",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "username": {
+                "label": "用户名（HTTPS 远端）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "token": {
+                "label": "密码 / 访问令牌",
+                "type": "password",
+                "default": ""
+              },
+              "timeoutSeconds": {
+                "label": "超时（秒）",
+                "type": "vuex-input",
+                "default": "180"
+              }
+            },
+            "output": {
+              "branch": {
+                "type": "string",
+                "description": "推送到的远端分支"
+              },
+              "sha": {
+                "type": "string",
+                "description": "推送后的提交"
+              },
+              "remote": {
+                "type": "string",
+                "description": "远端"
+              },
+              "forced": {
+                "type": "string",
+                "description": "是否强制推送"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "Git push",
+            "summary": "Pushes the checked-out branch to a remote and verifies the remote moved.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-git-push",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "git",
+              "publish"
             ]
           },
           "requires": {
