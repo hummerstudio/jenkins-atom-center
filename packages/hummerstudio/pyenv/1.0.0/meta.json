@@ -1,0 +1,11 @@
+{
+  "name": "pyenv 环境",
+  "summary": "用 pyenv 准备指定版本的 Python，可选建 venv 并在其中执行一条命令。",
+  "author": "hummerstudio",
+  "license": "MIT",
+  "tags": [
+    "official-port",
+    "python"
+  ],
+  "homepage": "https://github.com/hummerstudio/jenkins-atom-pyenv"
+}
