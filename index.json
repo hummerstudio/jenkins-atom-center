@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-01T09:58:22Z",
+  "generatedAt": "2026-11-01T10:03:39Z",
   "atoms": [
     {
       "atomCode": "allure-report",
@@ -8581,7 +8581,7 @@
       "publisher": "hummerstudio",
       "name": "JUnit test report",
       "channels": {
-        "stable": "1.3.0"
+        "stable": "1.3.1"
       },
       "versions": [
         {
@@ -9006,6 +9006,112 @@
               "failOnFailure": {
                 "label": "有失败用例就让这一步失败（比 UNSTABLE 更强）",
                 "type": "checkbox",
+                "default": "false"
+              }
+            },
+            "output": {
+              "total": {
+                "type": "string",
+                "description": "用例总数"
+              },
+              "failed": {
+                "type": "string",
+                "description": "失败数"
+              },
+              "errors": {
+                "type": "string",
+                "description": "错误数"
+              },
+              "skipped": {
+                "type": "string",
+                "description": "跳过数"
+              },
+              "durationSeconds": {
+                "type": "string",
+                "description": "用例耗时合计（秒）"
+              },
+              "report": {
+                "type": "report",
+                "description": "构建页内嵌的 HTML 报告"
+              },
+              "buildResult": {
+                "type": "string",
+                "description": "请求的构建结果（UNSTABLE 时由 runner 施加）"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "JUnit test report",
+            "summary": "把 junit 插件变成一个原子：解析 JUnit XML、汇总、发布 HTML 报告。",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-junit-report",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "junit"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        },
+        {
+          "version": "1.3.1",
+          "publishedAt": "2026-11-01T10:03:38Z",
+          "package": {
+            "file": "packages/hummerstudio/junit-report/1.3.1/junit-report-1.3.1.zip",
+            "sha256": "41c85b87c56413b5e8fa05e906dc37aee9f35f056641ce0979c4c8612f1b55d6"
+          },
+          "task": {
+            "atomCode": "junit-report",
+            "name": "JUnit test report",
+            "version": "1.3.1",
+            "description": "Summarises the JUnit XML a build produced and publishes it as an HTML report on the build page.",
+            "execution": {
+              "packagePath": "junit-report.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp junit-report.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "testResults": {
+                "label": "测试报告 XML（glob，逗号分隔）",
+                "type": "vuex-input",
+                "default": "**/surefire-reports/*.xml"
+              },
+              "label": {
+                "label": "报告名称",
+                "type": "vuex-input",
+                "default": "Test results"
+              },
+              "outputDir": {
+                "label": "生成的 HTML 放哪里",
+                "type": "vuex-input",
+                "default": "out/junit"
+              },
+              "allowEmptyResults": {
+                "label": "没有匹配到报告不算失败",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "skipMarkingUnstable": {
+                "label": "有失败用例时不把构建标为 UNSTABLE",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "failOnFailure": {
+                "label": "有失败用例就让这一步失败（比 UNSTABLE 更强）",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "allowUnreadableReports": {
+                "label": "报告解析失败也继续（默认 false：解析失败即失败）",
+                "type": "boolean",
                 "default": "false"
               }
             },
@@ -14518,7 +14624,7 @@
       "publisher": "hummerstudio",
       "name": ".NET test report",
       "channels": {
-        "stable": "1.1.0"
+        "stable": "1.1.1"
       },
       "versions": [
         {
@@ -14660,6 +14766,112 @@
               "skipMarkingUnstable": {
                 "label": "不把构建标为 UNSTABLE",
                 "type": "checkbox",
+                "default": "false"
+              }
+            },
+            "output": {
+              "total": {
+                "type": "string",
+                "description": "用例数"
+              },
+              "passed": {
+                "type": "string",
+                "description": "通过"
+              },
+              "failed": {
+                "type": "string",
+                "description": "失败"
+              },
+              "skipped": {
+                "type": "string",
+                "description": "跳过"
+              },
+              "report": {
+                "type": "report",
+                "description": "构建页内嵌报告"
+              },
+              "errors": {
+                "type": "string",
+                "description": "tests that neither passed, failed nor were skipped (error, timeout, warning)"
+              },
+              "formats": {
+                "type": "string",
+                "description": "report shapes found, comma separated: nunit3 / nunit2 / mstest-trx / xunit-net"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": ".NET test report",
+            "summary": "读 NUnit 3 / MSTest / xUnit.net 的报告（不是 JUnit XML）。",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-xunit-report",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "xunit"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        },
+        {
+          "version": "1.1.1",
+          "publishedAt": "2026-11-01T10:03:39Z",
+          "package": {
+            "file": "packages/hummerstudio/xunit-report/1.1.1/xunit-report-1.1.1.zip",
+            "sha256": "d50c7c1356292a0333a528cbbb18313573d41eff6fc92fbe1feb77d401e6229b"
+          },
+          "task": {
+            "atomCode": "xunit-report",
+            "name": ".NET test report",
+            "version": "1.1.1",
+            "description": "Reads .NET test reports: NUnit 3/2, MSTest and dotnet test TRX, xUnit.net. Not JUnit XML.",
+            "execution": {
+              "packagePath": "xunit-report.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp xunit-report.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "testResults": {
+                "label": "报告 glob",
+                "type": "vuex-input",
+                "default": "**/TestResults/*.trx, **/*.trx, **/TestResults/*.xml, **/test-results*.xml, **/nunit*.xml, **/xunit*.xml"
+              },
+              "label": {
+                "label": "报告名称",
+                "type": "vuex-input",
+                "default": ".NET tests"
+              },
+              "outputDir": {
+                "label": "HTML 输出目录",
+                "type": "vuex-input",
+                "default": "out/xunit"
+              },
+              "allowEmptyResults": {
+                "label": "没有报告不算失败",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "failOnFailure": {
+                "label": "有失败用例就让这一步失败",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "skipMarkingUnstable": {
+                "label": "不把构建标为 UNSTABLE",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "allowUnreadableReports": {
+                "label": "报告解析失败也继续（默认 false：解析失败即失败）",
+                "type": "boolean",
                 "default": "false"
               }
             },
