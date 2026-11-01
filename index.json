@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-01T10:03:39Z",
+  "generatedAt": "2026-11-01T10:24:15Z",
   "atoms": [
     {
       "atomCode": "allure-report",
@@ -8581,7 +8581,7 @@
       "publisher": "hummerstudio",
       "name": "JUnit test report",
       "channels": {
-        "stable": "1.3.1"
+        "stable": "1.3.2"
       },
       "versions": [
         {
@@ -9072,6 +9072,112 @@
             "atomCode": "junit-report",
             "name": "JUnit test report",
             "version": "1.3.1",
+            "description": "Summarises the JUnit XML a build produced and publishes it as an HTML report on the build page.",
+            "execution": {
+              "packagePath": "junit-report.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp junit-report.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "testResults": {
+                "label": "测试报告 XML（glob，逗号分隔）",
+                "type": "vuex-input",
+                "default": "**/surefire-reports/*.xml"
+              },
+              "label": {
+                "label": "报告名称",
+                "type": "vuex-input",
+                "default": "Test results"
+              },
+              "outputDir": {
+                "label": "生成的 HTML 放哪里",
+                "type": "vuex-input",
+                "default": "out/junit"
+              },
+              "allowEmptyResults": {
+                "label": "没有匹配到报告不算失败",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "skipMarkingUnstable": {
+                "label": "有失败用例时不把构建标为 UNSTABLE",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "failOnFailure": {
+                "label": "有失败用例就让这一步失败（比 UNSTABLE 更强）",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "allowUnreadableReports": {
+                "label": "报告解析失败也继续（默认 false：解析失败即失败）",
+                "type": "boolean",
+                "default": "false"
+              }
+            },
+            "output": {
+              "total": {
+                "type": "string",
+                "description": "用例总数"
+              },
+              "failed": {
+                "type": "string",
+                "description": "失败数"
+              },
+              "errors": {
+                "type": "string",
+                "description": "错误数"
+              },
+              "skipped": {
+                "type": "string",
+                "description": "跳过数"
+              },
+              "durationSeconds": {
+                "type": "string",
+                "description": "用例耗时合计（秒）"
+              },
+              "report": {
+                "type": "report",
+                "description": "构建页内嵌的 HTML 报告"
+              },
+              "buildResult": {
+                "type": "string",
+                "description": "请求的构建结果（UNSTABLE 时由 runner 施加）"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "JUnit test report",
+            "summary": "把 junit 插件变成一个原子：解析 JUnit XML、汇总、发布 HTML 报告。",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-junit-report",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "junit"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        },
+        {
+          "version": "1.3.2",
+          "publishedAt": "2026-11-01T10:24:15Z",
+          "package": {
+            "file": "packages/hummerstudio/junit-report/1.3.2/junit-report-1.3.2.zip",
+            "sha256": "cd1dcdacc3f4588ca689a3af75cb2fb7aac8f2534766fbbf28b38356046eeeff"
+          },
+          "task": {
+            "atomCode": "junit-report",
+            "name": "JUnit test report",
+            "version": "1.3.2",
             "description": "Summarises the JUnit XML a build produced and publishes it as an HTML report on the build page.",
             "execution": {
               "packagePath": "junit-report.jar",
