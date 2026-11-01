@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-01T08:20:27Z",
+  "generatedAt": "2026-11-01T09:22:36Z",
   "atoms": [
     {
       "atomCode": "allure-report",
@@ -11974,6 +11974,121 @@
             "tags": [
               "official-port",
               "sonar-scan"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        }
+      ]
+    },
+    {
+      "atomCode": "splunk-hec",
+      "publisher": "hummerstudio",
+      "name": "Splunk HEC event",
+      "channels": {
+        "stable": "1.0.0"
+      },
+      "versions": [
+        {
+          "version": "1.0.0",
+          "publishedAt": "2026-11-01T09:22:36Z",
+          "package": {
+            "file": "packages/hummerstudio/splunk-hec/1.0.0/splunk-hec-1.0.0.zip",
+            "sha256": "475b0966b727b7e2044eb776744ba7211261f96288cfcc4b114642557c11b837"
+          },
+          "task": {
+            "atomCode": "splunk-hec",
+            "name": "Splunk HEC event",
+            "version": "1.0.0",
+            "description": "Sends one build event to a Splunk HTTP Event Collector and checks its verdict.",
+            "execution": {
+              "packagePath": "splunk-hec.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp splunk-hec.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "url": {
+                "label": "Splunk 地址（含端口，如 https://splunk:8088）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "token": {
+                "label": "HEC token",
+                "type": "password",
+                "default": ""
+              },
+              "sourcetype": {
+                "label": "sourcetype",
+                "type": "vuex-input",
+                "default": "jenkins"
+              },
+              "source": {
+                "label": "source",
+                "type": "vuex-input",
+                "default": "jenkins"
+              },
+              "host": {
+                "label": "host（留空由 Splunk 决定）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "channel": {
+                "label": "channel（留空则不带）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "event": {
+                "label": "事件内容（JSON 或 key=value；留空用构建事实）",
+                "type": "textarea",
+                "default": ""
+              },
+              "mode": {
+                "label": "模式（event / raw）",
+                "type": "vuex-input",
+                "default": "event"
+              },
+              "timeoutSeconds": {
+                "label": "超时（秒）",
+                "type": "vuex-input",
+                "default": "30"
+              }
+            },
+            "output": {
+              "code": {
+                "type": "string",
+                "description": "HEC 返回码（0 = 已接收）"
+              },
+              "text": {
+                "type": "string",
+                "description": "HEC 返回文本"
+              },
+              "bytes": {
+                "type": "string",
+                "description": "发出的字节数"
+              },
+              "endpoint": {
+                "type": "string",
+                "description": "实际请求的端点"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "Splunk HEC event",
+            "summary": "Sends one build event to a Splunk HTTP Event Collector and checks its verdict.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-splunk-hec",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "splunk",
+              "metrics"
             ]
           },
           "requires": {
