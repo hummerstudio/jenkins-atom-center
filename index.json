@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-01T10:29:14Z",
+  "generatedAt": "2026-11-01T10:33:33Z",
   "atoms": [
     {
       "atomCode": "allure-report",
@@ -2963,7 +2963,7 @@
       "publisher": "hummerstudio",
       "name": "Static analysis report",
       "channels": {
-        "stable": "1.0.1"
+        "stable": "1.1.0"
       },
       "versions": [
         {
@@ -3086,6 +3086,94 @@
                 "label": "允许的 error 数（超过则失败）",
                 "type": "vuex-input-number",
                 "default": "0"
+              }
+            },
+            "output": {
+              "total": {
+                "type": "string",
+                "description": "问题总数"
+              },
+              "errors": {
+                "type": "string",
+                "description": "error 级"
+              },
+              "warnings": {
+                "type": "string",
+                "description": "warning 级"
+              },
+              "infos": {
+                "type": "string",
+                "description": "info 级"
+              },
+              "report": {
+                "type": "report",
+                "description": "构建页内嵌报告"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "Static analysis report",
+            "summary": "Reads checkstyle, PMD or SpotBugs XML, counts by severity and publishes it.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-checkstyle-report",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "checkstyle-report"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        },
+        {
+          "version": "1.1.0",
+          "publishedAt": "2026-11-01T10:33:33Z",
+          "package": {
+            "file": "packages/hummerstudio/checkstyle-report/1.1.0/checkstyle-report-1.1.0.zip",
+            "sha256": "cd10acb75600b4bd17a1f9af171428a43321c4cac1103742e0253c9921f8d428"
+          },
+          "task": {
+            "atomCode": "checkstyle-report",
+            "name": "Static analysis report",
+            "version": "1.1.0",
+            "description": "Reads checkstyle, PMD or SpotBugs XML, counts by severity and publishes it.",
+            "execution": {
+              "packagePath": "checkstyle-report.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp checkstyle-report.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "pattern": {
+                "label": "报告 glob（逗号分隔）",
+                "type": "vuex-input",
+                "default": "**/checkstyle-result.xml, **/pmd.xml, **/spotbugsXml.xml"
+              },
+              "label": {
+                "label": "报告名称",
+                "type": "vuex-input",
+                "default": "Static analysis"
+              },
+              "outputDir": {
+                "label": "HTML 输出目录",
+                "type": "vuex-input",
+                "default": "out/static-analysis"
+              },
+              "maxErrors": {
+                "label": "允许的 error 数（超过则失败）",
+                "type": "vuex-input-number",
+                "default": "0"
+              },
+              "allowUnreadableReports": {
+                "label": "报告解析失败也继续（默认 false：解析失败即失败）",
+                "type": "boolean",
+                "default": "false"
               }
             },
             "output": {
