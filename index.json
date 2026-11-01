@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-01T18:40:14Z",
+  "generatedAt": "2026-11-01T19:38:43Z",
   "atoms": [
     {
       "atomCode": "allure-report",
@@ -4895,6 +4895,266 @@
       ]
     },
     {
+      "atomCode": "datadog-metrics",
+      "publisher": "hummerstudio",
+      "name": "Datadog build metrics",
+      "channels": {
+        "stable": "1.0.0"
+      },
+      "versions": [
+        {
+          "version": "1.0.0",
+          "publishedAt": "2026-11-01T19:38:43Z",
+          "package": {
+            "file": "packages/hummerstudio/datadog-metrics/1.0.0/datadog-metrics-1.0.0.zip",
+            "sha256": "278b55425d00c21d8589476b57386d9b8af8c90b264839b4768845303463da8a"
+          },
+          "task": {
+            "atomCode": "datadog-metrics",
+            "name": "Datadog build metrics",
+            "version": "1.0.0",
+            "description": "把本次构建的指标（jenkins.job.*）与一条事件发给 Datadog HTTP API（v1/series + v1/events，可选 v2/series），API key 走凭据；HTTP 2xx 但响应体带 errors 时判失败。",
+            "execution": {
+              "packagePath": "datadog-metrics.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp datadog-metrics.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "site": {
+                "label": "Datadog 站点（us1 / us3 / us5 / eu / ap1 / ap2 / uk1 / gov）",
+                "type": "vuex-input",
+                "default": "datadoghq.com",
+                "description": "决定 API 主机 api.<site>；私有代理或测试端点用 apiUrl 覆盖"
+              },
+              "apiUrl": {
+                "label": "API 根地址（留空按 site 拼，如 https://api.datadoghq.com/api）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "apiVersion": {
+                "label": "指标 API 版本（auto / 1 / 2；auto 即 1，与官方 Jenkins 插件一致）",
+                "type": "vuex-input",
+                "default": "auto",
+                "description": "2 走 v2/series（points 是对象、type 是整数）；事件始终走 v1/events，因为 v2 事件需要 APP key"
+              },
+              "metricPrefix": {
+                "label": "内置指标前缀（默认 jenkins.job，留空则不带前缀）",
+                "type": "vuex-input",
+                "default": "jenkins.job"
+              },
+              "tags": {
+                "label": "额外标签（每行 key:value，Datadog 标签一律 key:value）",
+                "type": "textarea",
+                "default": ""
+              },
+              "customMetrics": {
+                "label": "额外指标（每行 name=value[:gauge|count|rate]，原样发送，不加前缀）",
+                "type": "textarea",
+                "default": ""
+              },
+              "eventTitle": {
+                "label": "事件标题（留空按官方插件格式 Job <job> build #<n> <result> on <host>）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "eventText": {
+                "label": "事件正文（留空按构建事实生成；支持 ${BUILD_NUMBER} 等变量）",
+                "type": "textarea",
+                "default": ""
+              },
+              "priority": {
+                "label": "事件优先级（auto / low / normal；auto：成功 low，其余 normal）",
+                "type": "vuex-input",
+                "default": "auto"
+              },
+              "alertType": {
+                "label": "事件类型（auto / success / error / warning / info；auto：SUCCESS→success，FAILURE→error，其余 warning）",
+                "type": "vuex-input",
+                "default": "auto"
+              },
+              "aggregationKey": {
+                "label": "事件聚合键（留空取 job 名）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "host": {
+                "label": "host（指标/事件的 host，留空取节点名）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "jenkinsUrl": {
+                "label": "Jenkins 根地址（默认 ${JENKINS_URL}，作为 jenkins_url 标签）",
+                "type": "vuex-input",
+                "default": "${JENKINS_URL}"
+              },
+              "jobName": {
+                "label": "Job 名（默认 ${JOB_NAME}；有构建上下文时以构建事实为准）",
+                "type": "vuex-input",
+                "default": "${JOB_NAME}"
+              },
+              "buildNumber": {
+                "label": "构建号（默认 ${BUILD_NUMBER}）",
+                "type": "vuex-input",
+                "default": "${BUILD_NUMBER}"
+              },
+              "buildResult": {
+                "label": "构建结果（默认 ${BUILD_STATUS}；为空时取构建事实）",
+                "type": "vuex-input",
+                "default": "${BUILD_STATUS}"
+              },
+              "buildUrl": {
+                "label": "构建 URL（默认 ${BUILD_URL}）",
+                "type": "vuex-input",
+                "default": "${BUILD_URL}"
+              },
+              "branchName": {
+                "label": "分支（默认 ${BRANCH_NAME}）",
+                "type": "vuex-input",
+                "default": "${BRANCH_NAME}"
+              },
+              "agentName": {
+                "label": "节点名（默认 ${NODE_NAME}）",
+                "type": "vuex-input",
+                "default": "${NODE_NAME}"
+              },
+              "userId": {
+                "label": "触发用户（user_id 标签，可空）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "buildDurationMs": {
+                "label": "构建耗时（毫秒；留空取构建事实，再退化为 now - buildStartedMs）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "pauseDurationMs": {
+                "label": "暂停时长（毫秒；给了才发 build_duration，否则不臆造）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "queueDurationMs": {
+                "label": "排队时长（毫秒；给了才发 waiting）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "timestampMs": {
+                "label": "点/事件时间戳（epoch 毫秒；留空用构建结束时间或当前时间）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "sendMetrics": {
+                "label": "发送指标",
+                "type": "boolean",
+                "default": "true"
+              },
+              "sendEvent": {
+                "label": "发送事件",
+                "type": "boolean",
+                "default": "true"
+              },
+              "dryRun": {
+                "label": "只生成报文不发请求（true/false）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "failOnError": {
+                "label": "Datadog 拒绝时判失败（默认 true）",
+                "type": "vuex-input",
+                "default": "true"
+              },
+              "timeoutSeconds": {
+                "label": "超时（秒）",
+                "type": "vuex-input",
+                "default": "30"
+              }
+            },
+            "output": {
+              "usedSite": {
+                "type": "string",
+                "description": "使用的站点"
+              },
+              "usedApiVersion": {
+                "type": "string",
+                "description": "指标实际使用的 API 版本（1 / 2）"
+              },
+              "metricsEndpoint": {
+                "type": "string",
+                "description": "指标请求的完整 URL（没发则为空）"
+              },
+              "eventEndpoint": {
+                "type": "string",
+                "description": "事件请求的完整 URL"
+              },
+              "httpStatus": {
+                "type": "string",
+                "description": "指标请求的 HTTP 状态"
+              },
+              "eventHttpStatus": {
+                "type": "string",
+                "description": "事件请求的 HTTP 状态"
+              },
+              "metricsAccepted": {
+                "type": "string",
+                "description": "指标是否被接受（true / false / skipped）"
+              },
+              "eventsAccepted": {
+                "type": "string",
+                "description": "事件是否被接受（true / false / skipped）"
+              },
+              "seriesCount": {
+                "type": "string",
+                "description": "发出的时间序列条数"
+              },
+              "pointTimestampSeconds": {
+                "type": "string",
+                "description": "点/事件时间戳（epoch 秒）"
+              },
+              "tagsUsed": {
+                "type": "string",
+                "description": "实际附带的标签（逗号分隔）"
+              },
+              "metricsPayload": {
+                "type": "string",
+                "description": "指标请求体（原样，dry run 的唯一产物）"
+              },
+              "eventPayload": {
+                "type": "string",
+                "description": "事件请求体（原样）"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              },
+              "context": [
+                "build"
+              ],
+              "secrets": {
+                "apiKey": ""
+              }
+            }
+          },
+          "meta": {
+            "name": "Datadog build metrics",
+            "summary": "把构建指标（jenkins.job.duration / completed / waiting）与一条构建事件发到 Datadog HTTP API，key 走凭据，2xx 但报文被拒也判失败。",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-datadog-metrics",
+            "license": "MIT",
+            "tags": [
+              "official",
+              "monitoring",
+              "datadog",
+              "metrics"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        }
+      ]
+    },
+    {
       "atomCode": "dependency-check-report",
       "publisher": "hummerstudio",
       "name": "Dependency vulnerabilities",
@@ -6688,6 +6948,184 @@
               "official-port",
               "ftp",
               "deploy"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        }
+      ]
+    },
+    {
+      "atomCode": "gatling-report",
+      "publisher": "hummerstudio",
+      "name": "Gatling report",
+      "channels": {
+        "stable": "1.0.0"
+      },
+      "versions": [
+        {
+          "version": "1.0.0",
+          "publishedAt": "2026-11-01T19:38:42Z",
+          "package": {
+            "file": "packages/hummerstudio/gatling-report/1.0.0/gatling-report-1.0.0.zip",
+            "sha256": "25e8da3cf9fd177bc9c298ec9b0afb4b98fd4c56e6bcce69d01dff83ab5630fc"
+          },
+          "task": {
+            "atomCode": "gatling-report",
+            "name": "Gatling report",
+            "version": "1.0.0",
+            "description": "解析 Gatling 测试报告（global_stats.json 或文本 simulation.log），统计成功/失败请求与延迟，按阈值卡口，并产出一份自包含 HTML 报告。",
+            "execution": {
+              "packagePath": "gatling-report.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp gatling-report.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "pattern": {
+                "label": "报告文件 glob（逗号分隔；global_stats.json 与 simulation.log）",
+                "type": "vuex-input",
+                "default": "**/global_stats.json, **/simulation.log"
+              },
+              "label": {
+                "label": "报告名称",
+                "type": "vuex-input",
+                "default": "Gatling"
+              },
+              "outputDir": {
+                "label": "HTML 输出目录（相对工作区）",
+                "type": "vuex-input",
+                "default": "out/gatling"
+              },
+              "maxFailureCount": {
+                "label": "最多允许失败请求数（留空不限，0 表示一个都不许失败）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "maxFailurePercent": {
+                "label": "最多允许失败百分比（留空不限）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "maxMeanResponseTimeMs": {
+                "label": "平均响应时间上限（毫秒，留空不限）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "maxPercentile95Ms": {
+                "label": "P95 响应时间上限（毫秒，留空不限）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "maxPercentile99Ms": {
+                "label": "P99 响应时间上限（毫秒，留空不限）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "failOnThreshold": {
+                "label": "超过阈值就让这一步失败（否则只标记 UNSTABLE）",
+                "type": "checkbox",
+                "default": "true"
+              },
+              "failOnAssertionFailure": {
+                "label": "Gatling 断言失败也让这一步失败",
+                "type": "checkbox",
+                "default": "true"
+              },
+              "markUnstable": {
+                "label": "有失败请求/失败断言但没超阈值时标记 UNSTABLE",
+                "type": "checkbox",
+                "default": "true"
+              },
+              "maxRows": {
+                "label": "HTML 里最多列多少个请求",
+                "type": "vuex-input",
+                "default": "200"
+              }
+            },
+            "output": {
+              "simulations": {
+                "type": "string",
+                "description": "识别到的 simulation 数"
+              },
+              "requests": {
+                "type": "string",
+                "description": "请求总数"
+              },
+              "okRequests": {
+                "type": "string",
+                "description": "成功请求数"
+              },
+              "koRequests": {
+                "type": "string",
+                "description": "失败请求数（Gatling 的 ko）"
+              },
+              "koPercent": {
+                "type": "string",
+                "description": "失败百分比（保留一位小数）"
+              },
+              "meanResponseTimeMs": {
+                "type": "string",
+                "description": "平均响应时间（毫秒，按请求数加权）"
+              },
+              "p95ResponseTimeMs": {
+                "type": "string",
+                "description": "P95 响应时间（毫秒）"
+              },
+              "p99ResponseTimeMs": {
+                "type": "string",
+                "description": "P99 响应时间（毫秒）"
+              },
+              "maxResponseTimeMs": {
+                "type": "string",
+                "description": "最大响应时间（毫秒）"
+              },
+              "assertionTotal": {
+                "type": "string",
+                "description": "Gatling 断言总数（没有 assertions.json 时为 0）"
+              },
+              "assertionPassed": {
+                "type": "string",
+                "description": "通过的断言数"
+              },
+              "assertionFailed": {
+                "type": "string",
+                "description": "失败的断言数"
+              },
+              "thresholdBreaches": {
+                "type": "string",
+                "description": "超阈值项数"
+              },
+              "thresholdSummary": {
+                "type": "string",
+                "description": "超阈值说明（没有则 no threshold breached）"
+              },
+              "report": {
+                "type": "report",
+                "description": "构建页内嵌的自包含 HTML 报告"
+              },
+              "buildResult": {
+                "type": "string",
+                "description": "请求的构建结果（有失败但未超阈值时为 UNSTABLE）"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "Gatling report",
+            "summary": "Read a Gatling report (global_stats.json or the text simulation.log), gate on failure counts / error rate / mean / p95 / p99, and publish one self-contained HTML page.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-gatling-report",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "gatling",
+              "performance"
             ]
           },
           "requires": {
