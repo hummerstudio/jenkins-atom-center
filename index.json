@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-02T01:58:20Z",
+  "generatedAt": "2026-11-02T02:32:08Z",
   "atoms": [
     {
       "atomCode": "allure-report",
@@ -4811,6 +4811,105 @@
       ]
     },
     {
+      "atomCode": "coverage",
+      "publisher": "hummerstudio",
+      "name": "Coverage",
+      "channels": {
+        "stable": "1.3.0"
+      },
+      "versions": [
+        {
+          "version": "1.3.0",
+          "publishedAt": "2026-11-02T02:32:04Z",
+          "package": {
+            "file": "packages/hummerstudio/coverage/1.3.0/coverage-1.3.0.zip",
+            "sha256": "550c28e21c6081d7af89bdaae0d762ada972fff43a74308cadd4e651eb2210f2"
+          },
+          "task": {
+            "atomCode": "coverage",
+            "name": "Coverage",
+            "version": "1.3.0",
+            "description": "Reads JaCoCo or Cobertura XML, shows the numbers and gates the build on a threshold.",
+            "execution": {
+              "packagePath": "coverage-upload.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp coverage-upload.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "pattern": {
+                "label": "报告文件 glob（逗号分隔）",
+                "type": "vuex-input",
+                "default": "**/jacoco.xml, **/cobertura-coverage.xml, **/coverage.xml, **/lcov.info"
+              },
+              "label": {
+                "label": "报告名称",
+                "type": "vuex-input",
+                "default": "Coverage"
+              },
+              "outputDir": {
+                "label": "HTML 输出目录",
+                "type": "vuex-input",
+                "default": "out/coverage"
+              },
+              "minLine": {
+                "label": "行覆盖率下限（%，0 = 不检查）",
+                "type": "vuex-input",
+                "default": "0"
+              },
+              "minBranch": {
+                "label": "分支覆盖率下限（%，0 = 不检查）",
+                "type": "vuex-input",
+                "default": "0"
+              },
+              "allowUnreadableReports": {
+                "label": "报告解析失败也继续（默认 false：解析失败即失败）",
+                "type": "boolean",
+                "default": "false"
+              }
+            },
+            "output": {
+              "lineCoverage": {
+                "type": "string",
+                "description": "行覆盖率（保留两位）"
+              },
+              "branchCoverage": {
+                "type": "string",
+                "description": "分支覆盖率"
+              },
+              "files": {
+                "type": "string",
+                "description": "解析的报告数"
+              },
+              "report": {
+                "type": "report",
+                "description": "构建页内嵌报告"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "Coverage report",
+            "summary": "Reads JaCoCo or Cobertura XML, shows the numbers and gates the build on a threshold.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-coverage-upload",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "coverage-upload"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        }
+      ]
+    },
+    {
       "atomCode": "coverage-upload",
       "publisher": "hummerstudio",
       "name": "Coverage report",
@@ -8238,6 +8337,162 @@
       ]
     },
     {
+      "atomCode": "github",
+      "publisher": "hummerstudio",
+      "name": "Commit status",
+      "channels": {
+        "stable": "1.1.0"
+      },
+      "versions": [
+        {
+          "version": "1.1.0",
+          "publishedAt": "2026-11-02T02:32:07Z",
+          "package": {
+            "file": "packages/hummerstudio/github/1.1.0/github-1.1.0.zip",
+            "sha256": "de07e4e0c9d6a12afce3e104d2eb2a877bd9d7dfa2a31d4d30455e2abdb47a28"
+          },
+          "task": {
+            "atomCode": "github",
+            "name": "Commit status",
+            "version": "1.1.0",
+            "description": "Posts the build state back to the commit on GitHub, GitLab or Gitea; on GitHub it does what the githubNotify step does (check credential / repository / commit first, report on the sha the API returns) and can also comment on a pull request.",
+            "execution": {
+              "packagePath": "github.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp github.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "provider": {
+                "label": "平台",
+                "type": "selector",
+                "default": "github",
+                "options": [
+                  "github",
+                  "gitlab",
+                  "gitea"
+                ]
+              },
+              "account": {
+                "label": "账号 / 组织（GitHub 必填；repo 写成 owner/name 时可留空）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "repo": {
+                "label": "仓库名（或 owner/name；留空取 GIT_URL）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "sha": {
+                "label": "提交 sha（留空取 GIT_COMMIT）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "state": {
+                "label": "状态（留空按 BUILD_STATUS 推断）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "contextName": {
+                "label": "状态名",
+                "type": "vuex-input",
+                "default": "jenkins/atom"
+              },
+              "description": {
+                "label": "描述（留空自动生成）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "targetUrl": {
+                "label": "详情链接（留空取 BUILD_URL）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "apiUrl": {
+                "label": "API 地址（gitea 必填）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "token": {
+                "label": "Token（凭据 id，Secret text）",
+                "type": "vuex-input",
+                "default": "",
+                "isSensitive": true
+              },
+              "preflight": {
+                "label": "写之前先核对凭据 / 仓库 / 提交（GitHub、Gitea）",
+                "type": "boolean",
+                "default": "true"
+              },
+              "verifyStatus": {
+                "label": "核对接口回显的状态（不是看状态码）",
+                "type": "boolean",
+                "default": "true"
+              },
+              "prNumber": {
+                "label": "PR 编号（留空取 CHANGE_ID）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "prComment": {
+                "label": "PR 评论正文（可选，支持 ${VAR}；插件没有这个功能）",
+                "type": "vuex-input",
+                "default": ""
+              }
+            },
+            "output": {
+              "status": {
+                "type": "string",
+                "description": "HTTP 状态码"
+              },
+              "state": {
+                "type": "string",
+                "description": "映射后的状态"
+              },
+              "sha": {
+                "type": "string",
+                "description": "实际写状态的提交 sha（可能是接口给出的完整 sha）"
+              },
+              "verified": {
+                "type": "string",
+                "description": "接口回显的状态；未开启校验为 not-checked"
+              },
+              "apiUrl": {
+                "type": "string",
+                "description": "实际调用的地址"
+              },
+              "commentId": {
+                "type": "string",
+                "description": "回读到的 PR 评论 id"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              },
+              "secrets": {
+                "token": ""
+              }
+            }
+          },
+          "meta": {
+            "name": "Commit status",
+            "summary": "Posts the build state back to the commit on GitHub, GitLab or Gitea.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-github",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "github"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        }
+      ]
+    },
+    {
       "atomCode": "github-checks",
       "publisher": "hummerstudio",
       "name": "GitHub Checks",
@@ -8433,6 +8688,116 @@
               "github-checks",
               "checks-api",
               "annotations"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        }
+      ]
+    },
+    {
+      "atomCode": "gitlab",
+      "publisher": "hummerstudio",
+      "name": "GitLab merge request",
+      "channels": {
+        "stable": "1.0.0"
+      },
+      "versions": [
+        {
+          "version": "1.0.0",
+          "publishedAt": "2026-11-02T02:32:08Z",
+          "package": {
+            "file": "packages/hummerstudio/gitlab/1.0.0/gitlab-1.0.0.zip",
+            "sha256": "afda9b1dcd75a7b0fc1b85c9ab2a2eb0c0a8bb43bf6247fc5584586459f5804c"
+          },
+          "task": {
+            "atomCode": "gitlab",
+            "name": "GitLab merge request",
+            "version": "1.0.0",
+            "description": "Comments on, approves or labels a GitLab merge request.",
+            "execution": {
+              "packagePath": "gitlab.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp gitlab.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "baseUrl": {
+                "label": "GitLab 地址",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "project": {
+                "label": "项目路径或 id（group/app）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "mrIid": {
+                "label": "Merge Request 编号",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "action": {
+                "label": "动作（comment / approve / labels）",
+                "type": "vuex-input",
+                "default": "comment"
+              },
+              "comment": {
+                "label": "评论内容（comment）",
+                "type": "textarea",
+                "default": ""
+              },
+              "labels": {
+                "label": "标签（逗号分隔，labels）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "token": {
+                "label": "Personal Access Token",
+                "type": "password",
+                "default": ""
+              },
+              "timeoutSeconds": {
+                "label": "超时（秒）",
+                "type": "vuex-input",
+                "default": "30"
+              }
+            },
+            "output": {
+              "action": {
+                "type": "string",
+                "description": "执行的动作"
+              },
+              "noteId": {
+                "type": "string",
+                "description": "评论 id（comment）"
+              },
+              "labels": {
+                "type": "string",
+                "description": "设置的标签（labels）"
+              },
+              "mrUrl": {
+                "type": "string",
+                "description": "MR 链接"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "GitLab merge request",
+            "summary": "Comments on, approves or labels a GitLab merge request.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-gitlab",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "gitlab",
+              "review"
             ]
           },
           "requires": {
@@ -10429,6 +10794,122 @@
             "tags": [
               "official-port",
               "jtl-report"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        }
+      ]
+    },
+    {
+      "atomCode": "junit",
+      "publisher": "hummerstudio",
+      "name": "JUnit",
+      "channels": {
+        "stable": "1.3.2"
+      },
+      "versions": [
+        {
+          "version": "1.3.2",
+          "publishedAt": "2026-11-02T02:32:03Z",
+          "package": {
+            "file": "packages/hummerstudio/junit/1.3.2/junit-1.3.2.zip",
+            "sha256": "47fe72d121d5d93236c47b3bf24dccdb8e0e5dff82654eadc8ab93a8d0b05797"
+          },
+          "task": {
+            "atomCode": "junit",
+            "name": "JUnit",
+            "version": "1.3.2",
+            "description": "Summarises the JUnit XML a build produced and publishes it as an HTML report on the build page.",
+            "execution": {
+              "packagePath": "junit.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp junit.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "testResults": {
+                "label": "测试报告 XML（glob，逗号分隔）",
+                "type": "vuex-input",
+                "default": "**/surefire-reports/*.xml"
+              },
+              "label": {
+                "label": "报告名称",
+                "type": "vuex-input",
+                "default": "Test results"
+              },
+              "outputDir": {
+                "label": "生成的 HTML 放哪里",
+                "type": "vuex-input",
+                "default": "out/junit"
+              },
+              "allowEmptyResults": {
+                "label": "没有匹配到报告不算失败",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "skipMarkingUnstable": {
+                "label": "有失败用例时不把构建标为 UNSTABLE",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "failOnFailure": {
+                "label": "有失败用例就让这一步失败（比 UNSTABLE 更强）",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "allowUnreadableReports": {
+                "label": "报告解析失败也继续（默认 false：解析失败即失败）",
+                "type": "boolean",
+                "default": "false"
+              }
+            },
+            "output": {
+              "total": {
+                "type": "string",
+                "description": "用例总数"
+              },
+              "failed": {
+                "type": "string",
+                "description": "失败数"
+              },
+              "errors": {
+                "type": "string",
+                "description": "错误数"
+              },
+              "skipped": {
+                "type": "string",
+                "description": "跳过数"
+              },
+              "durationSeconds": {
+                "type": "string",
+                "description": "用例耗时合计（秒）"
+              },
+              "report": {
+                "type": "report",
+                "description": "构建页内嵌的 HTML 报告"
+              },
+              "buildResult": {
+                "type": "string",
+                "description": "请求的构建结果（UNSTABLE 时由 runner 施加）"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "JUnit test report",
+            "summary": "把 junit 插件变成一个原子：解析 JUnit XML、汇总、发布 HTML 报告。",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-junit",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "junit"
             ]
           },
           "requires": {
@@ -14749,6 +15230,125 @@
       ]
     },
     {
+      "atomCode": "sonar",
+      "publisher": "hummerstudio",
+      "name": "SonarQube scan",
+      "channels": {
+        "stable": "1.0.1"
+      },
+      "versions": [
+        {
+          "version": "1.0.1",
+          "publishedAt": "2026-11-02T02:32:06Z",
+          "package": {
+            "file": "packages/hummerstudio/sonar/1.0.1/sonar-1.0.1.zip",
+            "sha256": "0ebe3beacc2279f346d602766e556ac8413d2095bf0b3d4e67cc1a08d1da9211"
+          },
+          "task": {
+            "atomCode": "sonar",
+            "name": "SonarQube scan",
+            "version": "1.0.1",
+            "description": "Runs sonarner and, unless told not to, holds the build until the quality gate answers.",
+            "execution": {
+              "packagePath": "sonar.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp sonar.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "projectKey": {
+                "label": "项目 key（必填）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "hostUrl": {
+                "label": "SonarQube 地址",
+                "type": "vuex-input",
+                "default": "https://sonarcloud.io"
+              },
+              "scanner": {
+                "label": "scanner 命令",
+                "type": "vuex-input",
+                "default": "sonarner"
+              },
+              "sources": {
+                "label": "源码目录",
+                "type": "vuex-input",
+                "default": "."
+              },
+              "exclusions": {
+                "label": "排除规则（sonar.exclusions）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "extraArgs": {
+                "label": "额外 -D 参数（空格分隔）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "waitForQualityGate": {
+                "label": "等待质量门禁结果",
+                "type": "checkbox",
+                "default": "true"
+              },
+              "gateTimeoutSeconds": {
+                "label": "等待超时（秒）",
+                "type": "vuex-input-number",
+                "default": "300"
+              },
+              "failOnGate": {
+                "label": "门禁未通过让构建失败",
+                "type": "checkbox",
+                "default": "true"
+              },
+              "sonarToken": {
+                "label": "SonarQube Token（凭据 id，Secret text）",
+                "type": "vuex-input",
+                "default": "",
+                "isSensitive": true
+              }
+            },
+            "output": {
+              "dashboardUrl": {
+                "type": "string",
+                "description": "SonarQube 项目看板地址"
+              },
+              "taskId": {
+                "type": "string",
+                "description": "计算引擎任务 id"
+              },
+              "qualityGate": {
+                "type": "string",
+                "description": "OK / ERROR / UNKNOWN"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              },
+              "secrets": {
+                "sonarToken": ""
+              }
+            }
+          },
+          "meta": {
+            "name": "SonarQube scan",
+            "summary": "Runs sonarner and, unless told not to, holds the build until the quality gate answers.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-sonar",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "sonar"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        }
+      ]
+    },
+    {
       "atomCode": "sonar-gate",
       "publisher": "hummerstudio",
       "name": "SonarQube quality gate",
@@ -17769,6 +18369,122 @@
             "tags": [
               "official-port",
               "ws-cleanup"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        }
+      ]
+    },
+    {
+      "atomCode": "xunit",
+      "publisher": "hummerstudio",
+      "name": ".NET test report",
+      "channels": {
+        "stable": "1.1.1"
+      },
+      "versions": [
+        {
+          "version": "1.1.1",
+          "publishedAt": "2026-11-02T02:32:05Z",
+          "package": {
+            "file": "packages/hummerstudio/xunit/1.1.1/xunit-1.1.1.zip",
+            "sha256": "1d7e1f1c5f6a34031f0e47bf2c050c2bd37e8dcc6e6798aa0877b8ca3ac01ac1"
+          },
+          "task": {
+            "atomCode": "xunit",
+            "name": ".NET test report",
+            "version": "1.1.1",
+            "description": "Reads .NET test reports: NUnit 3/2, MSTest and dotnet test TRX, xUnit.net. Not JUnit XML.",
+            "execution": {
+              "packagePath": "xunit.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp xunit.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "testResults": {
+                "label": "报告 glob",
+                "type": "vuex-input",
+                "default": "**/TestResults/*.trx, **/*.trx, **/TestResults/*.xml, **/test-results*.xml, **/nunit*.xml, **/xunit*.xml"
+              },
+              "label": {
+                "label": "报告名称",
+                "type": "vuex-input",
+                "default": ".NET tests"
+              },
+              "outputDir": {
+                "label": "HTML 输出目录",
+                "type": "vuex-input",
+                "default": "out/xunit"
+              },
+              "allowEmptyResults": {
+                "label": "没有报告不算失败",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "failOnFailure": {
+                "label": "有失败用例就让这一步失败",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "skipMarkingUnstable": {
+                "label": "不把构建标为 UNSTABLE",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "allowUnreadableReports": {
+                "label": "报告解析失败也继续（默认 false：解析失败即失败）",
+                "type": "boolean",
+                "default": "false"
+              }
+            },
+            "output": {
+              "total": {
+                "type": "string",
+                "description": "用例数"
+              },
+              "passed": {
+                "type": "string",
+                "description": "通过"
+              },
+              "failed": {
+                "type": "string",
+                "description": "失败"
+              },
+              "skipped": {
+                "type": "string",
+                "description": "跳过"
+              },
+              "report": {
+                "type": "report",
+                "description": "构建页内嵌报告"
+              },
+              "errors": {
+                "type": "string",
+                "description": "tests that neither passed, failed nor were skipped (error, timeout, warning)"
+              },
+              "formats": {
+                "type": "string",
+                "description": "report shapes found, comma separated: nunit3 / nunit2 / mstest-trx / xunit-net"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": ".NET test report",
+            "summary": "读 NUnit 3 / MSTest / xUnit.net 的报告（不是 JUnit XML）。",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-xunit",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "xunit"
             ]
           },
           "requires": {
