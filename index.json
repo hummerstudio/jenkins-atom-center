@@ -1,7 +1,114 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-02T03:21:23Z",
+  "generatedAt": "2026-11-02T03:26:05Z",
   "atoms": [
+    {
+      "atomCode": "allure",
+      "publisher": "hummerstudio",
+      "name": "Allure report",
+      "channels": {
+        "stable": "1.1.0"
+      },
+      "versions": [
+        {
+          "version": "1.1.0",
+          "publishedAt": "2026-11-02T03:25:56Z",
+          "package": {
+            "file": "packages/hummerstudio/allure/1.1.0/allure-1.1.0.zip",
+            "sha256": "10968828ab505f163f075849436e70733a89877f28269235f53902f08cb3457f"
+          },
+          "task": {
+            "atomCode": "allure",
+            "name": "Allure report",
+            "version": "1.1.0",
+            "description": "Reads allure-results and writes one self-contained HTML report with the counts.",
+            "execution": {
+              "packagePath": "allure.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp allure.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "resultsDir": {
+                "label": "allure-results 目录",
+                "type": "vuex-input",
+                "default": "allure-results"
+              },
+              "reportDir": {
+                "label": "报告输出目录",
+                "type": "vuex-input",
+                "default": "out/allure"
+              },
+              "title": {
+                "label": "报告标题",
+                "type": "vuex-input",
+                "default": "Allure report"
+              },
+              "failOnFailure": {
+                "label": "有失败用例就让这一步失败",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "allowUnreadableReports": {
+                "label": "结果文件解析失败也继续（默认 false：解析失败即失败）",
+                "type": "boolean",
+                "default": "false"
+              }
+            },
+            "output": {
+              "total": {
+                "type": "string",
+                "description": "用例总数"
+              },
+              "passed": {
+                "type": "string",
+                "description": "通过"
+              },
+              "failed": {
+                "type": "string",
+                "description": "失败"
+              },
+              "broken": {
+                "type": "string",
+                "description": "异常中断"
+              },
+              "skipped": {
+                "type": "string",
+                "description": "跳过"
+              },
+              "durationMs": {
+                "type": "string",
+                "description": "合计耗时（毫秒）"
+              },
+              "report": {
+                "type": "report",
+                "description": "构建页内嵌的 HTML 报告"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "Allure report",
+            "summary": "Reads allure-results and writes one self-contained HTML report with the counts.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-allure",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "allure",
+              "report"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        }
+      ]
+    },
     {
       "atomCode": "allure-report",
       "publisher": "hummerstudio",
@@ -3585,6 +3692,104 @@
       ]
     },
     {
+      "atomCode": "checkstyle",
+      "publisher": "hummerstudio",
+      "name": "Static analysis report",
+      "channels": {
+        "stable": "1.2.0"
+      },
+      "versions": [
+        {
+          "version": "1.2.0",
+          "publishedAt": "2026-11-02T03:25:58Z",
+          "package": {
+            "file": "packages/hummerstudio/checkstyle/1.2.0/checkstyle-1.2.0.zip",
+            "sha256": "3aed72ef672ceb4a9c36fff71e3b69ac25cf6821fc89d9e80be1fbebe2101755"
+          },
+          "task": {
+            "atomCode": "checkstyle",
+            "name": "Static analysis report",
+            "version": "1.2.0",
+            "description": "Reads checkstyle, PMD or SpotBugs XML, counts by severity and publishes it.",
+            "execution": {
+              "packagePath": "checkstyle.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp checkstyle.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "pattern": {
+                "label": "报告 glob（逗号分隔）",
+                "type": "vuex-input",
+                "default": "**/checkstyle-result.xml, **/pmd.xml, **/spotbugsXml.xml, **/cppcheck*.xml"
+              },
+              "label": {
+                "label": "报告名称",
+                "type": "vuex-input",
+                "default": "Static analysis"
+              },
+              "outputDir": {
+                "label": "HTML 输出目录",
+                "type": "vuex-input",
+                "default": "out/static-analysis"
+              },
+              "maxErrors": {
+                "label": "允许的 error 数（超过则失败）",
+                "type": "vuex-input-number",
+                "default": "0"
+              },
+              "allowUnreadableReports": {
+                "label": "报告解析失败也继续（默认 false：解析失败即失败）",
+                "type": "boolean",
+                "default": "false"
+              }
+            },
+            "output": {
+              "total": {
+                "type": "string",
+                "description": "问题总数"
+              },
+              "errors": {
+                "type": "string",
+                "description": "error 级"
+              },
+              "warnings": {
+                "type": "string",
+                "description": "warning 级"
+              },
+              "infos": {
+                "type": "string",
+                "description": "info 级"
+              },
+              "report": {
+                "type": "report",
+                "description": "构建页内嵌报告"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "Static analysis report",
+            "summary": "Reads checkstyle, PMD or SpotBugs XML, counts by severity and publishes it.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-checkstyle",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "checkstyle"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        }
+      ]
+    },
+    {
       "atomCode": "checkstyle-report",
       "publisher": "hummerstudio",
       "name": "Static analysis report",
@@ -5827,6 +6032,104 @@
       ]
     },
     {
+      "atomCode": "cucumber",
+      "publisher": "hummerstudio",
+      "name": "Cucumber report",
+      "channels": {
+        "stable": "1.0.0"
+      },
+      "versions": [
+        {
+          "version": "1.0.0",
+          "publishedAt": "2026-11-02T03:25:53Z",
+          "package": {
+            "file": "packages/hummerstudio/cucumber/1.0.0/cucumber-1.0.0.zip",
+            "sha256": "44af1ca18b759c311981c54b84aed6da330a6638f3b5d6415884464be5ec0066"
+          },
+          "task": {
+            "atomCode": "cucumber",
+            "name": "Cucumber report",
+            "version": "1.0.0",
+            "description": "读 cucumber JSON，按场景统计并发布。",
+            "execution": {
+              "packagePath": "cucumber.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp cucumber.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "pattern": {
+                "label": "JSON glob",
+                "type": "vuex-input",
+                "default": "**/cucumber.json, **/*cucumber*.json, **/target/cucumbers/*.json"
+              },
+              "label": {
+                "label": "报告名称",
+                "type": "vuex-input",
+                "default": "Cucumber"
+              },
+              "outputDir": {
+                "label": "HTML 输出目录",
+                "type": "vuex-input",
+                "default": "out/cucumber"
+              },
+              "failOnFailure": {
+                "label": "有失败场景就让这一步失败",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "skipMarkingUnstable": {
+                "label": "不把构建标为 UNSTABLE",
+                "type": "checkbox",
+                "default": "false"
+              }
+            },
+            "output": {
+              "scenarios": {
+                "type": "string",
+                "description": "场景数"
+              },
+              "passed": {
+                "type": "string",
+                "description": "通过"
+              },
+              "failed": {
+                "type": "string",
+                "description": "失败"
+              },
+              "skipped": {
+                "type": "string",
+                "description": "跳过"
+              },
+              "report": {
+                "type": "report",
+                "description": "构建页内嵌报告"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "Cucumber report",
+            "summary": "读 cucumber JSON，按场景统计并发布。",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-cucumber",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "cucumbers"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        }
+      ]
+    },
+    {
       "atomCode": "cucumber-report",
       "publisher": "hummerstudio",
       "name": "Cucumber report",
@@ -6176,6 +6479,118 @@
               "monitoring",
               "datadog",
               "metrics"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        }
+      ]
+    },
+    {
+      "atomCode": "dependency-check",
+      "publisher": "hummerstudio",
+      "name": "Dependency vulnerabilities",
+      "channels": {
+        "stable": "1.1.0"
+      },
+      "versions": [
+        {
+          "version": "1.1.0",
+          "publishedAt": "2026-11-02T03:26:00Z",
+          "package": {
+            "file": "packages/hummerstudio/dependency-check/1.1.0/dependency-check-1.1.0.zip",
+            "sha256": "90a43f9d5a5fc958e16e8360a1fe959eaf9a513d4cd3e533ea1ddce372cc0142"
+          },
+          "task": {
+            "atomCode": "dependency-check",
+            "name": "Dependency vulnerabilities",
+            "version": "1.1.0",
+            "description": "Reads an OWASP dependency-check XML report and gates on critical/high findings.",
+            "execution": {
+              "packagePath": "dependency-check.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp dependency-check.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "pattern": {
+                "label": "报告 glob",
+                "type": "vuex-input",
+                "default": "**/dependency-check-report.xml"
+              },
+              "label": {
+                "label": "报告名称",
+                "type": "vuex-input",
+                "default": "Dependencies"
+              },
+              "outputDir": {
+                "label": "HTML 输出目录",
+                "type": "vuex-input",
+                "default": "out/dependencies"
+              },
+              "maxCritical": {
+                "label": "允许的 critical 数",
+                "type": "vuex-input-number",
+                "default": "0"
+              },
+              "maxHigh": {
+                "label": "允许的 high 数（-1 = 不检查）",
+                "type": "vuex-input-number",
+                "default": "-1"
+              },
+              "maxTotal": {
+                "label": "允许的漏洞总数（-1 = 不检查）",
+                "type": "vuex-input-number",
+                "default": "-1"
+              },
+              "allowUnreadableReports": {
+                "label": "报告解析失败也继续（默认 false：解析失败即失败）",
+                "type": "boolean",
+                "default": "false"
+              }
+            },
+            "output": {
+              "dependencies": {
+                "type": "string",
+                "description": "依赖数"
+              },
+              "vulnerabilities": {
+                "type": "string",
+                "description": "漏洞数"
+              },
+              "critical": {
+                "type": "string",
+                "description": "critical 数"
+              },
+              "high": {
+                "type": "string",
+                "description": "high 数"
+              },
+              "medium": {
+                "type": "string",
+                "description": "medium 数"
+              },
+              "report": {
+                "type": "report",
+                "description": "构建页内嵌报告"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "Dependency vulnerabilities",
+            "summary": "Reads an OWASP dependency-check XML report and gates on critical/high findings.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-dependency-check",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "dependency-check"
             ]
           },
           "requires": {
@@ -9617,6 +10032,72 @@
       ]
     },
     {
+      "atomCode": "html",
+      "publisher": "hummerstudio",
+      "name": "Publish HTML report",
+      "channels": {
+        "stable": "1.2.0"
+      },
+      "versions": [
+        {
+          "version": "1.2.0",
+          "publishedAt": "2026-11-02T03:26:03Z",
+          "package": {
+            "file": "packages/hummerstudio/html/1.2.0/html-1.2.0.zip",
+            "sha256": "bbaf487207dadf44b8034f860b26a52e636b2fbf71ea550929991b8acbc3c2db"
+          },
+          "task": {
+            "atomCode": "html",
+            "name": "Publish HTML report",
+            "version": "1.2.0",
+            "description": "Publishes an HTML report directory from the workspace: archived with the build and viewable inline on the build page (the core of the htmlpublisher plugin).",
+            "execution": {
+              "packagePath": "html.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp html.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "path": {
+                "label": "报告目录（workspace 相对路径，如 out/coverage）",
+                "type": "vuex-input",
+                "required": true
+              },
+              "index": {
+                "label": "入口文件（相对报告目录）",
+                "type": "vuex-input",
+                "default": "index.html"
+              },
+              "label": {
+                "label": "报告名称（构建页上显示）",
+                "type": "vuex-input",
+                "default": "HTML report"
+              },
+              "requireIndex": {
+                "label": "入口文件不存在就失败",
+                "type": "checkbox",
+                "default": "true"
+              }
+            },
+            "output": {
+              "report": {
+                "type": "report",
+                "description": "归档并在构建页内嵌的报告"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.3.0"
+              }
+            }
+          },
+          "requires": {
+            "runner": ">=0.3.0"
+          }
+        }
+      ]
+    },
+    {
       "atomCode": "html-report",
       "publisher": "hummerstudio",
       "name": "Publish HTML report",
@@ -10745,6 +11226,126 @@
               "official-port",
               "jira",
               "issue-tracker"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        }
+      ]
+    },
+    {
+      "atomCode": "jmeter",
+      "publisher": "hummerstudio",
+      "name": "JMeter report",
+      "channels": {
+        "stable": "1.2.0"
+      },
+      "versions": [
+        {
+          "version": "1.2.0",
+          "publishedAt": "2026-11-02T03:26:01Z",
+          "package": {
+            "file": "packages/hummerstudio/jmeter/1.2.0/jmeter-1.2.0.zip",
+            "sha256": "62845fa2f95c1eb9ef635123f27a5a874933019f86657f6cb3dd04c667545d4e"
+          },
+          "task": {
+            "atomCode": "jmeter",
+            "name": "JMeter report",
+            "version": "1.2.0",
+            "description": "Turns a .jtl into latency percentiles and an error rate, per label and overall.",
+            "execution": {
+              "packagePath": "jmeter.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp jmeter.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "pattern": {
+                "label": "jtl 文件 glob",
+                "type": "vuex-input",
+                "default": "**/*.jtl"
+              },
+              "label": {
+                "label": "报告名称",
+                "type": "vuex-input",
+                "default": "Load test"
+              },
+              "outputDir": {
+                "label": "HTML 输出目录",
+                "type": "vuex-input",
+                "default": "out/jtl"
+              },
+              "maxErrorPercent": {
+                "label": "错误率上限（%，0 = 不检查）",
+                "type": "vuex-input",
+                "default": "0"
+              },
+              "maxP99Ms": {
+                "label": "p99 上限（毫秒，0 表示不卡）",
+                "type": "vuex-input",
+                "default": "0"
+              },
+              "maxAverageMs": {
+                "label": "平均响应上限（毫秒，0 表示不卡）",
+                "type": "vuex-input",
+                "default": "0"
+              },
+              "allowUnreadableReports": {
+                "label": "报告解析失败也继续（默认 false：解析失败即失败）",
+                "type": "boolean",
+                "default": "false"
+              }
+            },
+            "output": {
+              "samples": {
+                "type": "string",
+                "description": "样本数"
+              },
+              "errors": {
+                "type": "string",
+                "description": "错误数"
+              },
+              "errorPercent": {
+                "type": "string",
+                "description": "错误率"
+              },
+              "avgMs": {
+                "type": "string",
+                "description": "平均耗时"
+              },
+              "p90Ms": {
+                "type": "string",
+                "description": "p90"
+              },
+              "p99Ms": {
+                "type": "string",
+                "description": "p99"
+              },
+              "maxMs": {
+                "type": "string",
+                "description": "最大耗时"
+              },
+              "report": {
+                "type": "report",
+                "description": "构建页内嵌报告"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "JMeter report",
+            "summary": "Turns a .jtl into latency percentiles and an error rate, per label and overall.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-jmeter",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "jmeter"
             ]
           },
           "requires": {
@@ -14742,6 +15343,104 @@
       ]
     },
     {
+      "atomCode": "robot",
+      "publisher": "hummerstudio",
+      "name": "Robot Framework report",
+      "channels": {
+        "stable": "1.0.0"
+      },
+      "versions": [
+        {
+          "version": "1.0.0",
+          "publishedAt": "2026-11-02T03:25:55Z",
+          "package": {
+            "file": "packages/hummerstudio/robot/1.0.0/robot-1.0.0.zip",
+            "sha256": "3d31e51f00cef971fd25e9e0f1f48a004839761799be19749ef23959fd7a39c6"
+          },
+          "task": {
+            "atomCode": "robot",
+            "name": "Robot Framework report",
+            "version": "1.0.0",
+            "description": "读 Robot 的 output.xml，统计通过/失败/跳过。",
+            "execution": {
+              "packagePath": "robot.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp robot.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "pattern": {
+                "label": "output.xml glob",
+                "type": "vuex-input",
+                "default": "**/output.xml"
+              },
+              "label": {
+                "label": "报告名称",
+                "type": "vuex-input",
+                "default": "Robot Framework"
+              },
+              "outputDir": {
+                "label": "HTML 输出目录",
+                "type": "vuex-input",
+                "default": "out/robot"
+              },
+              "failOnFailure": {
+                "label": "有失败用例就让这一步失败",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "skipMarkingUnstable": {
+                "label": "不把构建标为 UNSTABLE",
+                "type": "checkbox",
+                "default": "false"
+              }
+            },
+            "output": {
+              "total": {
+                "type": "string",
+                "description": "用例数"
+              },
+              "passed": {
+                "type": "string",
+                "description": "通过"
+              },
+              "failed": {
+                "type": "string",
+                "description": "失败"
+              },
+              "skipped": {
+                "type": "string",
+                "description": "跳过"
+              },
+              "report": {
+                "type": "report",
+                "description": "构建页内嵌报告"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "Robot Framework report",
+            "summary": "读 Robot 的 output.xml，统计通过/失败/跳过。",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-robot",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "robot"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        }
+      ]
+    },
+    {
       "atomCode": "robot-report",
       "publisher": "hummerstudio",
       "name": "Robot Framework report",
@@ -17157,6 +17856,104 @@
       ]
     },
     {
+      "atomCode": "tap",
+      "publisher": "hummerstudio",
+      "name": "TAP / CTest report",
+      "channels": {
+        "stable": "1.1.0"
+      },
+      "versions": [
+        {
+          "version": "1.1.0",
+          "publishedAt": "2026-11-02T03:25:51Z",
+          "package": {
+            "file": "packages/hummerstudio/tap/1.1.0/tap-1.1.0.zip",
+            "sha256": "e96763437b035c522c9d27f9be5aad3d2bc3967f14cad537e81d12ec79375114"
+          },
+          "task": {
+            "atomCode": "tap",
+            "name": "TAP / CTest report",
+            "version": "1.1.0",
+            "description": "Reads TAP and CTest XML, counts pass/fail/skip and publishes the list.",
+            "execution": {
+              "packagePath": "tap.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp tap.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "pattern": {
+                "label": "报告文件 glob",
+                "type": "vuex-input",
+                "default": "**/*.tap, **/Testing/**/Test.xml, **/test-results/*.tap"
+              },
+              "label": {
+                "label": "报告名称",
+                "type": "vuex-input",
+                "default": "Test results (TAP)"
+              },
+              "outputDir": {
+                "label": "HTML 输出目录",
+                "type": "vuex-input",
+                "default": "out/tap"
+              },
+              "failOnFailure": {
+                "label": "有失败用例就让构建失败",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "skipMarkingUnstable": {
+                "label": "有失败用例时不把构建标为 UNSTABLE",
+                "type": "checkbox",
+                "default": "false"
+              }
+            },
+            "output": {
+              "total": {
+                "type": "string",
+                "description": "用例数"
+              },
+              "passed": {
+                "type": "string",
+                "description": "通过"
+              },
+              "failed": {
+                "type": "string",
+                "description": "失败"
+              },
+              "skipped": {
+                "type": "string",
+                "description": "跳过"
+              },
+              "report": {
+                "type": "report",
+                "description": "构建页内嵌报告"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "TAP / CTest report",
+            "summary": "Reads TAP and CTest XML, counts pass/fail/skip and publishes the list.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-tap",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "tap"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        }
+      ]
+    },
+    {
       "atomCode": "tap-report",
       "publisher": "hummerstudio",
       "name": "TAP / CTest report",
@@ -17553,6 +18350,150 @@
               "official-port",
               "notification",
               "telegram"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        }
+      ]
+    },
+    {
+      "atomCode": "testng",
+      "publisher": "hummerstudio",
+      "name": "TestNG report",
+      "channels": {
+        "stable": "1.0.1"
+      },
+      "versions": [
+        {
+          "version": "1.0.1",
+          "publishedAt": "2026-11-02T03:25:50Z",
+          "package": {
+            "file": "packages/hummerstudio/testng/1.0.1/testng-1.0.1.zip",
+            "sha256": "791dab308b38bc13b7a316ba195712d7174e32ffca0977964834f88b55ce225e"
+          },
+          "task": {
+            "atomCode": "testng",
+            "name": "TestNG report",
+            "version": "1.0.1",
+            "description": "解析 TestNG 的 testng-results.xml，按 testng 插件的阈值规则给构建定级（UNSTABLE/FAILURE），并发布自包含 HTML 报告。",
+            "execution": {
+              "packagePath": "testng.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp testng.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "reportFilenamePattern": {
+                "label": "TestNG XML（glob，可用 , ; 分隔多个）",
+                "type": "vuex-input",
+                "default": "**/testng-results.xml"
+              },
+              "label": {
+                "label": "报告名称",
+                "type": "vuex-input",
+                "default": "TestNG results"
+              },
+              "outputDir": {
+                "label": "生成的 HTML 放哪里",
+                "type": "vuex-input",
+                "default": "out/testng"
+              },
+              "thresholdMode": {
+                "label": "阈值模式（1=用例个数，2=百分比）",
+                "type": "vuex-input",
+                "default": "2"
+              },
+              "failedFails": {
+                "label": "失败用例数/百分比 超过多少判 FAILURE（默认 100）",
+                "type": "vuex-input",
+                "default": "100"
+              },
+              "failedSkips": {
+                "label": "跳过用例数/百分比 超过多少判 FAILURE（默认 100）",
+                "type": "vuex-input",
+                "default": "100"
+              },
+              "unstableFails": {
+                "label": "失败用例数/百分比 超过多少判 UNSTABLE（默认 0）",
+                "type": "vuex-input",
+                "default": "0"
+              },
+              "unstableSkips": {
+                "label": "跳过用例数/百分比 超过多少判 UNSTABLE（默认 100）",
+                "type": "vuex-input",
+                "default": "100"
+              },
+              "failureOnFailedTestConfig": {
+                "label": "配置方法（@Before/@After）失败即判 FAILURE",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "failIfNoReports": {
+                "label": "没有匹配到报告时让步骤失败（插件本身是继续）",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "allowUnreadableReports": {
+                "label": "报告解析失败也继续（默认 false：解析失败即失败）",
+                "type": "boolean",
+                "default": "false"
+              }
+            },
+            "output": {
+              "total": {
+                "type": "string",
+                "description": "用例总数（不含配置方法）"
+              },
+              "passed": {
+                "type": "string",
+                "description": "通过数"
+              },
+              "failed": {
+                "type": "string",
+                "description": "失败数"
+              },
+              "skipped": {
+                "type": "string",
+                "description": "跳过数"
+              },
+              "failedConfigMethods": {
+                "type": "string",
+                "description": "失败的配置方法数"
+              },
+              "skippedConfigMethods": {
+                "type": "string",
+                "description": "跳过的配置方法数"
+              },
+              "durationSeconds": {
+                "type": "string",
+                "description": "用例耗时合计（秒，非墙钟）"
+              },
+              "verdict": {
+                "type": "string",
+                "description": "NONE / UNSTABLE / FAILURE"
+              },
+              "report": {
+                "type": "report",
+                "description": "构建页内嵌的 HTML 报告"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "TestNG report",
+            "summary": "把 testng 插件变成一个原子：解析 testng-results.xml、按同一套阈值判 UNSTABLE/FAILURE、发布 HTML 报告。",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-testng",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "testng"
             ]
           },
           "requires": {
@@ -18533,6 +19474,107 @@
               "official-port",
               "vault",
               "secrets"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        }
+      ]
+    },
+    {
+      "atomCode": "warnings",
+      "publisher": "hummerstudio",
+      "name": "Compiler warnings",
+      "channels": {
+        "stable": "1.0.0"
+      },
+      "versions": [
+        {
+          "version": "1.0.0",
+          "publishedAt": "2026-11-02T03:26:05Z",
+          "package": {
+            "file": "packages/hummerstudio/warnings/1.0.0/warnings-1.0.0.zip",
+            "sha256": "aa57fde1cf23e335ea94d3c55b3614fd2a95124a51bf8b77c12320ec67ef0913"
+          },
+          "task": {
+            "atomCode": "warnings",
+            "name": "Compiler warnings",
+            "version": "1.0.0",
+            "description": "读编译器和 linter 的输出，按严重级别统计并发布。",
+            "execution": {
+              "packagePath": "warnings.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp warnings.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "pattern": {
+                "label": "日志文件（glob，逗号分隔）",
+                "type": "vuex-input",
+                "default": "**/build.log, **/*.log, **/warnings*.txt"
+              },
+              "label": {
+                "label": "报告名称",
+                "type": "vuex-input",
+                "default": "Warnings"
+              },
+              "outputDir": {
+                "label": "HTML 输出目录",
+                "type": "vuex-input",
+                "default": "out/warnings"
+              },
+              "maxErrors": {
+                "label": "允许的 error 数",
+                "type": "vuex-input-number",
+                "default": "0"
+              },
+              "maxWarnings": {
+                "label": "允许的 warning 数（-1 = 不检查）",
+                "type": "vuex-input-number",
+                "default": "-1"
+              }
+            },
+            "output": {
+              "total": {
+                "type": "string",
+                "description": "总数"
+              },
+              "errors": {
+                "type": "string",
+                "description": "error 数"
+              },
+              "warnings": {
+                "type": "string",
+                "description": "warning 数"
+              },
+              "linesScanned": {
+                "type": "string",
+                "description": "扫描行数"
+              },
+              "report": {
+                "type": "report",
+                "description": "构建页内嵌报告"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              },
+              "context": [
+                "log"
+              ]
+            }
+          },
+          "meta": {
+            "name": "Compiler warnings",
+            "summary": "读编译器和 linter 的输出，按严重级别统计并发布。",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-warnings",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "warnings-ng"
             ]
           },
           "requires": {
