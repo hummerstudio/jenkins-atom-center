@@ -1,0 +1,14 @@
+{
+  "name": "Git",
+  "summary": "One git atom, three actions: push and verify the remote, changelog since the last tag, tag with GIT_TAG_NAME/GIT_TAG_MESSAGE.",
+  "description": "Replaces the two separate git-push and git-changelog atoms (and absorbs git-tag-message): the specialised parameters are hidden by rely, so the step form shows only what the chosen action uses.",
+  "author": "hummerstudio",
+  "license": "MIT",
+  "tags": [
+    "official-port",
+    "git",
+    "publish",
+    "scm"
+  ],
+  "homepage": "https://github.com/hummerstudio/jenkins-atom-git"
+}

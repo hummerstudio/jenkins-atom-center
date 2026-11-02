@@ -1,0 +1,13 @@
+{
+  "name": "Jira",
+  "summary": "Writes JIRA issues, comments and transitions, and reports builds and deployments to the Jira app.",
+  "author": "hummerstudio",
+  "license": "MIT",
+  "tags": [
+    "official-port",
+    "jira",
+    "atlassian",
+    "issue-tracker",
+    "deployment"
+  ]
+}

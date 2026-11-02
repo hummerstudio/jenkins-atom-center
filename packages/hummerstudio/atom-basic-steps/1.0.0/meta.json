@@ -1,0 +1,13 @@
+{
+  "name": "Basic steps",
+  "summary": "把 rebuild 与 build-name-setter 合成一个原子：action=rename 改构建名/描述，action=rebuild 用同样的参数重跑，构建页入口仍由 ui.json 声明。",
+  "author": "hummerstudio",
+  "license": "MIT",
+  "tags": [
+    "build",
+    "metadata",
+    "ui",
+    "official-port"
+  ],
+  "homepage": "https://github.com/hummerstudio/jenkins-atom-basic-steps"
+}

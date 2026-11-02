@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-02T03:26:05Z",
+  "generatedAt": "2026-11-02T03:44:23Z",
   "atoms": [
     {
       "atomCode": "allure",
@@ -1654,6 +1654,286 @@
       ]
     },
     {
+      "atomCode": "atom-basic-steps",
+      "publisher": "hummerstudio",
+      "name": "Basic steps",
+      "channels": {
+        "stable": "1.0.0"
+      },
+      "versions": [
+        {
+          "version": "1.0.0",
+          "publishedAt": "2026-11-02T03:44:23Z",
+          "package": {
+            "file": "packages/hummerstudio/atom-basic-steps/1.0.0/atom-basic-steps-1.0.0.zip",
+            "sha256": "61c9b615c2b40fe21818a864d8ac1527838045076403ff4662bfb4cbfbc85f22"
+          },
+          "task": {
+            "atomCode": "atom-basic-steps",
+            "name": "Basic steps",
+            "version": "1.0.0",
+            "description": "The basic things you do to a build, in one atom: action=rename renames the build and sets its description (template or log regex), action=rebuild starts the same job again with the parameters this build ran with.",
+            "execution": {
+              "packagePath": "atom-basic-steps.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp atom-basic-steps.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "action": {
+                "label": "动作（rename = 改构建名/描述；rebuild = 用本次构建的参数重新触发同一个 job）",
+                "type": "vuex-input",
+                "default": "rename",
+                "required": true,
+                "description": "只有 rename 或 rebuild 两个值；下面两组参数按它显示。rebuild 的构建页入口由 ui.json 声明，不需要跑步骤"
+              },
+              "displayName": {
+                "label": "构建名模板（支持 ${BUILD_NUMBER}、${GIT_COMMIT} 等环境变量）",
+                "type": "vuex-input",
+                "default": "#${BUILD_NUMBER}",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "rename"
+                    }
+                  ]
+                }
+              },
+              "description": {
+                "label": "构建描述（同样支持环境变量，可留空表示不写）",
+                "type": "textarea",
+                "default": "",
+                "description": "超过 8192 个字符会被截断（与 runner 施加 mutations.json 时的上限一致）",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "rename"
+                    }
+                  ]
+                }
+              },
+              "fromLog": {
+                "label": "从日志取名用的正则（留空则只用模板）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "rename"
+                    }
+                  ]
+                }
+              },
+              "matchTemplate": {
+                "label": "命中正则后使用的模板（%MATCH% 为捕获组一，留空则整段替换构建名）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "rename"
+                    }
+                  ]
+                }
+              },
+              "jenkinsUrl": {
+                "label": "Jenkins 根地址（默认 ${JENKINS_URL}）",
+                "type": "vuex-input",
+                "default": "${JENKINS_URL}",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "rebuild"
+                    }
+                  ]
+                }
+              },
+              "rebuildJob": {
+                "label": "要重跑的 Job（默认 ${JOB_NAME}；folder 里的 job 写成 folder/job）",
+                "type": "vuex-input",
+                "default": "${JOB_NAME}",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "rebuild"
+                    }
+                  ]
+                }
+              },
+              "rebuildParameters": {
+                "label": "重跑参数（每行 KEY=VALUE；留空则沿用本次构建的参数）",
+                "type": "textarea",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "rebuild"
+                    }
+                  ]
+                }
+              },
+              "rebuildToken": {
+                "label": "Job 的认证 token（触发已设置 token 的 job 时用，留空不发送）",
+                "type": "password",
+                "isSensitive": true,
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "rebuild"
+                    }
+                  ]
+                }
+              },
+              "jenkinsUser": {
+                "label": "用户名（配 jenkinsApiToken 走 Basic 认证；两者都空则匿名触发）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "rebuild"
+                    }
+                  ]
+                }
+              },
+              "jenkinsApiToken": {
+                "label": "API token（与用户名配对使用，不会写进日志）",
+                "type": "password",
+                "isSensitive": true,
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "rebuild"
+                    }
+                  ]
+                }
+              },
+              "timeoutSeconds": {
+                "label": "请求超时（秒）",
+                "type": "vuex-input",
+                "default": "30",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "rebuild"
+                    }
+                  ]
+                }
+              },
+              "failOnError": {
+                "label": "Jenkins 拒绝或不可达时判失败（默认 true）",
+                "type": "vuex-input",
+                "default": "true",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "rebuild"
+                    }
+                  ]
+                }
+              }
+            },
+            "output": {
+              "usedDisplayName": {
+                "type": "string",
+                "description": "rename：最终写入的构建名（已展开变量、去换行、按 255 截断）"
+              },
+              "usedDescription": {
+                "type": "string",
+                "description": "rename：最终写入的构建描述（空串表示没有写）"
+              },
+              "rebuiltJob": {
+                "type": "string",
+                "description": "rebuild：被重跑的 job 全名"
+              },
+              "queueItemUrl": {
+                "type": "string",
+                "description": "rebuild：新构建的队列地址（Jenkins 回 Location 时有值）"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "context": [
+                "log",
+                "build"
+              ],
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "ui": {
+            "schema": 1,
+            "surfaces": [
+              {
+                "id": "rebuild",
+                "where": "run",
+                "title": "Rebuild",
+                "icon": "symbol-play",
+                "blocks": [
+                  {
+                    "kind": "text",
+                    "text": "Rebuild {job} #{build.number} with the parameters it ran with."
+                  },
+                  {
+                    "kind": "action",
+                    "label": "Rebuild",
+                    "action": {
+                      "kind": "build",
+                      "params": {
+                        "from": "build"
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "meta": {
+            "name": "Basic steps",
+            "summary": "把 rebuild 与 build-name-setter 合成一个原子：action=rename 改构建名/描述，action=rebuild 用同样的参数重跑，构建页入口仍由 ui.json 声明。",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-basic-steps",
+            "license": "MIT",
+            "tags": [
+              "build",
+              "metadata",
+              "ui",
+              "official-port"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        }
+      ]
+    },
+    {
       "atomCode": "aws-cloudformation",
       "publisher": "hummerstudio",
       "name": "AWS CloudFormation",
@@ -3160,7 +3440,7 @@
       "publisher": "hummerstudio",
       "name": "Chat notification",
       "channels": {
-        "stable": "1.2.0"
+        "stable": "1.3.0"
       },
       "versions": [
         {
@@ -3642,6 +3922,279 @@
                 "label": "Google Chat 卡片 JSON 数组（原样透传为 cards）",
                 "type": "textarea",
                 "default": ""
+              }
+            },
+            "output": {
+              "provider": {
+                "type": "string",
+                "description": "实际使用的服务"
+              },
+              "statusCode": {
+                "type": "string",
+                "description": "HTTP 状态码"
+              },
+              "accepted": {
+                "type": "string",
+                "description": "服务是否接受了消息"
+              },
+              "response": {
+                "type": "string",
+                "description": "响应体摘要"
+              },
+              "payloadBytes": {
+                "type": "string",
+                "description": "报文长度"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "Chat notification",
+            "summary": "Posts one message to Slack, Teams, Google Chat, DingTalk, WeCom, Discord, Mattermost or Rocket.Chat.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-chat-notify",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "notification",
+              "chat"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        },
+        {
+          "version": "1.3.0",
+          "publishedAt": "2026-11-02T03:38:33Z",
+          "package": {
+            "file": "packages/hummerstudio/chat-notify/1.3.0/chat-notify-1.3.0.zip",
+            "sha256": "33eb38561a654c7cb731fcb387935044f23f5966eed1e3abc4d43f05df17ee69"
+          },
+          "task": {
+            "atomCode": "chat-notify",
+            "name": "Chat notification",
+            "version": "1.3.0",
+            "description": "Sends a build notification to a chat webhook (8 providers, Office 365 cards for teams).",
+            "execution": {
+              "packagePath": "chat-notify.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp chat-notify.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "provider": {
+                "label": "服务",
+                "type": "vuex-input",
+                "default": "slack"
+              },
+              "webhookUrl": {
+                "label": "Webhook 地址",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "accessToken": {
+                "label": "钉钉 access_token（webhookUrl 留空时使用）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "provider",
+                      "value": "dingtalk"
+                    }
+                  ]
+                }
+              },
+              "secret": {
+                "label": "钉钉加签密钥",
+                "type": "password",
+                "default": "",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "provider",
+                      "value": "dingtalk"
+                    }
+                  ]
+                }
+              },
+              "text": {
+                "label": "消息内容",
+                "type": "textarea",
+                "default": ""
+              },
+              "channel": {
+                "label": "频道（Slack 可选）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "provider",
+                      "value": "slack"
+                    },
+                    {
+                      "key": "provider",
+                      "value": "mattermost"
+                    },
+                    {
+                      "key": "provider",
+                      "value": "rocketchat"
+                    }
+                  ]
+                }
+              },
+              "username": {
+                "label": "显示名（Discord 可选）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "provider",
+                      "value": "discord"
+                    },
+                    {
+                      "key": "provider",
+                      "value": "mattermost"
+                    },
+                    {
+                      "key": "provider",
+                      "value": "rocketchat"
+                    }
+                  ]
+                }
+              },
+              "avatarUrl": {
+                "label": "头像地址（Discord 可选）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "provider",
+                      "value": "discord"
+                    }
+                  ]
+                }
+              },
+              "markdown": {
+                "label": "企业微信用 markdown 消息",
+                "type": "checkbox",
+                "default": "false",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "provider",
+                      "value": "wecom"
+                    }
+                  ]
+                }
+              },
+              "timeoutSeconds": {
+                "label": "超时（秒）",
+                "type": "vuex-input",
+                "default": "30"
+              },
+              "failOnError": {
+                "label": "发送失败就让这一步失败",
+                "type": "checkbox",
+                "default": "true"
+              },
+              "title": {
+                "label": "卡片标题（teams）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "provider",
+                      "value": "teams"
+                    }
+                  ]
+                }
+              },
+              "facts": {
+                "label": "卡片事实表（name=value，逗号分隔）",
+                "type": "textarea",
+                "default": "",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "provider",
+                      "value": "teams"
+                    }
+                  ]
+                }
+              },
+              "status": {
+                "label": "构建结果（决定色条：success/unstable/failure）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "provider",
+                      "value": "teams"
+                    }
+                  ]
+                }
+              },
+              "themeColor": {
+                "label": "色条（留空则由 status 推）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "provider",
+                      "value": "teams"
+                    }
+                  ]
+                }
+              },
+              "threadKey": {
+                "label": "Google Chat 会话线程（同一条线里回复）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "provider",
+                      "value": "google-chat"
+                    }
+                  ]
+                }
+              },
+              "cardJson": {
+                "label": "Google Chat 卡片 JSON 数组（原样透传为 cards）",
+                "type": "textarea",
+                "default": "",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "provider",
+                      "value": "google-chat"
+                    }
+                  ]
+                }
               }
             },
             "output": {
@@ -8708,6 +9261,379 @@
       ]
     },
     {
+      "atomCode": "git",
+      "publisher": "hummerstudio",
+      "name": "Git",
+      "channels": {
+        "stable": "1.0.0"
+      },
+      "versions": [
+        {
+          "version": "1.0.0",
+          "publishedAt": "2026-11-02T03:44:20Z",
+          "package": {
+            "file": "packages/hummerstudio/git/1.0.0/git-1.0.0.zip",
+            "sha256": "679fbd42270b581e3ac9337b50763f0194fd79f88e9cbdd9db787ad94660faa9"
+          },
+          "task": {
+            "atomCode": "git",
+            "name": "Git",
+            "version": "1.0.0",
+            "description": "对工作区的 git 做三件事：push（推送并回读远端 sha）、changelog（按标签区间生成变更日志）、tag（打标签并导出 GIT_TAG_NAME / GIT_TAG_MESSAGE）。专项参数按 action 条件展示。",
+            "execution": {
+              "packagePath": "git.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp git.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "action": {
+                "label": "操作",
+                "type": "selector",
+                "default": "push",
+                "options": [
+                  "push",
+                  "changelog",
+                  "tag"
+                ],
+                "description": "push 推送当前分支到远端并回读 sha；changelog 把标签以来的提交写成文件；tag 在本次提交上打标签。"
+              },
+              "gitBinary": {
+                "label": "git 可执行文件",
+                "type": "vuex-input",
+                "default": "git",
+                "description": "留空或 git 表示用 PATH 上的那个；需要固定版本时填绝对路径。"
+              },
+              "remote": {
+                "label": "远端（origin 或 URL）",
+                "type": "vuex-input",
+                "default": "origin",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "push"
+                    }
+                  ]
+                }
+              },
+              "branch": {
+                "label": "本地分支（留空用当前分支）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "push"
+                    }
+                  ]
+                }
+              },
+              "targetBranch": {
+                "label": "远端分支（留空同名）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "push"
+                    }
+                  ]
+                }
+              },
+              "force": {
+                "label": "强制推送",
+                "type": "checkbox",
+                "default": "false",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "push"
+                    }
+                  ]
+                }
+              },
+              "setUpstream": {
+                "label": "设置上游跟踪",
+                "type": "checkbox",
+                "default": "true",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "push"
+                    }
+                  ]
+                }
+              },
+              "followTags": {
+                "label": "一并推送附注标签",
+                "type": "checkbox",
+                "default": "false",
+                "description": "只发附注标签（有 message 的那种）；轻量标签要单独推。",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "push"
+                    }
+                  ]
+                }
+              },
+              "username": {
+                "label": "用户名（HTTPS 远端）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "push"
+                    }
+                  ]
+                }
+              },
+              "token": {
+                "label": "密码 / 访问令牌",
+                "type": "password",
+                "default": "",
+                "description": "经 GIT_ASKPASS 交给 git，不进命令行、不进日志。",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "push"
+                    }
+                  ]
+                }
+              },
+              "timeoutSeconds": {
+                "label": "超时（秒）",
+                "type": "vuex-input",
+                "default": "180",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "push"
+                    }
+                  ]
+                }
+              },
+              "since": {
+                "label": "起始点（留空用最近的标签）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "changelog"
+                    }
+                  ]
+                }
+              },
+              "until": {
+                "label": "结束点",
+                "type": "vuex-input",
+                "default": "HEAD",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "changelog"
+                    }
+                  ]
+                }
+              },
+              "output": {
+                "label": "输出文件（workspace 相对）",
+                "type": "vuex-input",
+                "default": "CHANGELOG.md",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "changelog"
+                    }
+                  ]
+                }
+              },
+              "label": {
+                "label": "报告标题",
+                "type": "vuex-input",
+                "default": "Changelog",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "changelog"
+                    }
+                  ]
+                }
+              },
+              "tagName": {
+                "label": "标签名",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "tag"
+                    }
+                  ]
+                }
+              },
+              "tagMessage": {
+                "label": "标签说明（填写即为附注标签）",
+                "type": "textarea",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "tag"
+                    }
+                  ]
+                }
+              },
+              "tagCommit": {
+                "label": "打标签的提交",
+                "type": "vuex-input",
+                "default": "HEAD",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "tag"
+                    }
+                  ]
+                }
+              },
+              "tagForce": {
+                "label": "覆盖已存在的标签",
+                "type": "checkbox",
+                "default": "false",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "tag"
+                    }
+                  ]
+                }
+              }
+            },
+            "output": {
+              "pushedBranch": {
+                "type": "string",
+                "description": "push：推送到的远端分支"
+              },
+              "pushedSha": {
+                "type": "string",
+                "description": "push：推送后的提交"
+              },
+              "remoteUrl": {
+                "type": "string",
+                "description": "push：远端"
+              },
+              "forcePushed": {
+                "type": "string",
+                "description": "push：是否强制推送"
+              },
+              "commitCount": {
+                "type": "string",
+                "description": "changelog：区间内的提交数"
+              },
+              "rangeFrom": {
+                "type": "string",
+                "description": "changelog：区间起点"
+              },
+              "rangeTo": {
+                "type": "string",
+                "description": "changelog：区间终点"
+              },
+              "changelogFile": {
+                "type": "string",
+                "description": "changelog：写出的文件（workspace 相对）"
+              },
+              "GIT_TAG_NAME": {
+                "type": "string",
+                "description": "tag：打出的标签名，供后续步骤使用"
+              },
+              "GIT_TAG_MESSAGE": {
+                "type": "string",
+                "description": "tag：标签说明，供后续步骤使用"
+              },
+              "tagSha": {
+                "type": "string",
+                "description": "tag：被标记的提交"
+              },
+              "tagType": {
+                "type": "string",
+                "description": "tag：annotated 或 lightweight"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              },
+              "errors": {
+                "40100": "输入有误：检查 action、remote、tagName 等必填项",
+                "40201": "推送失败：远端拒绝（非快进 / 无权限 / 保护分支）或环境问题",
+                "40202": "推送后远端 sha 与本地不一致",
+                "40301": "工作目录不是 git 仓库",
+                "40302": "取不到当前分支（detached HEAD），请显式指定 branch",
+                "40401": "标签已存在；要覆盖请设 tagForce=true",
+                "40402": "打标签失败",
+                "40403": "标签内容与预期不符",
+                "40501": "区间端点不是本仓库的提交 / 分支 / 标签",
+                "40502": "git log 生成变更日志失败"
+              }
+            }
+          },
+          "meta": {
+            "name": "Git",
+            "summary": "One git atom, three actions: push and verify the remote, changelog since the last tag, tag with GIT_TAG_NAME/GIT_TAG_MESSAGE.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-git",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "git",
+              "publish",
+              "scm"
+            ],
+            "description": "packages/hummerstudio/git/1.0.0/Replaces the two separate git-push and git-changelog atoms (and absorbs git-tag-message): the specialised parameters are hidden by rely, so the step form shows only what the chosen action uses."
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        }
+      ]
+    },
+    {
       "atomCode": "git-changelog",
       "publisher": "hummerstudio",
       "name": "Git changelog",
@@ -10891,6 +11817,686 @@
               "official-port",
               "influxdb",
               "metrics"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        }
+      ]
+    },
+    {
+      "atomCode": "jira",
+      "publisher": "hummerstudio",
+      "name": "Jira",
+      "channels": {
+        "stable": "1.0.0"
+      },
+      "versions": [
+        {
+          "version": "1.0.0",
+          "publishedAt": "2026-11-02T03:44:22Z",
+          "package": {
+            "file": "packages/hummerstudio/jira/1.0.0/jira-1.0.0.zip",
+            "sha256": "b84be1fb141f75eb6fe93fbf71b641e371722c90ac5dfaabb87141933994cc06"
+          },
+          "task": {
+            "atomCode": "jira",
+            "name": "Jira",
+            "version": "1.0.0",
+            "description": "写 JIRA issue / 评论 / 流转，或把构建与部署信息上报给 Jira 应用（原 jira-issue 与 jira-build-info 合并）。",
+            "execution": {
+              "packagePath": "jira.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp jira.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "action": {
+                "label": "动作（issue / comment / transition / build / deployment）",
+                "type": "vuex-input",
+                "default": "issue",
+                "description": "issue/comment/transition 走 JIRA REST API（/rest/api/2）；build/deployment 走 Jira 应用回调（Jira Software Cloud）。选哪个，表单就只显示哪个动作要的参数。"
+              },
+              "baseUrl": {
+                "label": "JIRA 地址",
+                "type": "vuex-input",
+                "default": "",
+                "description": "例如 https://jira.example.com，原子会拼上 /rest/api/2。",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "issue"
+                    },
+                    {
+                      "key": "action",
+                      "value": "comment"
+                    },
+                    {
+                      "key": "action",
+                      "value": "transition"
+                    }
+                  ]
+                }
+              },
+              "username": {
+                "label": "用户名（留空则用 Bearer token）",
+                "type": "vuex-input",
+                "default": "",
+                "description": "填了用户名就用 Basic 认证（用户名 + 密码/API token）；留空则把 token 当个人访问令牌用 Bearer。",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "issue"
+                    },
+                    {
+                      "key": "action",
+                      "value": "comment"
+                    },
+                    {
+                      "key": "action",
+                      "value": "transition"
+                    }
+                  ]
+                }
+              },
+              "token": {
+                "label": "密码 / 访问令牌",
+                "type": "password",
+                "default": "",
+                "description": "JIRA 密码或 personal access token。",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "issue"
+                    },
+                    {
+                      "key": "action",
+                      "value": "comment"
+                    },
+                    {
+                      "key": "action",
+                      "value": "transition"
+                    }
+                  ]
+                }
+              },
+              "projectKey": {
+                "label": "项目 Key（issue）",
+                "type": "vuex-input",
+                "default": "",
+                "description": "例如 ACME。",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "issue"
+                    }
+                  ]
+                }
+              },
+              "issueType": {
+                "label": "问题类型（issue）",
+                "type": "vuex-input",
+                "default": "Task",
+                "description": "例如 Task / Bug / Story。",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "issue"
+                    }
+                  ]
+                }
+              },
+              "summary": {
+                "label": "标题（issue）",
+                "type": "textarea",
+                "default": "",
+                "description": "新建 issue 的标题。",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "issue"
+                    }
+                  ]
+                }
+              },
+              "description": {
+                "label": "描述（issue 的 description / build 的 description）",
+                "type": "textarea",
+                "default": "",
+                "description": "issue 动作写进 issue 的 description；build 动作作为构建描述上报。",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "issue"
+                    },
+                    {
+                      "key": "action",
+                      "value": "build"
+                    }
+                  ]
+                }
+              },
+              "fields": {
+                "label": "额外字段（JSON，合并进 issue 的 fields）",
+                "type": "textarea",
+                "default": "",
+                "description": "例如 {\"priority\": {\"name\": \"High\"}}，会覆盖同名生成字段。",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "issue"
+                    }
+                  ]
+                }
+              },
+              "issueKey": {
+                "label": "Issue Key（comment / transition）",
+                "type": "vuex-input",
+                "default": "",
+                "description": "例如 ABC-123。",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "comment"
+                    },
+                    {
+                      "key": "action",
+                      "value": "transition"
+                    }
+                  ]
+                }
+              },
+              "comment": {
+                "label": "评论内容（comment）",
+                "type": "textarea",
+                "default": "",
+                "description": "要写进 issue 的评论正文。",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "comment"
+                    }
+                  ]
+                }
+              },
+              "transition": {
+                "label": "流转名或 id（transition）",
+                "type": "vuex-input",
+                "default": "",
+                "description": "写名字（In Progress）会先查可用流转再按 id 提交；只写数字则直接按 id 提交。",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "transition"
+                    }
+                  ]
+                }
+              },
+              "webhookUrl": {
+                "label": "Jira 应用的回调地址（build / deployment）",
+                "type": "vuex-input",
+                "default": "",
+                "description": "Jira 站点里 Jenkins 应用连接后给出的 webhook 地址。",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "build"
+                    },
+                    {
+                      "key": "action",
+                      "value": "deployment"
+                    }
+                  ]
+                }
+              },
+              "secret": {
+                "label": "应用共享密钥（签 JWT）",
+                "type": "password",
+                "default": "",
+                "description": "Jira 应用与 Jenkins 之间的共享密钥，用来签 HS256 JWT。",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "build"
+                    },
+                    {
+                      "key": "action",
+                      "value": "deployment"
+                    }
+                  ]
+                }
+              },
+              "projectName": {
+                "label": "项目全名（默认 ${JOB_NAME}）",
+                "type": "vuex-input",
+                "default": "${JOB_NAME}",
+                "description": "Jira 用它算 pipelineId，改名字等于换一条流水线。",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "build"
+                    },
+                    {
+                      "key": "action",
+                      "value": "deployment"
+                    }
+                  ]
+                }
+              },
+              "buildNumber": {
+                "label": "构建号（默认 ${BUILD_NUMBER}）",
+                "type": "vuex-input",
+                "default": "${BUILD_NUMBER}",
+                "description": "构建号；deployment 时同时作为 deploymentSequenceNumber。",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "build"
+                    },
+                    {
+                      "key": "action",
+                      "value": "deployment"
+                    }
+                  ]
+                }
+              },
+              "buildUrl": {
+                "label": "构建链接（默认 ${BUILD_URL}）",
+                "type": "vuex-input",
+                "default": "${BUILD_URL}",
+                "description": "构建链接；deployment 的流水线链接会去掉末尾的构建号。",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "build"
+                    },
+                    {
+                      "key": "action",
+                      "value": "deployment"
+                    }
+                  ]
+                }
+              },
+              "label": {
+                "label": "显示名（默认 ${BUILD_DISPLAY_NAME}）",
+                "type": "vuex-input",
+                "default": "${BUILD_DISPLAY_NAME}",
+                "description": "显示名；留空则用项目名。",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "build"
+                    },
+                    {
+                      "key": "action",
+                      "value": "deployment"
+                    }
+                  ]
+                }
+              },
+              "state": {
+                "label": "状态（留空则按构建结果推断）",
+                "type": "vuex-input",
+                "default": "",
+                "description": "unknown / pending / in_progress / cancelled / failed / rolled_back / successful；留空按 BUILD_STATUS 推断。",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "build"
+                    },
+                    {
+                      "key": "action",
+                      "value": "deployment"
+                    }
+                  ]
+                }
+              },
+              "issueKeys": {
+                "label": "Issue Keys（逗号分隔；留空则从分支名/提交里提取）",
+                "type": "textarea",
+                "default": "",
+                "description": "显式写下的 key 会先校验格式（ABC-123），不合法就地报错，不会发到 Jira。",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "build"
+                    },
+                    {
+                      "key": "action",
+                      "value": "deployment"
+                    }
+                  ]
+                }
+              },
+              "branch": {
+                "label": "分支名（默认 ${BRANCH_NAME}）",
+                "type": "vuex-input",
+                "default": "${BRANCH_NAME}",
+                "description": "分支名；issueKeys 留空时从这里提取 ABC-123 这样的 key。",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "build"
+                    },
+                    {
+                      "key": "action",
+                      "value": "deployment"
+                    }
+                  ]
+                }
+              },
+              "changeBranch": {
+                "label": "源分支（默认 ${CHANGE_BRANCH}）",
+                "type": "vuex-input",
+                "default": "${CHANGE_BRANCH}",
+                "description": "源分支（PR 场景）；同样参与 key 提取。",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "build"
+                    },
+                    {
+                      "key": "action",
+                      "value": "deployment"
+                    }
+                  ]
+                }
+              },
+              "commitMessages": {
+                "label": "提交信息（提取 issue key 用）",
+                "type": "textarea",
+                "default": "",
+                "description": "提交信息；issueKeys 与分支名都没提到 key 时才看这里。",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "build"
+                    },
+                    {
+                      "key": "action",
+                      "value": "deployment"
+                    }
+                  ]
+                }
+              },
+              "testsTotal": {
+                "label": "测试总数（留空则不报测试）",
+                "type": "vuex-input",
+                "default": "",
+                "description": "测试总数；留空则不上报 testInfo。",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "build"
+                    }
+                  ]
+                }
+              },
+              "testsFailed": {
+                "label": "失败数",
+                "type": "vuex-input",
+                "default": "",
+                "description": "失败的测试数。",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "build"
+                    }
+                  ]
+                }
+              },
+              "testsSkipped": {
+                "label": "跳过数",
+                "type": "vuex-input",
+                "default": "",
+                "description": "跳过的测试数。",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "build"
+                    }
+                  ]
+                }
+              },
+              "environmentId": {
+                "label": "环境 id（deployment）",
+                "type": "vuex-input",
+                "default": "",
+                "description": "Jira 用环境 id 认部署目标，例如 env-1。",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "deployment"
+                    }
+                  ]
+                }
+              },
+              "environmentName": {
+                "label": "环境名（deployment）",
+                "type": "vuex-input",
+                "default": "",
+                "description": "环境显示名，例如 Staging。",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "deployment"
+                    }
+                  ]
+                }
+              },
+              "environmentType": {
+                "label": "环境类型（development/testing/staging/production）",
+                "type": "vuex-input",
+                "default": "",
+                "description": "留空按 unmapped 上报。",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "deployment"
+                    }
+                  ]
+                }
+              },
+              "serviceIds": {
+                "label": "服务 id（deployment，逗号分隔）",
+                "type": "vuex-input",
+                "default": "",
+                "description": "服务的 id 或 key，逗号分隔，作为 serviceIdOrKeys 关联上报。",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "deployment"
+                    }
+                  ]
+                }
+              },
+              "enableGating": {
+                "label": "部署门禁（true 则请求 Jira 门禁）",
+                "type": "vuex-input",
+                "default": "",
+                "description": "true 时在 deployment 里带上 initiate_deployment_gating 命令。",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "deployment"
+                    }
+                  ]
+                }
+              },
+              "timeoutSeconds": {
+                "label": "超时秒数",
+                "type": "vuex-input",
+                "default": "30",
+                "description": "单次 HTTP 调用的超时（5–300 秒）。"
+              }
+            },
+            "output": {
+              "operation": {
+                "type": "string",
+                "description": "实际执行的动作：issue / comment / transition / build / deployment"
+              },
+              "createdIssueKey": {
+                "type": "string",
+                "description": "新建出来的 issue key（issue）"
+              },
+              "issueUrl": {
+                "type": "string",
+                "description": "issue 链接（issue）"
+              },
+              "targetIssueKey": {
+                "type": "string",
+                "description": "被写入的 issue key（comment / transition）"
+              },
+              "commentId": {
+                "type": "string",
+                "description": "评论 id（comment）"
+              },
+              "transitionId": {
+                "type": "string",
+                "description": "流转 id（transition）"
+              },
+              "transitionName": {
+                "type": "string",
+                "description": "Jira 认的流转名（transition；按名字流转时有值）"
+              },
+              "skipped": {
+                "type": "string",
+                "description": "true 表示没有可关联的 issue key / 服务，未发请求（build / deployment）"
+              },
+              "pipelineId": {
+                "type": "string",
+                "description": "Jira 用来认这条流水线的 id（项目名的哈希，build / deployment）"
+              },
+              "sentState": {
+                "type": "string",
+                "description": "上报给 Jira 的状态（build / deployment）"
+              },
+              "associatedIssueKeys": {
+                "type": "string",
+                "description": "关联上的 issue keys（build / deployment）"
+              },
+              "accepted": {
+                "type": "string",
+                "description": "Jira 接收条数（build / deployment）"
+              },
+              "unknownAssociations": {
+                "type": "string",
+                "description": "Jira 不认识的关联数（build / deployment）"
+              },
+              "httpStatus": {
+                "type": "string",
+                "description": "Jira 应用回调的 HTTP 状态（build / deployment）"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              },
+              "errors": {
+                "40001": "action 不认识：issue / comment / transition / build / deployment",
+                "40002": "缺 JIRA 地址（baseUrl），或它不是 http(s)",
+                "40003": "缺 JIRA 的密码 / 访问令牌（token）",
+                "40004": "issue 动作需要 projectKey 和 summary",
+                "40005": "JIRA 拒绝了新建 issue 的请求",
+                "40006": "comment / transition 需要 issueKey",
+                "40007": "comment 动作需要评论内容",
+                "40008": "JIRA 拒绝了评论请求",
+                "40009": "transition 动作需要流转名或 id",
+                "40010": "查不到这个 issue 的可用流转",
+                "40011": "这个 issue 上没有该流转（消息里会列出可用的）",
+                "40012": "JIRA 拒绝了流转请求",
+                "40013": "连不上 JIRA（连接超时）",
+                "40014": "调用 JIRA 时网络出错",
+                "40015": "fields 不是 JSON 对象",
+                "40020": "缺 Jira 应用的回调地址（webhookUrl），或它不是 http(s)",
+                "40021": "缺 Jira 应用的共享密钥（secret）",
+                "40022": "缺 projectName（Jira 用它算 pipelineId）",
+                "40023": "buildNumber 不是非负整数",
+                "40024": "state 不在 allowed 列表里",
+                "40025": "issueKeys 里有不合法的 key，或超过 100 个",
+                "40026": "deployment 缺 environmentId/environmentName，或 environmentType 不合法",
+                "40027": "Jira 应用返回了非 2xx",
+                "40028": "Jira 应用返回的不是 JSON",
+                "40029": "Jira 应用的应答里没有 accepted/rejected 字段",
+                "40030": "Jira 拒绝了这条构建 / 部署信息",
+                "40031": "Jira 不认识这些 issue key / 服务",
+                "40032": "Jira 既没接收也没拒绝",
+                "40033": "连不上 Jira 应用"
+              }
+            }
+          },
+          "meta": {
+            "name": "Jira",
+            "summary": "Writes JIRA issues, comments and transitions, and reports builds and deployments to the Jira app.",
+            "author": "hummerstudio",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "jira",
+              "atlassian",
+              "issue-tracker",
+              "deployment"
             ]
           },
           "requires": {
