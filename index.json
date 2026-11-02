@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-01T21:53:02Z",
+  "generatedAt": "2026-11-02T01:50:56Z",
   "atoms": [
     {
       "atomCode": "allure-report",
@@ -2929,7 +2929,7 @@
       "publisher": "hummerstudio",
       "name": "Chat notification",
       "channels": {
-        "stable": "1.1.0"
+        "stable": "1.2.0"
       },
       "versions": [
         {
@@ -3261,6 +3261,155 @@
               "themeColor": {
                 "label": "色条（留空则由 status 推）",
                 "type": "vuex-input",
+                "default": ""
+              }
+            },
+            "output": {
+              "provider": {
+                "type": "string",
+                "description": "实际使用的服务"
+              },
+              "statusCode": {
+                "type": "string",
+                "description": "HTTP 状态码"
+              },
+              "accepted": {
+                "type": "string",
+                "description": "服务是否接受了消息"
+              },
+              "response": {
+                "type": "string",
+                "description": "响应体摘要"
+              },
+              "payloadBytes": {
+                "type": "string",
+                "description": "报文长度"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "Chat notification",
+            "summary": "Posts one message to Slack, Teams, Google Chat, DingTalk, WeCom, Discord, Mattermost or Rocket.Chat.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-chat-notify",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "notification",
+              "chat"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        },
+        {
+          "version": "1.2.0",
+          "publishedAt": "2026-11-02T01:50:56Z",
+          "package": {
+            "file": "packages/hummerstudio/chat-notify/1.2.0/chat-notify-1.2.0.zip",
+            "sha256": "3a0de55f72965c6a09f843f9443c4df2be27887c1cf27c485fbba11346ae33d4"
+          },
+          "task": {
+            "atomCode": "chat-notify",
+            "name": "Chat notification",
+            "version": "1.2.0",
+            "description": "Sends a build notification to a chat webhook (8 providers, Office 365 cards for teams).",
+            "execution": {
+              "packagePath": "chat-notify.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp chat-notify.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "provider": {
+                "label": "服务",
+                "type": "vuex-input",
+                "default": "slack"
+              },
+              "webhookUrl": {
+                "label": "Webhook 地址",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "accessToken": {
+                "label": "钉钉 access_token（webhookUrl 留空时使用）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "secret": {
+                "label": "钉钉加签密钥",
+                "type": "password",
+                "default": ""
+              },
+              "text": {
+                "label": "消息内容",
+                "type": "textarea",
+                "default": ""
+              },
+              "channel": {
+                "label": "频道（Slack 可选）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "username": {
+                "label": "显示名（Discord 可选）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "avatarUrl": {
+                "label": "头像地址（Discord 可选）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "markdown": {
+                "label": "企业微信用 markdown 消息",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "timeoutSeconds": {
+                "label": "超时（秒）",
+                "type": "vuex-input",
+                "default": "30"
+              },
+              "failOnError": {
+                "label": "发送失败就让这一步失败",
+                "type": "checkbox",
+                "default": "true"
+              },
+              "title": {
+                "label": "卡片标题（teams）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "facts": {
+                "label": "卡片事实表（name=value，逗号分隔）",
+                "type": "textarea",
+                "default": ""
+              },
+              "status": {
+                "label": "构建结果（决定色条：success/unstable/failure）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "themeColor": {
+                "label": "色条（留空则由 status 推）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "threadKey": {
+                "label": "Google Chat 会话线程（同一条线里回复）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "cardJson": {
+                "label": "Google Chat 卡片 JSON 数组（原样透传为 cards）",
+                "type": "textarea",
                 "default": ""
               }
             },
