@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-02T02:46:56Z",
+  "generatedAt": "2026-11-02T03:21:23Z",
   "atoms": [
     {
       "atomCode": "allure-report",
@@ -2925,6 +2925,130 @@
       ]
     },
     {
+      "atomCode": "build-token-trigger",
+      "publisher": "hummerstudio",
+      "name": "Trigger Jenkins build by token",
+      "channels": {
+        "stable": "1.0.0"
+      },
+      "versions": [
+        {
+          "version": "1.0.0",
+          "publishedAt": "2026-11-02T03:21:23Z",
+          "package": {
+            "file": "packages/hummerstudio/build-token-trigger/1.0.0/build-token-trigger-1.0.0.zip",
+            "sha256": "106a7d1471f2841a767750007c90e76dcbeedc7f4e99615ac46930685c3c2804"
+          },
+          "task": {
+            "atomCode": "build-token-trigger",
+            "name": "Trigger Jenkins build by token",
+            "version": "1.0.0",
+            "description": "用 build token 触发（同机或远端）Jenkins 的构建：POST /buildByToken/build[WithParameters]，job/token/delay/参数按表单编码发送，读 Location 作队列地址；404/302 可分别用 ignoreMissing/ignoreUnqueued 放行。",
+            "execution": {
+              "packagePath": "build-token-trigger.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp build-token-trigger.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "jenkinsUrl": {
+                "label": "Jenkins 地址（如 https://ci.example.com，可带上下文路径 /jenkins）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "job": {
+                "label": "Job 名（多级目录用 / 分隔，如 folder/my-job）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "token": {
+                "label": "Build token（Job 配置 → 构建触发器 → 触发远程构建；留空则用绑定的 token 凭据）",
+                "type": "password",
+                "default": ""
+              },
+              "parameters": {
+                "label": "构建参数，每行 KEY=VALUE（有参数时走 /buildWithParameters）",
+                "type": "textarea",
+                "default": ""
+              },
+              "delay": {
+                "label": "静默期秒数（留空或负数＝不发送 delay）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "ignoreMissing": {
+                "label": "Job 不存在（HTTP 404）时不算失败，出参 about:missing",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "ignoreUnqueued": {
+                "label": "未被队列接受（HTTP 302）时不算失败，出参 about:unqueued",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "timeoutSeconds": {
+                "label": "连接与读取超时（秒）",
+                "type": "vuex-input",
+                "default": "60"
+              }
+            },
+            "output": {
+              "outcome": {
+                "type": "string",
+                "description": "queued / missing / unqueued"
+              },
+              "queued": {
+                "type": "string",
+                "description": "true 仅当真的进了队列"
+              },
+              "queueUrl": {
+                "type": "string",
+                "description": "队列地址（Location，相对地址用 jenkinsUrl 补全）；放行时是 about:missing / about:unqueued"
+              },
+              "httpCode": {
+                "type": "string",
+                "description": "远端返回的状态码"
+              },
+              "jobUrl": {
+                "type": "string",
+                "description": "该 job 的页面地址（job 名按 /job/ 展开，和插件日志里的一致）"
+              },
+              "triggerUrl": {
+                "type": "string",
+                "description": "实际 POST 的地址"
+              },
+              "location": {
+                "type": "string",
+                "description": "原样的 Location 响应头（可能为空）"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              },
+              "secrets": {
+                "token": ""
+              }
+            }
+          },
+          "meta": {
+            "name": "Trigger Jenkins build by token",
+            "summary": "build-token-trigger 移植：用要触发的 job 的 build token 发一次同步 POST，把 Location 当作队列地址返回，404/302 可放行。",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-build-token-trigger",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "build-token-trigger"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        }
+      ]
+    },
+    {
       "atomCode": "chat-notify",
       "publisher": "hummerstudio",
       "name": "Chat notification",
@@ -3817,7 +3941,7 @@
       "publisher": "hummerstudio",
       "name": "CMake build",
       "channels": {
-        "stable": "1.3.0"
+        "stable": "1.3.1"
       },
       "versions": [
         {
@@ -4083,6 +4207,181 @@
             "atomCode": "cmake-build",
             "name": "CMake build",
             "version": "1.3.0",
+            "description": "Configures with cmake, builds a target and optionally installs it into a prefix, the same shape as the maven and gradle atoms.",
+            "execution": {
+              "packagePath": "cmake-build.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp cmake-build.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "source": {
+                "label": "源码目录",
+                "type": "vuex-input",
+                "default": "."
+              },
+              "buildDir": {
+                "label": "构建目录",
+                "type": "vuex-input",
+                "default": "build"
+              },
+              "generator": {
+                "label": "生成器（如 Ninja）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "preloadScript": {
+                "label": "预载脚本 -C（相对工作区，插件的 Preload Script）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "buildType": {
+                "label": "构建类型",
+                "type": "selector",
+                "default": "Release",
+                "options": [
+                  "Release",
+                  "Debug",
+                  "RelWithDebInfo",
+                  "MinSizeRel"
+                ]
+              },
+              "target": {
+                "label": "目标（留空 = all）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "configureArgs": {
+                "label": "configure 额外参数",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "buildArgs": {
+                "label": "build 额外参数",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "jobs": {
+                "label": "并行度（0 = 工具默认）",
+                "type": "vuex-input-number",
+                "default": "0"
+              },
+              "clean": {
+                "label": "先删构建目录",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "cleanInstallDir": {
+                "label": "先清空安装目录（插件里的 Wipeout Install Dir）",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "runTests": {
+                "label": "构建后跑 ctest",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "testArgs": {
+                "label": "ctest 额外参数（如 --output-junit reports/ctest.xml）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "failOnTestFailure": {
+                "label": "有测试失败就让这一步失败",
+                "type": "checkbox",
+                "default": "true"
+              },
+              "outputJunit": {
+                "label": "同时写出 JUnit 报告（留空则只看 testArgs）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "installDir": {
+                "label": "安装目录（相对工作区，留空则只构建不安装）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "installCommand": {
+                "label": "安装命令（在构建目录里执行，留空则 cmake --install）",
+                "type": "vuex-input",
+                "default": ""
+              }
+            },
+            "output": {
+              "buildDir": {
+                "type": "string",
+                "description": "构建目录"
+              },
+              "buildType": {
+                "type": "string",
+                "description": "构建类型"
+              },
+              "binaries": {
+                "type": "string",
+                "description": "产物数"
+              },
+              "build": {
+                "type": "artifact",
+                "description": "归档的构建目录"
+              },
+              "testsPassed": {
+                "type": "string",
+                "description": "通过的测试数"
+              },
+              "testsFailed": {
+                "type": "string",
+                "description": "失败的测试数"
+              },
+              "junitReport": {
+                "type": "string",
+                "description": "JUnit 报告的完整路径"
+              },
+              "installDir": {
+                "type": "string",
+                "description": "安装目录（未安装时为空）"
+              },
+              "installedFiles": {
+                "type": "string",
+                "description": "安装到安装目录的文件数"
+              },
+              "install": {
+                "type": "artifact",
+                "description": "归档的安装目录（仅在设置了安装目录时）"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "CMake build",
+            "summary": "Configures with cmake, builds a target and installs into a prefix (the cmakebuilder plugin's install half: preload script, install prefix, clean install dir, install command).",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-cmake-build",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "cmake-build",
+              "cmakebuilder"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        },
+        {
+          "version": "1.3.1",
+          "publishedAt": "2026-11-02T03:01:50Z",
+          "package": {
+            "file": "packages/hummerstudio/cmake-build/1.3.1/cmake-build-1.3.1.zip",
+            "sha256": "0fe2be10b38bdbf6880ba0313addd89f86dcb9da92cc2e0aacc01f745c88de33"
+          },
+          "task": {
+            "atomCode": "cmake-build",
+            "name": "CMake build",
+            "version": "1.3.1",
             "description": "Configures with cmake, builds a target and optionally installs it into a prefix, the same shape as the maven and gradle atoms.",
             "execution": {
               "packagePath": "cmake-build.jar",
@@ -4815,7 +5114,7 @@
       "publisher": "hummerstudio",
       "name": "Coverage",
       "channels": {
-        "stable": "1.3.1"
+        "stable": "1.3.2"
       },
       "versions": [
         {
@@ -4918,6 +5217,95 @@
             "atomCode": "coverage",
             "name": "Coverage",
             "version": "1.3.1",
+            "description": "Reads JaCoCo or Cobertura XML, shows the numbers and gates the build on a threshold.",
+            "execution": {
+              "packagePath": "coverage.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp coverage.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "pattern": {
+                "label": "报告文件 glob（逗号分隔）",
+                "type": "vuex-input",
+                "default": "**/jacoco.xml, **/cobertura-coverage.xml, **/coverage.xml, **/lcov.info"
+              },
+              "label": {
+                "label": "报告名称",
+                "type": "vuex-input",
+                "default": "Coverage"
+              },
+              "outputDir": {
+                "label": "HTML 输出目录",
+                "type": "vuex-input",
+                "default": "out/coverage"
+              },
+              "minLine": {
+                "label": "行覆盖率下限（%，0 = 不检查）",
+                "type": "vuex-input",
+                "default": "0"
+              },
+              "minBranch": {
+                "label": "分支覆盖率下限（%，0 = 不检查）",
+                "type": "vuex-input",
+                "default": "0"
+              },
+              "allowUnreadableReports": {
+                "label": "报告解析失败也继续（默认 false：解析失败即失败）",
+                "type": "boolean",
+                "default": "false"
+              }
+            },
+            "output": {
+              "lineCoverage": {
+                "type": "string",
+                "description": "行覆盖率（保留两位）"
+              },
+              "branchCoverage": {
+                "type": "string",
+                "description": "分支覆盖率"
+              },
+              "files": {
+                "type": "string",
+                "description": "解析的报告数"
+              },
+              "report": {
+                "type": "report",
+                "description": "构建页内嵌报告"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "Coverage report",
+            "summary": "Reads JaCoCo or Cobertura XML, shows the numbers and gates the build on a threshold.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-coverage-upload",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "coverage-upload"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        },
+        {
+          "version": "1.3.2",
+          "publishedAt": "2026-11-02T03:06:51Z",
+          "package": {
+            "file": "packages/hummerstudio/coverage/1.3.2/coverage-1.3.2.zip",
+            "sha256": "f9e864521ff4bd86d4d3389048922675ebac8963d69abaaf6e2aa8bce00b27f9"
+          },
+          "task": {
+            "atomCode": "coverage",
+            "name": "Coverage",
+            "version": "1.3.2",
             "description": "Reads JaCoCo or Cobertura XML, shows the numbers and gates the build on a threshold.",
             "execution": {
               "packagePath": "coverage.jar",
@@ -14735,7 +15123,7 @@
       "publisher": "hummerstudio",
       "name": "运行脚本",
       "channels": {
-        "stable": "1.1.0"
+        "stable": "1.1.1"
       },
       "versions": [
         {
@@ -14967,6 +15355,120 @@
             "atomCode": "script",
             "name": "运行脚本",
             "version": "1.1.0",
+            "description": "用选定的解释器跑一段脚本，支持 sh/bash/bat/powershell/pwsh/python/node/go，退出码即结论。",
+            "execution": {
+              "packagePath": "script.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp script.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "interpreter": {
+                "label": "解释器（sh / bash / bat / powershell / pwsh / python / node / go）",
+                "type": "vuex-input",
+                "default": "sh"
+              },
+              "script": {
+                "label": "脚本内容（与脚本文件二选一）",
+                "type": "textarea",
+                "default": ""
+              },
+              "scriptFile": {
+                "label": "脚本文件（相对工作区）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "interpreterPath": {
+                "label": "解释器绝对路径（venv 的 python、指定版本 node）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "args": {
+                "label": "参数（一行一个，不解释引号）",
+                "type": "textarea",
+                "default": ""
+              },
+              "env": {
+                "label": "环境变量（KEY=value，一行一个，只作用于本次）",
+                "type": "textarea",
+                "default": ""
+              },
+              "workdir": {
+                "label": "工作目录（相对工作区，留空即工作区根）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "failOnError": {
+                "label": "非零退出码判失败",
+                "type": "boolean",
+                "default": "true"
+              },
+              "timeoutSeconds": {
+                "label": "超时（秒）",
+                "type": "vuex-input",
+                "default": "1800"
+              },
+              "envFromStdout": {
+                "label": "把脚本输出的 KEY=VALUE 变成环境变量（支持 KEY:VALUE 与 NAME+ 追加）",
+                "type": "boolean",
+                "default": "false"
+              }
+            },
+            "output": {
+              "exitCode": {
+                "type": "string",
+                "description": "脚本退出码"
+              },
+              "durationMs": {
+                "type": "string",
+                "description": "实际耗时（毫秒）"
+              },
+              "usedInterpreter": {
+                "type": "string",
+                "description": "使用的解释器（used* 前缀避免与入参同名）"
+              },
+              "usedInterpreterPath": {
+                "type": "string",
+                "description": "解析到的解释器绝对路径"
+              },
+              "outputTail": {
+                "type": "string",
+                "description": "输出末尾（最多 8000 字符）"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "运行脚本",
+            "summary": "用 sh / bash / bat / powershell / pwsh / python / node / go 跑一段脚本，退出码即结论。",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-script",
+            "license": "MIT",
+            "tags": [
+              "official",
+              "generic",
+              "script"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        },
+        {
+          "version": "1.1.1",
+          "publishedAt": "2026-11-02T02:49:07Z",
+          "package": {
+            "file": "packages/hummerstudio/script/1.1.1/script-1.1.1.zip",
+            "sha256": "6529b504e3dc4c8d35a4c4ff3bf302c42a76def2c938d32cd27ed4194ed9d914"
+          },
+          "task": {
+            "atomCode": "script",
+            "name": "运行脚本",
+            "version": "1.1.1",
             "description": "用选定的解释器跑一段脚本，支持 sh/bash/bat/powershell/pwsh/python/node/go，退出码即结论。",
             "execution": {
               "packagePath": "script.jar",
