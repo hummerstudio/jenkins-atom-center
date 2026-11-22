@@ -1,0 +1,16 @@
+{
+  "name": "Build tool",
+  "summary": "Maven / Ant / Gradle 合一：跑一条构建命令，退出码即结果。",
+  "author": "hummerstudio",
+  "license": "MIT",
+  "tags": [
+    "build-tool",
+    "official-port"
+  ],
+  "homepage": "https://github.com/hummerstudio/jenkins-atom-build-tool",
+  "replaces": [
+    "maven",
+    "ant",
+    "gradle"
+  ]
+}
