@@ -1,0 +1,17 @@
+{
+  "name": "Basic steps",
+  "summary": "把 build-name-setter、rebuild、zip-artifacts、compress-artifacts、text-file、text-finder、log-parser、json-tool、file-ops 与 files-tool 合成一个原子：action=rename 改构建名/描述，rebuild 用同样的参数重跑，zip/unzip 打包解包，compress 原地打确定性 zip，write-file 写文本文件，find-text 找正则，parse-log 按规则解析日志，json 读写 JSON，file-ops 复制/移动/删除，files-list 列文件/校验和/CSV；构建页入口仍由 ui.json 声明。",
+  "author": "hummerstudio",
+  "license": "MIT",
+  "tags": [
+    "build",
+    "metadata",
+    "ui",
+    "archive",
+    "files",
+    "log",
+    "json",
+    "official-port"
+  ],
+  "homepage": "https://github.com/hummerstudio/jenkins-atom-basic-steps"
+}

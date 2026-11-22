@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-22T11:40:21Z",
+  "generatedAt": "2026-11-22T11:57:31Z",
   "atoms": [
     {
       "atomCode": "allure",
@@ -1799,7 +1799,7 @@
       "publisher": "hummerstudio",
       "name": "Basic steps",
       "channels": {
-        "stable": "1.1.0"
+        "stable": "1.2.0"
       },
       "versions": [
         {
@@ -2520,15 +2520,1025 @@
           "requires": {
             "runner": ">=0.4.0"
           }
+        },
+        {
+          "version": "1.2.0",
+          "publishedAt": "2026-11-22T11:57:31Z",
+          "package": {
+            "file": "packages/hummerstudio/atom-basic-steps/1.2.0/atom-basic-steps-1.2.0.zip",
+            "sha256": "29142f504d6113b9f193ab6bee2b9a5cf91686dbbcfa31b7bbd16f28cef76609"
+          },
+          "task": {
+            "atomCode": "atom-basic-steps",
+            "name": "Basic steps",
+            "version": "1.2.0",
+            "description": "The basic things you do to a build and its workspace, in one atom: action=rename renames the build (template or log regex), rebuild starts the same job again with the parameters this build ran with, zip/unzip packs or unpacks an archive, compress packs a tree in place into a deterministic zip, write-file creates or updates one text file, find-text searches the log or a file set for a regexp, parse-log applies named rules to the log, json reads/writes/merges a JSON document, file-ops copies/moves/deletes by pattern, files-list lists, touches, hashes and reads CSV files.",
+            "execution": {
+              "packagePath": "atom-basic-steps.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp atom-basic-steps.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "action": {
+                "label": "动作（rename = 改构建名/描述；rebuild = 用本次构建的参数重跑同一个 job；zip/unzip = 打包/解包；compress = 原地打确定性 zip；write-file = 写文本文件；find-text = 在日志/文件里找正则；parse-log = 按规则解析日志；json = 读写 JSON；file-ops = 复制/移动/删除；files-list = 列文件/校验和/CSV）",
+                "type": "vuex-input",
+                "default": "rename",
+                "required": true,
+                "description": "只有 rename、rebuild、zip、unzip、compress、write-file、find-text、parse-log、json、file-ops、files-list 十一个值；下面每组参数按它显示。rebuild 的构建页入口由 ui.json 声明，不需要跑步骤"
+              },
+              "displayName": {
+                "label": "构建名模板（支持 ${BUILD_NUMBER}、${GIT_COMMIT} 等环境变量）",
+                "type": "vuex-input",
+                "default": "#${BUILD_NUMBER}",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "rename"
+                    }
+                  ]
+                }
+              },
+              "description": {
+                "label": "构建描述（同样支持环境变量，可留空表示不写）",
+                "type": "textarea",
+                "default": "",
+                "description": "超过 8192 个字符会被截断（与 runner 施加 mutations.json 时的上限一致）",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "rename"
+                    }
+                  ]
+                }
+              },
+              "fromLog": {
+                "label": "从日志取名用的正则（留空则只用模板）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "rename"
+                    }
+                  ]
+                }
+              },
+              "matchTemplate": {
+                "label": "命中正则后使用的模板（%MATCH% 为捕获组一，留空则整段替换构建名）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "rename"
+                    }
+                  ]
+                }
+              },
+              "jenkinsUrl": {
+                "label": "Jenkins 根地址（默认 ${JENKINS_URL}）",
+                "type": "vuex-input",
+                "default": "${JENKINS_URL}",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "rebuild"
+                    }
+                  ]
+                }
+              },
+              "rebuildJob": {
+                "label": "要重跑的 Job（默认 ${JOB_NAME}；folder 里的 job 写成 folder/job）",
+                "type": "vuex-input",
+                "default": "${JOB_NAME}",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "rebuild"
+                    }
+                  ]
+                }
+              },
+              "rebuildParameters": {
+                "label": "重跑参数（每行 KEY=VALUE；留空则沿用本次构建的参数）",
+                "type": "textarea",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "rebuild"
+                    }
+                  ]
+                }
+              },
+              "rebuildToken": {
+                "label": "Job 的认证 token（触发已设置 token 的 job 时用，留空不发送）",
+                "type": "password",
+                "isSensitive": true,
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "rebuild"
+                    }
+                  ]
+                }
+              },
+              "jenkinsUser": {
+                "label": "用户名（配 jenkinsApiToken 走 Basic 认证；两者都空则匿名触发）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "rebuild"
+                    }
+                  ]
+                }
+              },
+              "jenkinsApiToken": {
+                "label": "API token（与用户名配对使用，不会写进日志）",
+                "type": "password",
+                "isSensitive": true,
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "rebuild"
+                    }
+                  ]
+                }
+              },
+              "timeoutSeconds": {
+                "label": "请求超时（秒）",
+                "type": "vuex-input",
+                "default": "30",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "rebuild"
+                    }
+                  ]
+                }
+              },
+              "failOnError": {
+                "label": "Jenkins 拒绝或不可达时判失败（默认 true）",
+                "type": "vuex-input",
+                "default": "true",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "rebuild"
+                    }
+                  ]
+                }
+              },
+              "archive": {
+                "label": "归档文件路径（workspace 相对；zip 写它，unzip 读它）",
+                "type": "vuex-input",
+                "default": "artifacts.zip",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "zip"
+                    },
+                    {
+                      "key": "action",
+                      "value": "unzip"
+                    }
+                  ]
+                }
+              },
+              "includes": {
+                "label": "打包哪些文件（glob，逗号分隔；留空则什么都不打，直接报错）",
+                "type": "vuex-input",
+                "default": "**/*",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "zip"
+                    }
+                  ]
+                }
+              },
+              "excludes": {
+                "label": "排除（glob，逗号分隔）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "zip"
+                    }
+                  ]
+                }
+              },
+              "target": {
+                "label": "解压到哪个目录（workspace 相对）",
+                "type": "vuex-input",
+                "default": "unpacked",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "unzip"
+                    }
+                  ]
+                }
+              },
+              "baseDir": {
+                "label": "相对目录（默认 workspace；包内条目名相对它）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "compress"
+                    }
+                  ]
+                }
+              },
+              "patterns": {
+                "label": "要打包的文件（逗号分隔的 glob，相对 baseDir）",
+                "type": "vuex-input",
+                "default": "**/*",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "compress"
+                    }
+                  ]
+                }
+              },
+              "exclude": {
+                "label": "排除（逗号分隔的 glob，相对 baseDir）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "compress"
+                    }
+                  ]
+                }
+              },
+              "outputFile": {
+                "label": "输出文件（workspace 相对）",
+                "type": "vuex-input",
+                "default": "artifacts.zip",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "compress"
+                    }
+                  ]
+                }
+              },
+              "deleteSource": {
+                "label": "打包后删除源文件",
+                "type": "checkbox",
+                "default": "false",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "compress"
+                    }
+                  ]
+                }
+              },
+              "option": {
+                "label": "写入方式（appendToEnd 追加、insertAtStart 前插、overWrite 覆盖）",
+                "type": "selector",
+                "default": "appendToEnd",
+                "options": [
+                  "insertAtStart",
+                  "appendToEnd",
+                  "overWrite"
+                ],
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "write-file"
+                    }
+                  ]
+                }
+              },
+              "path": {
+                "label": "文件路径（workspace 相对，可用 ${VAR}）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "write-file"
+                    }
+                  ]
+                }
+              },
+              "content": {
+                "label": "写入内容（可用 ${VAR}，\\n 换行）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "write-file"
+                    }
+                  ]
+                }
+              },
+              "useWorkspace": {
+                "label": "路径相对 workspace（关掉才允许写 workspace 外）",
+                "type": "checkbox",
+                "default": "true",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "write-file"
+                    }
+                  ]
+                }
+              },
+              "lineSeparator": {
+                "label": "换行符",
+                "type": "selector",
+                "default": "platform",
+                "options": [
+                  "platform",
+                  "lf",
+                  "crlf",
+                  "cr"
+                ],
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "write-file"
+                    }
+                  ]
+                }
+              },
+              "verifyAfterWrite": {
+                "label": "写完回读比对",
+                "type": "checkbox",
+                "default": "true",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "write-file"
+                    }
+                  ]
+                }
+              },
+              "maxFileSizeBytes": {
+                "label": "已有文件大小上限（字节）",
+                "type": "vuex-input",
+                "default": "16777216",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "write-file"
+                    }
+                  ]
+                }
+              },
+              "regexp": {
+                "label": "正则（逗号分隔多个）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "find-text"
+                    }
+                  ]
+                }
+              },
+              "useBuildLog": {
+                "label": "搜索构建日志",
+                "type": "checkbox",
+                "default": "true",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "find-text"
+                    }
+                  ]
+                }
+              },
+              "fileSet": {
+                "label": "此外搜索这些文件（glob，逗号分隔）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "find-text"
+                    }
+                  ]
+                }
+              },
+              "buildResult": {
+                "label": "命中时把构建置为",
+                "type": "selector",
+                "default": "FAILURE",
+                "options": [
+                  "FAILURE",
+                  "UNSTABLE",
+                  "SUCCESS"
+                ],
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "find-text"
+                    }
+                  ]
+                }
+              },
+              "failWhenMatch": {
+                "label": "命中就让这一步失败（留空 = 跟随 buildResult：不是 SUCCESS 就失败）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "find-text"
+                    }
+                  ]
+                }
+              },
+              "failWhenMissing": {
+                "label": "没命中就让这一步失败",
+                "type": "checkbox",
+                "default": "false",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "find-text"
+                    }
+                  ]
+                }
+              },
+              "source": {
+                "label": "日志来源（buildLog 或 workspace 里的文件）",
+                "type": "vuex-input",
+                "default": "buildLog",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "parse-log"
+                    }
+                  ]
+                }
+              },
+              "rules": {
+                "label": "规则（JSON：名称 -> 正则，或 {pattern,min,max,level}）",
+                "type": "textarea",
+                "default": "{\"error\": \"ERROR|Exception\"}",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "parse-log"
+                    }
+                  ]
+                }
+              },
+              "ignoreCase": {
+                "label": "忽略大小写",
+                "type": "checkbox",
+                "default": "false",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "parse-log"
+                    }
+                  ]
+                }
+              },
+              "maxMatchesPerRule": {
+                "label": "每规则最多记多少条命中行",
+                "type": "vuex-input",
+                "default": "20",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "parse-log"
+                    }
+                  ]
+                }
+              },
+              "operation": {
+                "label": "子操作（json：read/write/merge；file-ops：copy/move/mkdir/delete；files-list：touch/sha256/find/readcsv；留空取各自的默认）",
+                "type": "selector",
+                "default": "",
+                "options": [
+                  "read",
+                  "write",
+                  "merge",
+                  "copy",
+                  "move",
+                  "mkdir",
+                  "delete",
+                  "touch",
+                  "sha256",
+                  "find",
+                  "readcsv"
+                ],
+                "description": "十一个值都是被吸收原子的原值；每个动作只接受自己那一组，别组的值会按该动作原来的错误消息拒绝",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "json"
+                    },
+                    {
+                      "key": "action",
+                      "value": "file-ops"
+                    },
+                    {
+                      "key": "action",
+                      "value": "files-list"
+                    }
+                  ]
+                }
+              },
+              "file": {
+                "label": "JSON 文件（workspace 相对）",
+                "type": "vuex-input",
+                "default": "package.json",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "json"
+                    }
+                  ]
+                }
+              },
+              "jsonPath": {
+                "label": "字段路径（a.b.c；read 留空 = 全文）",
+                "type": "vuex-input",
+                "default": "",
+                "description": "被吸收的 json-tool 叫它 path；这里叫 jsonPath，因为 path 在这个原子里的意思是「要写的文件」",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "json"
+                    }
+                  ]
+                }
+              },
+              "value": {
+                "label": "写入的值",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "json"
+                    }
+                  ]
+                }
+              },
+              "asNumber": {
+                "label": "按数字写入",
+                "type": "checkbox",
+                "default": "false",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "json"
+                    }
+                  ]
+                }
+              },
+              "from": {
+                "label": "merge 的来源文件",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "json"
+                    }
+                  ]
+                }
+              },
+              "pattern": {
+                "label": "匹配的文件（glob，逗号分隔；file-ops 与 files-list 共用，留空取各自默认）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "file-ops"
+                    },
+                    {
+                      "key": "action",
+                      "value": "files-list"
+                    }
+                  ]
+                }
+              },
+              "dest": {
+                "label": "目标路径（workspace 相对）",
+                "type": "vuex-input",
+                "default": "",
+                "description": "被吸收的 file-ops 叫它 target；这里叫 dest，因为 target 在这个原子里是 unzip 的解压目录",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "file-ops"
+                    }
+                  ]
+                }
+              },
+              "flatten": {
+                "label": "复制时压平目录结构",
+                "type": "checkbox",
+                "default": "false",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "file-ops"
+                    }
+                  ]
+                }
+              },
+              "touchFiles": {
+                "label": "touch 的文件（逗号分隔）",
+                "type": "vuex-input",
+                "default": "",
+                "description": "被吸收的 files-tool 叫它 files；这里叫 touchFiles，因为 files 已经是 zip 的出参名",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "files-list"
+                    }
+                  ]
+                }
+              },
+              "checksumFile": {
+                "label": "sha256 写到哪个文件",
+                "type": "vuex-input",
+                "default": "checksums.sha256",
+                "description": "被吸收的 files-tool 叫它 output；这里叫 checksumFile，因为 output 是 files-list 自己的出参名",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "files-list"
+                    }
+                  ]
+                }
+              },
+              "csvFile": {
+                "label": "readcsv 的 CSV 文件",
+                "type": "vuex-input",
+                "default": "",
+                "description": "被吸收的 files-tool 叫它 file；这里叫 csvFile，因为 file 已经被 action=json 用掉了",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "files-list"
+                    }
+                  ]
+                }
+              },
+              "column": {
+                "label": "readcsv 的列名（留空取第一列）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "files-list"
+                    }
+                  ]
+                }
+              }
+            },
+            "output": {
+              "usedDisplayName": {
+                "type": "string",
+                "description": "rename：最终写入的构建名（已展开变量、去换行、按 255 截断）"
+              },
+              "usedDescription": {
+                "type": "string",
+                "description": "rename：最终写入的构建描述（空串表示没有写）"
+              },
+              "rebuiltJob": {
+                "type": "string",
+                "description": "rebuild：被重跑的 job 全名"
+              },
+              "queueItemUrl": {
+                "type": "string",
+                "description": "rebuild：新构建的队列地址（Jenkins 回 Location 时有值）"
+              },
+              "archive": {
+                "type": "string",
+                "description": "zip：归档文件在磁盘上的绝对路径"
+              },
+              "files": {
+                "type": "string",
+                "description": "zip：打进包的文件数；file-ops：处理数量；files-list find：匹配的文件（最多 100 个）"
+              },
+              "bytes": {
+                "type": "string",
+                "description": "zip：归档字节数；unzip：解出的字节数；write-file：写入字节数"
+              },
+              "human": {
+                "type": "string",
+                "description": "zip/unzip：上面那个字节数的人类可读形式"
+              },
+              "entries": {
+                "type": "string",
+                "description": "unzip：解出的条目数（目录条目不计）"
+              },
+              "target": {
+                "type": "string",
+                "description": "unzip：解压目录的绝对路径；file-ops：原样回显的目标路径"
+              },
+              "filesAdded": {
+                "type": "string",
+                "description": "compress：打进包的文件数"
+              },
+              "rawBytes": {
+                "type": "string",
+                "description": "compress：原始字节数"
+              },
+              "archiveBytes": {
+                "type": "string",
+                "description": "compress：压缩后字节数"
+              },
+              "ratio": {
+                "type": "string",
+                "description": "compress：压缩后占原始的百分比"
+              },
+              "outputFile": {
+                "type": "string",
+                "description": "compress：输出文件（workspace 相对，原样回显）"
+              },
+              "archiveFile": {
+                "type": "artifact",
+                "description": "zip/compress：打包出的 zip（会被归档）"
+              },
+              "path": {
+                "type": "string",
+                "description": "write-file：写入的绝对路径；json write：写入的字段路径"
+              },
+              "option": {
+                "type": "string",
+                "description": "write-file：实际使用的写入方式"
+              },
+              "created": {
+                "type": "string",
+                "description": "write-file：是否新建（true/false）；file-ops mkdir：创建的目录"
+              },
+              "sha256": {
+                "type": "string",
+                "description": "write-file：写入内容的 sha256"
+              },
+              "lineSeparator": {
+                "type": "string",
+                "description": "write-file：实际使用的换行符（crlf/lf/custom）"
+              },
+              "verified": {
+                "type": "string",
+                "description": "write-file：是否回读通过"
+              },
+              "matches": {
+                "type": "string",
+                "description": "find-text：命中行数；parse-log：命中行摘要（JSON，带行号）"
+              },
+              "linesScanned": {
+                "type": "string",
+                "description": "find-text：扫描行数"
+              },
+              "firstMatch": {
+                "type": "string",
+                "description": "find-text：第一条命中的原文"
+              },
+              "rules": {
+                "type": "string",
+                "description": "parse-log：规则数"
+              },
+              "count_<name>": {
+                "type": "string",
+                "description": "parse-log：每条规则的命中数（一规则一个出参，点号换成下划线）"
+              },
+              "value": {
+                "type": "string",
+                "description": "json read：读到的值；json write：写入的值"
+              },
+              "type": {
+                "type": "string",
+                "description": "json read：值类型（string/number/boolean/array/object）"
+              },
+              "count": {
+                "type": "string",
+                "description": "json read（全文）：展开的键数；files-list touch：创建的个数；files-list find：匹配的文件数"
+              },
+              "merged": {
+                "type": "string",
+                "description": "json merge：合并的键数"
+              },
+              "file": {
+                "type": "string",
+                "description": "json：操作的 JSON 文件（workspace 相对）"
+              },
+              "operation": {
+                "type": "string",
+                "description": "file-ops：实际执行的操作"
+              },
+              "deleted": {
+                "type": "string",
+                "description": "file-ops delete：删除数量"
+              },
+              "first": {
+                "type": "string",
+                "description": "files-list find：第一个匹配的文件；readcsv：第一行的列值"
+              },
+              "values": {
+                "type": "string",
+                "description": "files-list readcsv：整列的值（逗号分隔）"
+              },
+              "output": {
+                "type": "string",
+                "description": "files-list sha256：校验和文件"
+              },
+              "checksums": {
+                "type": "artifact",
+                "description": "files-list sha256：归档的校验和文件"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "context": [
+                "log",
+                "build"
+              ],
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "ui": {
+            "schema": 1,
+            "surfaces": [
+              {
+                "id": "rebuild",
+                "where": "run",
+                "title": "Rebuild",
+                "icon": "symbol-play",
+                "blocks": [
+                  {
+                    "kind": "text",
+                    "text": "Rebuild {job} #{build.number} with the parameters it ran with."
+                  },
+                  {
+                    "kind": "action",
+                    "label": "Rebuild",
+                    "action": {
+                      "kind": "build",
+                      "params": {
+                        "from": "build"
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "meta": {
+            "name": "Basic steps",
+            "summary": "把 build-name-setter、rebuild、zip-artifacts、compress-artifacts、text-file、text-finder、log-parser、json-tool、file-ops 与 files-tool 合成一个原子：action=rename 改构建名/描述，rebuild 用同样的参数重跑，zip/unzip 打包解包，compress 原地打确定性 zip，write-file 写文本文件，find-text 找正则，parse-log 按规则解析日志，json 读写 JSON，file-ops 复制/移动/删除，files-list 列文件/校验和/CSV；构建页入口仍由 ui.json 声明。",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-basic-steps",
+            "license": "MIT",
+            "tags": [
+              "build",
+              "metadata",
+              "ui",
+              "archive",
+              "files",
+              "log",
+              "json",
+              "official-port"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
         }
       ],
       "category": "generic",
-      "summary": "把 rebuild、build-name-setter、zip-artifacts 与 compress-artifacts 合成一个原子：action=rename 改构建名/描述，rebuild 用同样的参数重跑，zip/unzip 打包解包，compress 原地打确定性 zip；构建页入口仍由 ui.json 声明。",
+      "summary": "把 build-name-setter、rebuild、zip-artifacts、compress-artifacts、text-file、text-finder、log-parser、json-tool、file-ops 与 files-tool 合成一个原子：action=rename 改构建名/描述，rebuild 用同样的参数重跑，zip/unzip 打包解包，compress 原地打确定性 zip，write-file 写文本文件，find-text 找正则，parse-log 按规则解析日志，json 读写 JSON，file-ops 复制/移动/删除，files-list 列文件/校验和/CSV；构建页入口仍由 ui.json 声明。",
       "tags": [
         "build",
         "metadata",
         "ui",
         "archive",
+        "files",
+        "log",
+        "json",
         "official-port"
       ],
       "enabled": true
