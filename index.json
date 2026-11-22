@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-22T11:57:31Z",
+  "generatedAt": "2026-11-22T23:54:27Z",
   "atoms": [
     {
       "atomCode": "allure",
@@ -5181,6 +5181,440 @@
       "tags": [
         "official-port",
         "credentials-binding"
+      ],
+      "enabled": true
+    },
+    {
+      "atomCode": "bitbucket",
+      "publisher": "hummerstudio",
+      "name": "Bitbucket build status",
+      "channels": {
+        "stable": "1.0.0"
+      },
+      "versions": [
+        {
+          "version": "1.0.0",
+          "publishedAt": "2026-11-22T23:54:27Z",
+          "package": {
+            "file": "packages/hummerstudio/bitbucket/1.0.0/bitbucket-1.0.0.zip",
+            "sha256": "db9818683ac7efc13fa9e58ff5e17346cc9895fe126776207ac63fb823552601"
+          },
+          "task": {
+            "atomCode": "bitbucket",
+            "name": "Bitbucket build status",
+            "version": "1.0.0",
+            "description": "Posts a build status to the commit of a Bitbucket Server / Data Center or Bitbucket Cloud repository (pick `flavor`), reads it back, and on Server can also approve / withdraw / decline or comment on the pull request — each with a read-back. Merges the former bitbucket-status and bitbucket-cloud-status atoms.",
+            "execution": {
+              "packagePath": "bitbucket.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp bitbucket.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "flavor": {
+                "label": "部署形态",
+                "type": "select",
+                "default": "server",
+                "description": "server = Bitbucket Server / Data Center（/rest/build-status/1.0，五字段报文，HTTP access token 或用户名+密码，可选 PR 动作）；cloud = Bitbucket Cloud（api.bitbucket.org/2.0，OAuth consumer 或 accessToken）。两者是两套 API，选哪个表单就只显示哪个要的参数；不填按 server 处理。",
+                "options": [
+                  {
+                    "label": "Bitbucket Server / Data Center（server）",
+                    "value": "server"
+                  },
+                  {
+                    "label": "Bitbucket Cloud（cloud）",
+                    "value": "cloud"
+                  }
+                ]
+              },
+              "serverUrl": {
+                "label": "Bitbucket 地址",
+                "type": "vuex-input",
+                "default": "",
+                "description": "Bitbucket Server / Data Center 根地址，例如 https://bitbucket.example.com。",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "flavor",
+                      "value": "server"
+                    }
+                  ]
+                }
+              },
+              "apiUrl": {
+                "label": "API 根地址（cloud，默认 https://api.bitbucket.org）",
+                "type": "vuex-input",
+                "default": "",
+                "description": "只在测试或走代理时改。",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "flavor",
+                      "value": "cloud"
+                    }
+                  ]
+                }
+              },
+              "tokenUrl": {
+                "label": "token 端点（cloud，默认 https://bitbucket.org/site/oauth2/access_token）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "flavor",
+                      "value": "cloud"
+                    }
+                  ]
+                }
+              },
+              "workspace": {
+                "label": "Bitbucket 工作区 / owner（cloud，留空从 GIT_URL 推断）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "flavor",
+                      "value": "cloud"
+                    }
+                  ]
+                }
+              },
+              "repoSlug": {
+                "label": "仓库 slug（server 做 PR 动作时要；cloud 留空从 GIT_URL 推断）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "sha": {
+                "label": "提交 sha（留空取 GIT_COMMIT）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "state": {
+                "label": "状态（留空按 BUILD_STATUS 推断；cloud 仍为空则 INPROGRESS）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "key": {
+                "label": "构建标识 key（server 留空用 JOB_NAME；cloud 留空 md5(JOB_NAME#BUILD_NUMBER)）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "name": {
+                "label": "显示名（留空用 JOB_NAME #BUILD_NUMBER；cloud 的 overrideLatestBuild 下用 JOB_NAME）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "description": {
+                "label": "描述（server 留空自动生成；cloud 留空不发该字段）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "buildUrl": {
+                "label": "构建链接（留空取 BUILD_URL；cloud 必填）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "username": {
+                "label": "用户名（server，Basic 认证时用）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "flavor",
+                      "value": "server"
+                    }
+                  ]
+                }
+              },
+              "password": {
+                "label": "个人访问令牌或密码（server，凭据 id，Secret text）",
+                "type": "vuex-input",
+                "default": "",
+                "isSensitive": true,
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "flavor",
+                      "value": "server"
+                    }
+                  ]
+                }
+              },
+              "token": {
+                "label": "HTTP 访问令牌（server，凭据 id，Secret text；留空则用用户名+密码）",
+                "type": "vuex-input",
+                "default": "",
+                "isSensitive": true,
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "flavor",
+                      "value": "server"
+                    }
+                  ]
+                }
+              },
+              "consumerKey": {
+                "label": "OAuth consumer key（cloud）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "flavor",
+                      "value": "cloud"
+                    }
+                  ]
+                }
+              },
+              "consumerSecret": {
+                "label": "OAuth consumer secret（cloud，凭据，Secret text）",
+                "type": "vuex-input",
+                "default": "",
+                "isSensitive": true,
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "flavor",
+                      "value": "cloud"
+                    }
+                  ]
+                }
+              },
+              "accessToken": {
+                "label": "已有 access token（cloud，凭据，Secret text；给了就跳过 client_credentials 换 token）",
+                "type": "vuex-input",
+                "default": "",
+                "isSensitive": true,
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "flavor",
+                      "value": "cloud"
+                    }
+                  ]
+                }
+              },
+              "considerUnstableAsSuccess": {
+                "label": "把 UNSTABLE 报成 SUCCESSFUL（server）",
+                "type": "boolean",
+                "default": "false",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "flavor",
+                      "value": "server"
+                    }
+                  ]
+                }
+              },
+              "notifyAborted": {
+                "label": "中止/未构建的构建也上报（server，已 FAILED）",
+                "type": "boolean",
+                "default": "false",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "flavor",
+                      "value": "server"
+                    }
+                  ]
+                }
+              },
+              "includeBuildNumberInKey": {
+                "label": "key 里带上构建号（server）",
+                "type": "boolean",
+                "default": "false",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "flavor",
+                      "value": "server"
+                    }
+                  ]
+                }
+              },
+              "overrideLatestBuild": {
+                "label": "只保留该 job 最新一条状态（cloud，key=md5(JOB_NAME)、name=JOB_NAME）",
+                "type": "boolean",
+                "default": "false",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "flavor",
+                      "value": "cloud"
+                    }
+                  ]
+                }
+              },
+              "verifyAfterWrite": {
+                "label": "写完回读校验",
+                "type": "boolean",
+                "default": "true"
+              },
+              "pullRequestUrl": {
+                "label": "Pull request 页面地址（server，可选）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "flavor",
+                      "value": "server"
+                    }
+                  ]
+                }
+              },
+              "projectKey": {
+                "label": "项目 key（server，PR 动作时要）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "flavor",
+                      "value": "server"
+                    }
+                  ]
+                }
+              },
+              "pullRequestId": {
+                "label": "PR 编号（server，留空取 CHANGE_ID）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "flavor",
+                      "value": "server"
+                    }
+                  ]
+                }
+              },
+              "prAction": {
+                "label": "PR 动作（server）：none / approve（绿批红撤）/ decline（红关）",
+                "type": "vuex-input",
+                "default": "none",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "flavor",
+                      "value": "server"
+                    }
+                  ]
+                }
+              },
+              "comment": {
+                "label": "PR 评论（server，支持 ${VAR}；留空不发）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "flavor",
+                      "value": "server"
+                    }
+                  ]
+                }
+              }
+            },
+            "output": {
+              "status": {
+                "type": "string",
+                "description": "HTTP 状态码"
+              },
+              "state": {
+                "type": "string",
+                "description": "上报的状态（SUCCESSFUL / FAILED / INPROGRESS；server 跳过时为 SKIPPED）"
+              },
+              "key": {
+                "type": "string",
+                "description": "实际发送的 key"
+              },
+              "apiUrl": {
+                "type": "string",
+                "description": "实际调用的地址"
+              },
+              "verified": {
+                "type": "string",
+                "description": "回读到的状态，未回读为 not-checked"
+              },
+              "prAction": {
+                "type": "string",
+                "description": "server：实际执行的 PR 动作（none / approve / withdraw-approve / decline）"
+              },
+              "prVerified": {
+                "type": "string",
+                "description": "server：回读到的 PR 状态（approved / withdrawn / declined / not-checked）"
+              },
+              "commentId": {
+                "type": "string",
+                "description": "server：回读到的评论 id"
+              },
+              "repo": {
+                "type": "string",
+                "description": "cloud：owner/repo"
+              },
+              "tokenSource": {
+                "type": "string",
+                "description": "cloud：access-token 或 client-credentials"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              },
+              "secrets": {
+                "token": "",
+                "password": "",
+                "consumerSecret": "",
+                "accessToken": ""
+              }
+            }
+          },
+          "meta": {
+            "name": "Bitbucket build status",
+            "summary": "Posts a build status to a Bitbucket Server / Data Center or Bitbucket Cloud commit (pick the flavor) and reads it back; on Server it can also approve, withdraw, decline or comment on the pull request.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-bitbucket",
+            "license": "MIT",
+            "tags": [
+              "bitbucket",
+              "official-port"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        }
+      ],
+      "category": "other",
+      "summary": "Posts a build status to a Bitbucket Server / Data Center or Bitbucket Cloud commit (pick the flavor) and reads it back; on Server it can also approve, withdraw, decline or comment on the pull request.",
+      "tags": [
+        "bitbucket",
+        "official-port"
       ],
       "enabled": true
     },
@@ -13335,7 +13769,7 @@
       "publisher": "hummerstudio",
       "name": "Git",
       "channels": {
-        "stable": "1.0.0"
+        "stable": "1.1.0"
       },
       "versions": [
         {
@@ -13700,15 +14134,591 @@
           "requires": {
             "runner": ">=0.4.0"
           }
+        },
+        {
+          "version": "1.1.0",
+          "publishedAt": "2026-11-22T23:54:27Z",
+          "package": {
+            "file": "packages/hummerstudio/git/1.1.0/git-1.1.0.zip",
+            "sha256": "4664165290f658ed0fd70a23d5606dbdd5803c8ef64cd9d52d174cc47c3878dd"
+          },
+          "task": {
+            "atomCode": "git",
+            "name": "Git",
+            "version": "1.1.0",
+            "description": "对工作区的 git 做四件事：checkout（把仓库取进工作区并交出提交号）、push（推送并回读远端 sha）、changelog（按标签区间生成变更日志）、tag（打标签并导出 GIT_TAG_NAME / GIT_TAG_MESSAGE）。专项参数按 action 条件展示。",
+            "execution": {
+              "packagePath": "git.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp git.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "action": {
+                "label": "操作",
+                "type": "selector",
+                "default": "push",
+                "options": [
+                  "push",
+                  "changelog",
+                  "tag",
+                  "checkout"
+                ],
+                "description": "checkout 用 init+fetch 把仓库取进工作区（工作区本来就不是空的）；push 推送当前分支到远端并回读 sha；changelog 把标签以来的提交写成文件；tag 在本次提交上打标签。"
+              },
+              "gitBinary": {
+                "label": "git 可执行文件",
+                "type": "vuex-input",
+                "default": "git",
+                "description": "留空或 git 表示用 PATH 上的那个；需要固定版本时填绝对路径。"
+              },
+              "remote": {
+                "label": "远端（origin 或 URL）",
+                "type": "vuex-input",
+                "default": "origin",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "push"
+                    }
+                  ]
+                }
+              },
+              "branch": {
+                "label": "分支（push：本地分支；checkout：远端分支）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "push"
+                    },
+                    {
+                      "key": "action",
+                      "value": "checkout"
+                    }
+                  ]
+                },
+                "description": "push 留空用当前检出的分支；checkout 留空用远端的默认分支。"
+              },
+              "targetBranch": {
+                "label": "远端分支（留空同名）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "push"
+                    }
+                  ]
+                }
+              },
+              "force": {
+                "label": "强制推送",
+                "type": "checkbox",
+                "default": "false",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "push"
+                    }
+                  ]
+                }
+              },
+              "setUpstream": {
+                "label": "设置上游跟踪",
+                "type": "checkbox",
+                "default": "true",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "push"
+                    }
+                  ]
+                }
+              },
+              "followTags": {
+                "label": "一并推送附注标签",
+                "type": "checkbox",
+                "default": "false",
+                "description": "只发附注标签（有 message 的那种）；轻量标签要单独推。",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "push"
+                    }
+                  ]
+                }
+              },
+              "username": {
+                "label": "用户名（HTTPS 远端）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "push"
+                    },
+                    {
+                      "key": "action",
+                      "value": "checkout"
+                    }
+                  ]
+                }
+              },
+              "token": {
+                "label": "密码 / 访问令牌",
+                "type": "password",
+                "default": "",
+                "description": "push 经 GIT_ASKPASS 交给 git，checkout 经一次性凭据文件交给 git；两者都不进命令行、不进日志。",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "push"
+                    },
+                    {
+                      "key": "action",
+                      "value": "checkout"
+                    }
+                  ]
+                }
+              },
+              "timeoutSeconds": {
+                "label": "超时（秒）",
+                "type": "vuex-input",
+                "default": "180",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "push"
+                    },
+                    {
+                      "key": "action",
+                      "value": "checkout"
+                    }
+                  ]
+                },
+                "description": "单条 git 命令的预算，小于 10 按 10 算。"
+              },
+              "since": {
+                "label": "起始点（留空用最近的标签）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "changelog"
+                    }
+                  ]
+                }
+              },
+              "until": {
+                "label": "结束点",
+                "type": "vuex-input",
+                "default": "HEAD",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "changelog"
+                    }
+                  ]
+                }
+              },
+              "output": {
+                "label": "输出文件（workspace 相对）",
+                "type": "vuex-input",
+                "default": "CHANGELOG.md",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "changelog"
+                    }
+                  ]
+                }
+              },
+              "label": {
+                "label": "报告标题",
+                "type": "vuex-input",
+                "default": "Changelog",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "changelog"
+                    }
+                  ]
+                }
+              },
+              "tagName": {
+                "label": "标签名",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "tag"
+                    }
+                  ]
+                }
+              },
+              "tagMessage": {
+                "label": "标签说明（填写即为附注标签）",
+                "type": "textarea",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "tag"
+                    }
+                  ]
+                }
+              },
+              "tagAuthor": {
+                "label": "标签作者",
+                "type": "vuex-input",
+                "default": "",
+                "description": "打 annotated tag 时的 committer 名字。CI 机器通常没有配置 git 身份，填这里即可，不需要改 agent 的全局配置。",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "tag"
+                    }
+                  ]
+                }
+              },
+              "tagEmail": {
+                "label": "标签作者邮箱",
+                "type": "vuex-input",
+                "default": "",
+                "description": "打 annotated tag 时的 committer 邮箱，与 tagAuthor 配套使用。",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "tag"
+                    }
+                  ]
+                }
+              },
+              "tagCommit": {
+                "label": "打标签的提交",
+                "type": "vuex-input",
+                "default": "HEAD",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "tag"
+                    }
+                  ]
+                }
+              },
+              "tagForce": {
+                "label": "覆盖已存在的标签",
+                "type": "checkbox",
+                "default": "false",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "tag"
+                    }
+                  ]
+                }
+              },
+              "url": {
+                "label": "仓库地址（checkout）",
+                "type": "vuex-input",
+                "default": "",
+                "description": "必填：HTTPS 或本地路径均可，SSH 远端请用 agent。",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "checkout"
+                    }
+                  ]
+                }
+              },
+              "commit": {
+                "label": "检出某个提交（优先于分支）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "checkout"
+                    }
+                  ]
+                }
+              },
+              "targetDir": {
+                "label": "工作子目录",
+                "type": "vuex-input",
+                "default": ".",
+                "description": "checkout 落在工作区的这个子目录里，不能跑到工作区外面。",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "checkout"
+                    }
+                  ]
+                }
+              },
+              "depth": {
+                "label": "浅克隆深度（留空为完整克隆）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "checkout"
+                    }
+                  ]
+                }
+              },
+              "password": {
+                "label": "密码",
+                "type": "password",
+                "default": "",
+                "description": "只在没有填 token 时使用；与 username 一起写进一次性凭据文件。",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "checkout"
+                    }
+                  ]
+                }
+              },
+              "submodules": {
+                "label": "更新子模块",
+                "type": "checkbox",
+                "default": "false",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "checkout"
+                    }
+                  ]
+                }
+              },
+              "clean": {
+                "label": "检出前清理未跟踪文件",
+                "type": "checkbox",
+                "default": "false",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "checkout"
+                    }
+                  ]
+                }
+              },
+              "tags": {
+                "label": "克隆时带上 tag",
+                "type": "checkbox",
+                "default": "true",
+                "description": "勾掉只在明确不需要 describe 的构建上做；导出最近标签需要它。",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "checkout"
+                    }
+                  ]
+                }
+              },
+              "useMostRecentTag": {
+                "label": "导出最近标签",
+                "type": "atom-checkbox",
+                "default": "",
+                "description": "checkout 之后把最近的标签导出为 GIT_TAG_NAME / GIT_TAG_MESSAGE（附注标签取正文，轻量标签回落到提交说明）。",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "checkout"
+                    }
+                  ]
+                }
+              }
+            },
+            "output": {
+              "GIT_COMMIT": {
+                "type": "string",
+                "description": "checkout：检出的提交（交给下一步）"
+              },
+              "GIT_BRANCH": {
+                "type": "string",
+                "description": "checkout：当前分支（分离头时为空）"
+              },
+              "GIT_URL": {
+                "type": "string",
+                "description": "checkout：远端地址"
+              },
+              "GIT_CHECKOUT_DIR": {
+                "type": "string",
+                "description": "checkout：检出目录（相对 workspace）"
+              },
+              "fileCount": {
+                "type": "string",
+                "description": "checkout：检出后工作区里的文件数"
+              },
+              "pushedBranch": {
+                "type": "string",
+                "description": "push：推送到的远端分支"
+              },
+              "pushedSha": {
+                "type": "string",
+                "description": "push：推送后的提交"
+              },
+              "remoteUrl": {
+                "type": "string",
+                "description": "push：远端"
+              },
+              "forcePushed": {
+                "type": "string",
+                "description": "push：是否强制推送"
+              },
+              "commitCount": {
+                "type": "string",
+                "description": "changelog：区间内的提交数"
+              },
+              "rangeFrom": {
+                "type": "string",
+                "description": "changelog：区间起点"
+              },
+              "rangeTo": {
+                "type": "string",
+                "description": "changelog：区间终点"
+              },
+              "changelogFile": {
+                "type": "string",
+                "description": "changelog：写出的文件（workspace 相对）"
+              },
+              "GIT_TAG_NAME": {
+                "type": "string",
+                "description": "tag：打出的标签名；checkout：useMostRecentTag 时的最近标签名。都供后续步骤使用"
+              },
+              "GIT_TAG_MESSAGE": {
+                "type": "string",
+                "description": "tag：标签说明；checkout：最近标签的正文（没有则用提交说明）。都供后续步骤使用"
+              },
+              "tagSha": {
+                "type": "string",
+                "description": "tag：被标记的提交"
+              },
+              "tagType": {
+                "type": "string",
+                "description": "tag：annotated 或 lightweight"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              },
+              "errors": {
+                "40001": "checkout：url 必填",
+                "40002": "checkout：本机 PATH 上没有 git",
+                "40003": "checkout：targetDir 跑到工作区外面了",
+                "40004": "checkout：更新已有检出时 git fetch 失败",
+                "40005": "checkout：git clean 失败",
+                "40006": "checkout：更新已有检出时 git checkout 失败",
+                "40007": "checkout：git init 失败",
+                "40008": "checkout：设置 origin 失败",
+                "40009": "checkout：git 无法通过认证（用户名 / 密码 / 令牌不对，或没有权限）",
+                "40010": "checkout：git fetch（或 submodule update）失败",
+                "40011": "checkout：首次检出时 git checkout 失败（提交 / 分支不存在？）",
+                "40100": "输入有误：检查 action、remote、tagName 等必填项",
+                "40201": "推送失败：远端拒绝（非快进 / 无权限 / 保护分支）或环境问题",
+                "40202": "推送后远端 sha 与本地不一致",
+                "40301": "工作目录不是 git 仓库",
+                "40302": "取不到当前分支（detached HEAD），请显式指定 branch",
+                "40401": "标签已存在；要覆盖请设 tagForce=true",
+                "40402": "打标签失败",
+                "40403": "标签内容与预期不符",
+                "40501": "区间端点不是本仓库的提交 / 分支 / 标签",
+                "40502": "git log 生成变更日志失败"
+              }
+            }
+          },
+          "meta": {
+            "name": "Git",
+            "summary": "One git atom, four actions: checkout a repository into the workspace (init+fetch, credentials, submodules, recent tag), push and verify the remote, changelog since the last tag, tag with GIT_TAG_NAME/GIT_TAG_MESSAGE.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-git",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "git",
+              "scm",
+              "checkout",
+              "publish"
+            ],
+            "description": "packages/hummerstudio/git/1.1.0/Replaces the separate git-checkout, git-push and git-changelog atoms (and absorbs git-tag-message): the specialised parameters are hidden by rely, so the step form shows only what the chosen action uses."
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
         }
       ],
       "category": "scm",
-      "summary": "One git atom, three actions: push and verify the remote, changelog since the last tag, tag with GIT_TAG_NAME/GIT_TAG_MESSAGE.",
+      "summary": "One git atom, four actions: checkout a repository into the workspace (init+fetch, credentials, submodules, recent tag), push and verify the remote, changelog since the last tag, tag with GIT_TAG_NAME/GIT_TAG_MESSAGE.",
       "tags": [
         "official-port",
         "git",
-        "publish",
-        "scm"
+        "scm",
+        "checkout",
+        "publish"
       ],
       "enabled": true
     },
@@ -14593,7 +15603,7 @@
       "publisher": "hummerstudio",
       "name": "Commit status",
       "channels": {
-        "stable": "1.1.0"
+        "stable": "1.2.0"
       },
       "versions": [
         {
@@ -14741,13 +15751,476 @@
           "requires": {
             "runner": ">=0.4.0"
           }
+        },
+        {
+          "version": "1.2.0",
+          "publishedAt": "2026-11-22T23:54:27Z",
+          "package": {
+            "file": "packages/hummerstudio/github/1.2.0/github-1.2.0.zip",
+            "sha256": "d54c85b1476bd29cfb348a07d6858fa52dd513eaf82947ffb8efe4b52895f14e"
+          },
+          "task": {
+            "atomCode": "github",
+            "name": "Commit status",
+            "version": "1.2.0",
+            "description": "Reports a build back to its commit on GitHub, GitLab or Gitea, through one of two APIs: action=status posts the build state as a commit status (the githubNotify step's behaviour: check credential / repository / commit first, report on the sha the API returns, and optionally comment on a pull request); action=checks publishes a GitHub check run with line-level annotations, in 50-annotation batches, and reads the run and its annotations back.",
+            "execution": {
+              "packagePath": "github.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp github.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "action": {
+                "label": "动作",
+                "type": "selector",
+                "default": "status",
+                "options": [
+                  "status",
+                  "checks"
+                ],
+                "required": true,
+                "description": "status = 往提交上写一条状态（statuses API，GitHub / GitLab / Gitea；githubNotify 的行为）；checks = 写一个 GitHub check run，带行级注解（checks API，只有 GitHub）。选哪个，表单只显示哪个动作的参数。"
+              },
+              "account": {
+                "label": "账号 / 组织（repo 写成 owner/name 时可留空；checks 动作必填）",
+                "type": "vuex-input",
+                "default": "",
+                "description": "GitHub / Gitea 的 owner；GitLab 可以只写 repo 的 group/name。留空时从 GIT_URL 推断。"
+              },
+              "repo": {
+                "label": "仓库名（或 owner/name；留空取 GIT_URL）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "sha": {
+                "label": "提交 sha（留空取 GIT_COMMIT；短 sha 由接口解析成完整 sha）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "apiUrl": {
+                "label": "API 地址（gitea 必填；GitHub / checks 默认 https://api.github.com，GHE 填根地址）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "token": {
+                "label": "Token（凭据 id，Secret text）",
+                "type": "vuex-input",
+                "default": "",
+                "isSensitive": true
+              },
+              "preflight": {
+                "label": "写之前先核对凭据 / 仓库 / 提交（GitHub、Gitea）",
+                "type": "boolean",
+                "default": "true"
+              },
+              "provider": {
+                "label": "平台",
+                "type": "selector",
+                "default": "github",
+                "options": [
+                  "github",
+                  "gitlab",
+                  "gitea"
+                ],
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "status"
+                    }
+                  ]
+                }
+              },
+              "state": {
+                "label": "状态（留空按 BUILD_STATUS 推断）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "status"
+                    }
+                  ]
+                }
+              },
+              "contextName": {
+                "label": "状态名",
+                "type": "vuex-input",
+                "default": "jenkins/atom",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "status"
+                    }
+                  ]
+                }
+              },
+              "description": {
+                "label": "描述（留空自动生成）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "status"
+                    }
+                  ]
+                }
+              },
+              "targetUrl": {
+                "label": "详情链接（留空取 BUILD_URL）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "status"
+                    }
+                  ]
+                }
+              },
+              "verifyStatus": {
+                "label": "核对接口回显的状态（不是看状态码）",
+                "type": "boolean",
+                "default": "true",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "status"
+                    }
+                  ]
+                }
+              },
+              "prNumber": {
+                "label": "PR 编号（留空取 CHANGE_ID）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "status"
+                    }
+                  ]
+                }
+              },
+              "prComment": {
+                "label": "PR 评论正文（可选，支持 ${VAR}；插件没有这个功能）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "status"
+                    }
+                  ]
+                }
+              },
+              "name": {
+                "label": "检查名（留空取 JOB_NAME，再不行 jenkins/atom；支持 ${VAR}）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "checks"
+                    }
+                  ]
+                }
+              },
+              "status": {
+                "label": "检查状态",
+                "type": "selector",
+                "default": "completed",
+                "options": [
+                  "queued",
+                  "in_progress",
+                  "completed"
+                ],
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "checks"
+                    }
+                  ]
+                }
+              },
+              "conclusion": {
+                "label": "结论（留空按 BUILD_STATUS 推断；只在 completed 时有效）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "checks"
+                    }
+                  ]
+                }
+              },
+              "title": {
+                "label": "输出标题（留空按构建结果生成）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "checks"
+                    }
+                  ]
+                }
+              },
+              "summary": {
+                "label": "摘要（留空自动生成；支持 ${VAR}）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "checks"
+                    }
+                  ]
+                }
+              },
+              "summaryFile": {
+                "label": "摘要文件（相对工作区；填了就用它）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "checks"
+                    }
+                  ]
+                }
+              },
+              "text": {
+                "label": "详情正文（Markdown；支持 ${VAR}）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "checks"
+                    }
+                  ]
+                }
+              },
+              "textFile": {
+                "label": "详情正文文件（相对工作区，比如测试报告）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "checks"
+                    }
+                  ]
+                }
+              },
+              "annotationsFile": {
+                "label": "注解文件（JSON 数组，路径相对工作区）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "checks"
+                    }
+                  ]
+                }
+              },
+              "detailsUrl": {
+                "label": "检查详情链接（留空取 BUILD_URL）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "checks"
+                    }
+                  ]
+                }
+              },
+              "externalId": {
+                "label": "external_id（留空取 BUILD_TAG；同名检查按它区分是不是同一次构建）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "checks"
+                    }
+                  ]
+                }
+              },
+              "reuseExisting": {
+                "label": "同名检查在同一提交上就更新，不再建一个",
+                "type": "boolean",
+                "default": "true",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "checks"
+                    }
+                  ]
+                }
+              },
+              "verify": {
+                "label": "写完回读检查与注解（不是看状态码）",
+                "type": "boolean",
+                "default": "true",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "checks"
+                    }
+                  ]
+                }
+              },
+              "maxMessageSize": {
+                "label": "摘要/正文上限（字符，插件默认 65535）",
+                "type": "vuex-input",
+                "default": "65535",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "checks"
+                    }
+                  ]
+                }
+              }
+            },
+            "output": {
+              "status": {
+                "type": "string",
+                "description": "HTTP 状态码（status = 写状态那次；checks = 创建/更新检查那次）"
+              },
+              "state": {
+                "type": "string",
+                "description": "status 动作：映射后的状态"
+              },
+              "sha": {
+                "type": "string",
+                "description": "status 动作：实际写状态的提交 sha（可能是接口给出的完整 sha）"
+              },
+              "id": {
+                "type": "string",
+                "description": "checks 动作：检查运行 id"
+              },
+              "name": {
+                "type": "string",
+                "description": "checks 动作：检查名"
+              },
+              "headSha": {
+                "type": "string",
+                "description": "checks 动作：实际挂到的提交 sha"
+              },
+              "conclusion": {
+                "type": "string",
+                "description": "checks 动作：结论；未完成时为 none"
+              },
+              "annotations": {
+                "type": "string",
+                "description": "checks 动作：发出的注解条数"
+              },
+              "checkUrl": {
+                "type": "string",
+                "description": "checks 动作：详情链接"
+              },
+              "annotationsVerified": {
+                "type": "string",
+                "description": "checks 动作：回读到的注解条数"
+              },
+              "verified": {
+                "type": "string",
+                "description": "回读到的东西：status 是接口回显的状态，checks 是回读到的结论/状态；未开启校验为 not-checked"
+              },
+              "apiUrl": {
+                "type": "string",
+                "description": "status：实际调用的地址；checks：检查运行的对象地址"
+              },
+              "commentId": {
+                "type": "string",
+                "description": "status 动作：回读到的 PR 评论 id"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              },
+              "secrets": {
+                "token": ""
+              }
+            }
+          },
+          "meta": {
+            "name": "Commit status",
+            "summary": "Posts the build state back to the commit on GitHub, GitLab or Gitea — as a commit status, or as a GitHub check run with line-level annotations.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-github",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "github",
+              "checks-api",
+              "annotations"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
         }
       ],
       "category": "scm",
-      "summary": "Posts the build state back to the commit on GitHub, GitLab or Gitea.",
+      "summary": "Posts the build state back to the commit on GitHub, GitLab or Gitea — as a commit status, or as a GitHub check run with line-level annotations.",
       "tags": [
         "official-port",
-        "github"
+        "github",
+        "checks-api",
+        "annotations"
       ],
       "enabled": true
     },
@@ -20604,7 +22077,7 @@
       "publisher": "hummerstudio",
       "name": "Maven",
       "channels": {
-        "stable": "1.2.2"
+        "stable": "1.3.0"
       },
       "versions": [
         {
@@ -20947,13 +22420,323 @@
           "requires": {
             "runner": ">=0.4.0"
           }
+        },
+        {
+          "version": "1.3.0",
+          "publishedAt": "2026-11-22T23:54:27Z",
+          "package": {
+            "file": "packages/hummerstudio/maven/1.3.0/maven-1.3.0.zip",
+            "sha256": "c7d77748ecce1945e5692b53f6f68f17d3acc20889b6ce54eeb25071a42dca8f"
+          },
+          "task": {
+            "atomCode": "maven",
+            "name": "Maven",
+            "version": "1.3.0",
+            "description": "把 maven-plugin 变成一个原子：action=build 跑 mvn goals，退出码即构建结果；action=resolve 按 GAV 从 Maven 仓库下载构件到工作区（仓库布局、RELEASE/LATEST/SNAPSHOT、校验和策略、Basic 凭据）。",
+            "execution": {
+              "packagePath": "maven.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp maven.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "action": {
+                "label": "操作",
+                "type": "select",
+                "default": "build",
+                "options": [
+                  {
+                    "label": "构建（build）：跑 mvn goals",
+                    "value": "build"
+                  },
+                  {
+                    "label": "解析构件（resolve）：按坐标下载到工作区",
+                    "value": "resolve"
+                  }
+                ],
+                "description": "build 在工作区里跑 mvn，退出码即结果；resolve 只下载构件，不跑 mvn。"
+              },
+              "goals": {
+                "label": "goals（如 clean verify）",
+                "type": "vuex-input",
+                "default": "verify",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "build"
+                    }
+                  ]
+                }
+              },
+              "options": {
+                "label": "额外参数（如 -DskipTests -Pci）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "build"
+                    }
+                  ]
+                }
+              },
+              "home": {
+                "label": "mvn 安装目录（留空则用 PATH 或 $MAVEN_HOME）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "build"
+                    }
+                  ]
+                }
+              },
+              "repoUrl": {
+                "label": "仓库地址（如 https://repo1.maven.org/maven2 或 Nexus 的 /repository/releases）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "resolve"
+                    }
+                  ]
+                }
+              },
+              "coordinates": {
+                "label": "坐标，每行一个 groupId:artifactId:version[:extension[:classifier]]（版本可写 RELEASE / LATEST）",
+                "type": "textarea",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "resolve"
+                    }
+                  ]
+                }
+              },
+              "username": {
+                "label": "用户名（可选；留空则用绑定的同名凭据）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "resolve"
+                    }
+                  ]
+                }
+              },
+              "password": {
+                "label": "密码 / API Key（可选；留空则用绑定的同名凭据）",
+                "type": "password",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "resolve"
+                    }
+                  ]
+                }
+              },
+              "localRepository": {
+                "label": "本地仓库目录（相对工作区，或绝对路径 / ~/.m2/repository）",
+                "type": "vuex-input",
+                "default": ".m2/repository",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "resolve"
+                    }
+                  ]
+                }
+              },
+              "targetDirectory": {
+                "label": "复制到工作区的目标目录（留空即工作区根）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "resolve"
+                    }
+                  ]
+                }
+              },
+              "targetFileName": {
+                "label": "复制后的文件名（单个坐标时可用，可带子目录）",
+                "type": "vuex-input",
+                "default": "",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "resolve"
+                    }
+                  ]
+                }
+              },
+              "checksumPolicy": {
+                "label": "校验和策略（fail：不一致或缺失即失败；warn：只告警；ignore：不查）",
+                "type": "selector",
+                "default": "fail",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "resolve"
+                    }
+                  ]
+                },
+                "options": [
+                  "fail",
+                  "warn",
+                  "ignore"
+                ]
+              },
+              "timeoutSeconds": {
+                "label": "单次请求超时（秒）",
+                "type": "vuex-input",
+                "default": "60",
+                "rely": {
+                  "operation": "AND",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "resolve"
+                    }
+                  ]
+                }
+              },
+              "failOnError": {
+                "label": "失败即让这一步失败（build：mvn 非零退出码；resolve：任一构件解析失败）",
+                "type": "checkbox",
+                "default": "true"
+              }
+            },
+            "output": {
+              "exitCode": {
+                "type": "string",
+                "description": "build：mvn 的退出码"
+              },
+              "durationMs": {
+                "type": "string",
+                "description": "build：耗时（毫秒）"
+              },
+              "resolved": {
+                "type": "string",
+                "description": "resolve：成功解析的构件数"
+              },
+              "failed": {
+                "type": "string",
+                "description": "resolve：失败的构件数（failOnError=false 时才可能非零）"
+              },
+              "snapshots": {
+                "type": "string",
+                "description": "resolve：其中快照版本的数量"
+              },
+              "bytes": {
+                "type": "string",
+                "description": "resolve：下载的字节数"
+              },
+              "files": {
+                "type": "string",
+                "description": "resolve：本地仓库中的绝对路径，每行一个"
+              },
+              "targets": {
+                "type": "string",
+                "description": "resolve：工作区中的副本路径，每行一个"
+              },
+              "urls": {
+                "type": "string",
+                "description": "resolve：实际下载的远端 URL，每行一个"
+              },
+              "versions": {
+                "type": "string",
+                "description": "resolve：groupId:artifactId=实际版本（RELEASE/LATEST 解析后）"
+              },
+              "checksums": {
+                "type": "string",
+                "description": "resolve：每个构件一行：<路径>\\t<算法>=<ok|mismatch|missing|ignored>"
+              },
+              "first": {
+                "type": "string",
+                "description": "resolve：第一个工作区副本的路径"
+              },
+              "errors": {
+                "type": "string",
+                "description": "resolve：failOnError=false 时每个失败一行"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              },
+              "secrets": {
+                "username": "",
+                "password": ""
+              },
+              "errors": {
+                "40001": "入参有误：resolve 的坐标语法 / 用户名密码不配对 / checksumPolicy 未知；或 build 时 mvn 起不来",
+                "40002": "resolve：repoUrl 缺失或不是 http(s) 地址",
+                "40003": "resolve：构件在仓库里不存在（HTTP 404），消息里带 URL",
+                "40004": "resolve：仓库拒绝凭据（HTTP 401/403），检查 username/password 或绑定的凭据",
+                "40005": "resolve：仓库没有发布任何校验和，而 checksumPolicy=fail",
+                "40006": "resolve：校验和与下载到的字节不符，而 checksumPolicy=fail；如需保留字节设 warn",
+                "40007": "resolve：maven-metadata.xml 缺失、无法解析或没有可用版本",
+                "40008": "resolve：其他 HTTP 错误、连接失败、短读或重定向异常",
+                "40009": "resolve：targetFileName 只适用于单个坐标",
+                "40010": "resolve：目标路径跑出了工作区",
+                "40012": "resolve：落盘后回读的 SHA-1 与下载字节不符（磁盘或插件问题）",
+                "40013": "resolve：请求超时；加大 timeoutSeconds",
+                "40014": "action 不认识；用 build 或 resolve"
+              }
+            }
+          },
+          "meta": {
+            "name": "Maven",
+            "summary": "maven-plugin 的移植（build：跑 mvn goals）加上 repository-connector 的解析侧（resolve：按 GAV 取构件，含 RELEASE/LATEST/SNAPSHOT、校验和策略与目标目录复制）。",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-maven",
+            "license": "MIT",
+            "tags": [
+              "build-tool",
+              "official-port",
+              "repository-connector"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
         }
       ],
       "category": "build",
-      "summary": "把 maven-plugin 变成一个原子：跑 mvn goals，退出码即构建结果。",
+      "summary": "maven-plugin 的移植（build：跑 mvn goals）加上 repository-connector 的解析侧（resolve：按 GAV 取构件，含 RELEASE/LATEST/SNAPSHOT、校验和策略与目标目录复制）。",
       "tags": [
         "build-tool",
-        "official-port"
+        "official-port",
+        "repository-connector"
       ],
       "enabled": true
     },

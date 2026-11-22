@@ -1,0 +1,11 @@
+{
+  "name": "Bitbucket build status",
+  "summary": "Posts a build status to a Bitbucket Server / Data Center or Bitbucket Cloud commit (pick the flavor) and reads it back; on Server it can also approve, withdraw, decline or comment on the pull request.",
+  "author": "hummerstudio",
+  "license": "MIT",
+  "tags": [
+    "bitbucket",
+    "official-port"
+  ],
+  "homepage": "https://github.com/hummerstudio/jenkins-atom-bitbucket"
+}
