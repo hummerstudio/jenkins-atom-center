@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-22T09:32:11Z",
+  "generatedAt": "2026-11-22T10:42:04Z",
   "atoms": [
     {
       "atomCode": "allure",
@@ -10850,7 +10850,7 @@
       "publisher": "hummerstudio",
       "name": "Google Cloud Storage",
       "channels": {
-        "stable": "1.0.0"
+        "stable": "1.1.0"
       },
       "versions": [
         {
@@ -11101,11 +11101,367 @@
           "requires": {
             "runner": ">=0.3.0"
           }
+        },
+        {
+          "version": "1.1.0",
+          "publishedAt": "2026-11-22T10:42:04Z",
+          "package": {
+            "file": "packages/hummerstudio/gcs/1.1.0/gcs-1.1.0.zip",
+            "sha256": "c4e0c57623727bbdbf607aca35fb015f99c3abe43da672d8e0f15a772a9ac3ef"
+          },
+          "task": {
+            "atomCode": "gcs",
+            "name": "Google Cloud Storage",
+            "version": "1.1.0",
+            "description": "Uploads workspace files to a GCS bucket (the plugin's gs://bucket[/prefix] + pattern form, or the absorbed gcs-upload form: bare bucket + files + objectPrefix), downloads objects (gs://bucket/prefix*), or sets an expiring-bucket lifecycle rule — with a service account, straight against the GCS JSON API.",
+            "execution": {
+              "packagePath": "gcs.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp gcs.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "action": {
+                "label": "动作（upload / download / lifecycle）",
+                "type": "vuex-input",
+                "default": "upload",
+                "description": "upload 对应 googleStorageUpload（构建日志上传同理，给它一个日志文件即可）；download 对应 googleStorageDownload；lifecycle 对应 googleStorageBucketLifecycle。选哪个，表单就只显示哪个动作要的参数。"
+              },
+              "clientEmail": {
+                "label": "服务账号邮箱",
+                "type": "vuex-input",
+                "default": "",
+                "description": "服务账号的 client_email，也是 JWT 断言里的 iss。"
+              },
+              "privateKey": {
+                "label": "服务账号私钥（PEM，PKCS#8）",
+                "type": "password",
+                "default": "",
+                "description": "服务账号 JSON 里 private_key 的内容，用来签 RS256 断言。"
+              },
+              "tokenUrl": {
+                "label": "token 端点（测试时可指向本地）",
+                "type": "vuex-input",
+                "default": "https://oauth2.googleapis.com/token",
+                "description": "OAuth2 换 token 的地址，也是断言里的 aud。"
+              },
+              "apiUrl": {
+                "label": "存储端点",
+                "type": "vuex-input",
+                "default": "https://storage.googleapis.com",
+                "description": "GCS JSON API 的根，原子会在后面拼 /storage/v1 与 /upload/storage/v1。桶名形式的上传里，uploadUrl 留空时就用它。"
+              },
+              "timeoutSeconds": {
+                "label": "超时（秒）",
+                "type": "vuex-input",
+                "default": "120",
+                "description": "单次 HTTP 请求的超时。"
+              },
+              "retries": {
+                "label": "重试次数（429 / 5xx）",
+                "type": "vuex-input",
+                "default": "2",
+                "description": "遇到 429 或 5xx 时的额外重试次数，对应插件里的 RetryHttpInitializerWrapper；0 表示不重试。只用于 gs:// 形式；桶名形式（gcs-upload）本来就不重试。"
+              },
+              "bucket": {
+                "label": "桶（gs://bucket/prefix，或只用桶名）",
+                "type": "vuex-input",
+                "default": "",
+                "description": "upload 有两种写法，靠桶的写法选：gs://bucket[/prefix] 是插件口径，配 pattern / pathPrefix / sharedPublicly，/ 之后是对象名前缀；只写桶名（不含 /）是 gcs-upload 口径，配 files / objectPrefix / uploadUrl / contentType / failOnError。lifecycle 只认 gs://bucket。",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "upload"
+                    },
+                    {
+                      "key": "action",
+                      "value": "lifecycle"
+                    }
+                  ]
+                }
+              },
+              "pattern": {
+                "label": "要上传的文件（逗号分隔的 glob）",
+                "type": "vuex-input",
+                "default": "**/*",
+                "description": "插件口径：相对工作区的 glob，多个用逗号分隔。对象名 = 桶路径前缀 + 去掉 pathPrefix 的相对路径。只在 bucket 写成 gs://… 时生效；只写桶名时用 files。",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "upload"
+                    }
+                  ]
+                }
+              },
+              "files": {
+                "label": "要上传的文件（gcs-upload，逗号分隔的 glob）",
+                "type": "vuex-input",
+                "default": "**/*.jar",
+                "description": "gcs-upload 的入参：相对工作区的 glob，一个都没匹配到就报 40004。只在 bucket 只写桶名时生效；bucket 写成 gs://… 时用 pattern。files 留空则退回 pattern。",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "upload"
+                    }
+                  ]
+                }
+              },
+              "objectPrefix": {
+                "label": "对象前缀（gcs-upload）",
+                "type": "vuex-input",
+                "default": "",
+                "description": "非空时对象名 = 前缀 + \"/\" + 文件名（丢掉目录）；留空则用工作区相对路径。只用于桶名形式的上传。",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "upload"
+                    }
+                  ]
+                }
+              },
+              "pathPrefix": {
+                "label": "从相对路径里剥掉的前缀（upload）/ 从对象名里剥掉的前缀（download）",
+                "type": "vuex-input",
+                "default": "",
+                "description": "与插件的 pathPrefix 同义：gs:// 形式的上传把相对路径开头这段剥掉，download 把对象名开头这段剥掉再落到本地。桶名形式的上传不用它（那是 objectPrefix）。",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "upload"
+                    },
+                    {
+                      "key": "action",
+                      "value": "download"
+                    }
+                  ]
+                }
+              },
+              "contentType": {
+                "label": "Content-Type 覆盖（gcs-upload）",
+                "type": "vuex-input",
+                "default": "",
+                "description": "留空按扩展名（jar/zip/war → application/zip，json/html/txt/log 各按表，其余 application/octet-stream）；填了就全部用它。只用于桶名形式的上传。",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "upload"
+                    }
+                  ]
+                }
+              },
+              "sharedPublicly": {
+                "label": "对象公开可读",
+                "type": "checkbox",
+                "default": "false",
+                "description": "对应插件的 sharedPublicly：上传时带 predefinedAcl=publicRead。只在 gs:// 形式的上传里生效。",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "upload"
+                    }
+                  ]
+                }
+              },
+              "uploadUrl": {
+                "label": "存储端点（gcs-upload）",
+                "type": "vuex-input",
+                "default": "https://storage.googleapis.com",
+                "description": "gcs-upload 的入参：上传端点的根，原子在后面拼 /upload/storage/v1/b/<bucket>/o。留空则退回 apiUrl。只用于桶名形式的上传。",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "upload"
+                    }
+                  ]
+                }
+              },
+              "failOnError": {
+                "label": "上传失败就让这一步失败（gcs-upload）",
+                "type": "checkbox",
+                "default": "true",
+                "description": "true：第一个失败就整步失败（40007）；false：记 warning 继续传其余文件，failed 出参计数，步骤仍算成功。只用于桶名形式的上传。",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "upload"
+                    }
+                  ]
+                }
+              },
+              "bucketUri": {
+                "label": "要下载的对象（gs://bucket/对象，可用一个 *）",
+                "type": "vuex-input",
+                "default": "",
+                "description": "与插件一致：对象名里只允许一个 *，且 * 之后的部分不能再含 /；例如 gs://b/logs/module_*_build.log。",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "download"
+                    }
+                  ]
+                }
+              },
+              "localDirectory": {
+                "label": "下载到（相对工作区）",
+                "type": "vuex-input",
+                "default": ".",
+                "description": "下载根目录，相对工作区；对象名剥掉前缀后的路径会挂在它下面。",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "download"
+                    }
+                  ]
+                }
+              },
+              "ttlDays": {
+                "label": "生命周期：多少天后删除（天）",
+                "type": "vuex-input",
+                "default": "7",
+                "description": "与插件一致：把桶的 lifecycle 换成唯一一条 Delete/age=ttlDays 规则（会替换已有规则）。",
+                "rely": {
+                  "operation": "OR",
+                  "expression": [
+                    {
+                      "key": "action",
+                      "value": "lifecycle"
+                    }
+                  ]
+                }
+              }
+            },
+            "output": {
+              "operation": {
+                "type": "string",
+                "description": "实际执行的动作：upload / download / lifecycle"
+              },
+              "target": {
+                "type": "string",
+                "description": "操作的桶或 gs:// 路径"
+              },
+              "uploaded": {
+                "type": "string",
+                "description": "成功上传的对象数（upload）"
+              },
+              "downloaded": {
+                "type": "string",
+                "description": "成功下载的对象数（download）"
+              },
+              "failed": {
+                "type": "string",
+                "description": "上传失败的文件数（桶名形式，failOnError=false 时才可能非零）"
+              },
+              "bytes": {
+                "type": "string",
+                "description": "上传或下载的字节数"
+              },
+              "bucket": {
+                "type": "string",
+                "description": "写入的桶名（桶名形式的上传；gcs-upload 原有的出参，与同名入参是两回事）"
+              },
+              "first": {
+                "type": "string",
+                "description": "第一个对象（GCS 回了 selfLink 就用它，否则是 gs:// 路径；download 时是本地路径）"
+              },
+              "urls": {
+                "type": "string",
+                "description": "全部上传对象（最多 20 行，桶名形式）"
+              },
+              "objects": {
+                "type": "string",
+                "description": "全部对象（最多 20 行，gs:// 形式的上传与下载）"
+              },
+              "localPath": {
+                "type": "string",
+                "description": "下载根目录的绝对路径（download）"
+              },
+              "lifecycle": {
+                "type": "string",
+                "description": "实际写进桶的 lifecycle 规则 JSON（lifecycle）"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              },
+              "secrets": {
+                "privateKey": ""
+              },
+              "errors": {
+                "40001": "action 不认识：upload / download / lifecycle；桶名形式的上传：缺 bucket",
+                "40002": "缺服务账号邮箱（clientEmail）",
+                "40003": "缺服务账号私钥（privateKey）",
+                "40004": "apiUrl / tokenUrl / uploadUrl 不是 http(s) 地址；桶名形式的上传：files（或 pattern）没有匹配到任何文件",
+                "40005": "gs:// 形式：桶要写成 gs://bucket[/prefix]；桶名形式：bucket 不是桶名（带 / 或带 gs://），或上传端点连不上",
+                "40006": "gs:// 形式：pattern 没有匹配到任何文件；桶名形式：上传请求网络出错",
+                "40007": "gs:// 形式的 download：bucketUri 要写成 gs://bucket/对象；桶名形式的上传：被存储端拒绝（给出 HTTP 状态与原因）",
+                "40008": "gs:// 形式：对象名里只允许一个 *；桶名形式：私钥签不出断言",
+                "40009": "gs:// 形式：* 之后的部分不能再含 /（插件同样不支持）；桶名形式：token 端点连接超时",
+                "40010": "gs:// 形式：ttlDays 要是 >= 1 的整数；桶名形式：token 交换时网络出错",
+                "40011": "gs:// 形式：私钥签不出断言（PEM 不是 PKCS#8，或不是 RSA 私钥）；桶名形式：token 端点拒绝了断言",
+                "40012": "gs:// 形式：token 端点拒绝了断言（iss / scope / aud / 签名不对）；桶名形式：token 端点 5xx",
+                "40013": "token 端点的应答里没有 access_token",
+                "40014": "存储端拒绝了这次调用（401 / 403）",
+                "40015": "存储端一直 429 / 5xx，重试用尽",
+                "40016": "对象不存在（404）",
+                "40017": "桶不存在（404）：原子不建桶，先在控制台建好",
+                "40018": "更新桶的 lifecycle 被拒绝",
+                "40019": "连不上 apiUrl / tokenUrl",
+                "40020": "调用存储端时网络出错",
+                "40021": "对象名逃出了本地下载目录"
+              }
+            }
+          },
+          "meta": {
+            "name": "Google Cloud Storage",
+            "summary": "Uploads workspace files to a GCS bucket — the plugin's gs://bucket[/prefix] + pattern form or the absorbed gcs-upload form (bare bucket, files, objectPrefix, contentType, failOnError) — downloads objects by gs:// path or wildcard, and sets an expiring-bucket lifecycle rule, against the GCS JSON API with a service account.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-gcs",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "gcp",
+              "storage",
+              "gcs",
+              "upload"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
         }
       ],
       "category": "artifact",
-      "summary": "Uploads workspace files to a GCS bucket, downloads objects (gs://bucket/prefix*), or sets an expiring-bucket lifecycle rule — with a service account, straight against the GCS JSON API.",
-      "tags": [],
+      "summary": "Uploads workspace files to a GCS bucket — the plugin's gs://bucket[/prefix] + pattern form or the absorbed gcs-upload form (bare bucket, files, objectPrefix, contentType, failOnError) — downloads objects by gs:// path or wildcard, and sets an expiring-bucket lifecycle rule, against the GCS JSON API with a service account.",
+      "tags": [
+        "official-port",
+        "gcp",
+        "storage",
+        "gcs",
+        "upload"
+      ],
       "enabled": true
     },
     {
@@ -22919,6 +23275,311 @@
       "enabled": true
     },
     {
+      "atomCode": "splunk",
+      "publisher": "hummerstudio",
+      "name": "Splunk",
+      "channels": {
+        "stable": "1.0.0"
+      },
+      "versions": [
+        {
+          "version": "1.0.0",
+          "publishedAt": "2026-11-22T10:42:04Z",
+          "package": {
+            "file": "packages/hummerstudio/splunk/1.0.0/splunk-1.0.0.zip",
+            "sha256": "62d2ce6b03307480f418806d5a50e1d536e68c46d06c6f7ff393a46bd336676d"
+          },
+          "task": {
+            "atomCode": "splunk",
+            "name": "Splunk",
+            "version": "1.0.0",
+            "description": "Sends one event, or this build's build/deployment payload, to Splunk's HTTP Event Collector: HEC envelope, metadata, token header, gzip above 1KiB and the collector's verdict.",
+            "execution": {
+              "packagePath": "splunk.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp splunk.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "action": {
+                "label": "动作：event（通用事件）/ build（构建事件）",
+                "type": "select",
+                "default": "build",
+                "options": [
+                  {
+                    "label": "构建事件（build）",
+                    "value": "build"
+                  },
+                  {
+                    "label": "通用事件（event）",
+                    "value": "event"
+                  }
+                ]
+              },
+              "url": {
+                "label": "Splunk HEC 地址（如 https://splunk.example.com:8088，自动补 /services/collector/event）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "token": {
+                "label": "HEC Token（Authorization: Splunk ***）",
+                "type": "password",
+                "default": ""
+              },
+              "eventKind": {
+                "label": "build：事件类型 job_event（构建事件）/ build_report（构建报告）/ custom（自定义 JSON）",
+                "type": "vuex-input",
+                "default": "job_event"
+              },
+              "jobEventType": {
+                "label": "build：job_event 阶段 completed / started",
+                "type": "vuex-input",
+                "default": "completed"
+              },
+              "jobName": {
+                "label": "build：job_name（默认 ${JOB_NAME}）",
+                "type": "vuex-input",
+                "default": "${JOB_NAME}"
+              },
+              "buildNumber": {
+                "label": "build：build_number（默认 ${BUILD_NUMBER}）",
+                "type": "vuex-input",
+                "default": "${BUILD_NUMBER}"
+              },
+              "buildUrl": {
+                "label": "build：build_url（插件写的是 run.getUrl() 的相对路径）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "jobResult": {
+                "label": "build：job_result SUCCESS/UNSTABLE/FAILURE/NOT_BUILT/ABORTED（默认 ${BUILD_STATUS}）",
+                "type": "vuex-input",
+                "default": "${BUILD_STATUS}"
+              },
+              "jobDurationMs": {
+                "label": "build：构建耗时毫秒（job_duration = 毫秒/1000，小于 10 时用 now - 开始时间）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "jobStartedTimeMs": {
+                "label": "build：开始时间（epoch 毫秒，用于 job_started_at 与 job_duration 兜底）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "jobStartedAt": {
+                "label": "build：job_started_at（留空则用开始时间格式化，yyyy-MM-dd'T'HH:mm:ss.SSSZ）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "queueId": {
+                "label": "build：queue_id（默认 0）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "queueTimeSeconds": {
+                "label": "build：queue_time 秒（默认 0）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "user": {
+                "label": "build：触发用户（留空记 anonymous，与插件 getTriggerUserName 一致）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "triggerBy": {
+                "label": "build：trigger_by（构建原因短描述，逗号分隔）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "upstream": {
+                "label": "build：upstream（上游构建 URL，可空）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "node": {
+                "label": "build：node（默认 ${NODE_NAME}）",
+                "type": "vuex-input",
+                "default": "${NODE_NAME}"
+              },
+              "label": {
+                "label": "build：节点标签（可空）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "jobType": {
+                "label": "build：job_type（如 Freestyle project，可空）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "parameters": {
+                "label": "build：构建参数（每行 key=value，写进 metadata）",
+                "type": "textarea",
+                "default": ""
+              },
+              "maskedParameters": {
+                "label": "build：需要打码的参数名（逗号分隔，值写成 ***）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "testsTotal": {
+                "label": "build：测试总数（留空则不写 test_summary）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "testsFailed": {
+                "label": "build：失败数",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "testsSkipped": {
+                "label": "build：跳过数",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "testsDurationSeconds": {
+                "label": "build：测试耗时秒",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "customEvent": {
+                "label": "eventKind=custom 时的 JSON 对象（即 build 的 event 字段；event 动作下与 event 同义）",
+                "type": "textarea",
+                "default": ""
+              },
+              "event": {
+                "label": "event：事件内容（JSON 或 key=value；留空用构建事实）",
+                "type": "textarea",
+                "default": ""
+              },
+              "mode": {
+                "label": "event：模式 event（JSON）/ raw（文本，走 /services/collector/raw）",
+                "type": "vuex-input",
+                "default": "event"
+              },
+              "channel": {
+                "label": "event：channel（写进报文，留空则不带）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "index": {
+                "label": "index（留空：event 不写该字段；build 按类型 job_event=jenkins_statistics，其余 jenkins）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "source": {
+                "label": "source（留空：event=jenkins；build=jenkins/<事件类型>）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "sourcetype": {
+                "label": "sourcetype（留空：event=jenkins；build=json:jenkins）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "host": {
+                "label": "host（留空则不写该字段，由 Splunk 决定）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "timestampMs": {
+                "label": "事件时间（epoch 毫秒，留空用当前时间；build 报文里是秒 + 三位小数）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "compress": {
+                "label": "超过 1KiB 时 gzip（true/false）",
+                "type": "vuex-input",
+                "default": "true"
+              },
+              "dryRun": {
+                "label": "只组报文不发请求（true/false）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "failOnError": {
+                "label": "build：被拒/连不上是否让构建失败（默认 true；插件只记日志）",
+                "type": "vuex-input",
+                "default": "true"
+              },
+              "timeoutSeconds": {
+                "label": "超时秒数",
+                "type": "vuex-input",
+                "default": "30"
+              }
+            },
+            "output": {
+              "action": {
+                "type": "string",
+                "description": "实际执行的动作（event / build）"
+              },
+              "eventKind": {
+                "type": "string",
+                "description": "build 发送的事件类型（job_event / build_report / custom）"
+              },
+              "endpoint": {
+                "type": "string",
+                "description": "实际请求的端点（event 为完整 URL，build 为路径）"
+              },
+              "httpStatus": {
+                "type": "string",
+                "description": "HTTP 状态（build 连不上时为空）"
+              },
+              "channel": {
+                "type": "string",
+                "description": "x-splunk-request-channel 的值（build）"
+              },
+              "code": {
+                "type": "string",
+                "description": "event：HEC 返回码（0 = 已接收）"
+              },
+              "text": {
+                "type": "string",
+                "description": "event：HEC 返回文本"
+              },
+              "bytes": {
+                "type": "string",
+                "description": "实际发出的字节数（压缩后）"
+              },
+              "gzipped": {
+                "type": "string",
+                "description": "build：是否 gzip"
+              },
+              "body": {
+                "type": "string",
+                "description": "实际发出的报文（也是 dry run 的唯一产物）"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.3.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "Splunk",
+            "summary": "Sends one event, or this build's build/deployment payload, to Splunk's HTTP Event Collector with the HEC envelope, metadata, Splunk token header and verdict check.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-splunk",
+            "license": "MIT",
+            "tags": [
+              "splunk",
+              "official-port"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.3.0"
+          }
+        }
+      ],
+      "category": "other",
+      "summary": "Sends one event, or this build's build/deployment payload, to Splunk's HTTP Event Collector with the HEC envelope, metadata, Splunk token header and verdict check.",
+      "tags": [
+        "splunk",
+        "official-port"
+      ],
+      "enabled": true
+    },
+    {
       "atomCode": "splunk-devops",
       "publisher": "hummerstudio",
       "name": "Splunk HEC build event",
@@ -23302,6 +23963,189 @@
         "official-port",
         "splunk",
         "metrics"
+      ],
+      "enabled": true
+    },
+    {
+      "atomCode": "ssh",
+      "publisher": "hummerstudio",
+      "name": "SSH",
+      "channels": {
+        "stable": "1.0.0"
+      },
+      "versions": [
+        {
+          "version": "1.0.0",
+          "publishedAt": "2026-11-22T10:42:04Z",
+          "package": {
+            "file": "packages/hummerstudio/ssh/1.0.0/ssh-1.0.0.zip",
+            "sha256": "6afa40a5a44fa233d5998e09de49c1ccbb074d942a2e78cedfa33f87e70f332b"
+          },
+          "task": {
+            "atomCode": "ssh",
+            "name": "SSH",
+            "version": "1.0.0",
+            "description": "Copies files to another machine over SSH, or runs a shell command over there: one connection, two verbs.",
+            "execution": {
+              "packagePath": "ssh.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp ssh.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "action": {
+                "label": "动作",
+                "type": "select",
+                "default": "publish",
+                "options": [
+                  {
+                    "label": "发布文件（publish）",
+                    "value": "publish"
+                  },
+                  {
+                    "label": "执行命令（exec）",
+                    "value": "exec"
+                  }
+                ]
+              },
+              "host": {
+                "label": "主机",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "port": {
+                "label": "端口",
+                "type": "vuex-input",
+                "default": "22"
+              },
+              "user": {
+                "label": "用户名",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "command": {
+                "label": "要执行的命令（action=exec）",
+                "type": "textarea",
+                "default": ""
+              },
+              "expectedExitCode": {
+                "label": "期望退出码（action=exec）",
+                "type": "vuex-input",
+                "default": "0"
+              },
+              "failOnError": {
+                "label": "退出码不符就让这一步失败（action=exec）",
+                "type": "checkbox",
+                "default": "true"
+              },
+              "remoteDir": {
+                "label": "远端目录（不存在会创建，action=publish）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "sourceFiles": {
+                "label": "要传的文件（逗号分隔的 glob）",
+                "type": "vuex-input",
+                "default": "**/*"
+              },
+              "exclude": {
+                "label": "排除（逗号分隔的 glob）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "baseDir": {
+                "label": "相对目录（默认 workspace）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "deleteRemote": {
+                "label": "先清空远端目录",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "keyFile": {
+                "label": "私钥路径（workspace 内）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "key": {
+                "label": "或直接给私钥内容",
+                "type": "password",
+                "default": ""
+              },
+              "knownHostsFile": {
+                "label": "known_hosts 文件（留空用系统默认）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "strictHostKeyChecking": {
+                "label": "主机密钥校验（accept-new / yes / no）",
+                "type": "vuex-input",
+                "default": "accept-new"
+              },
+              "timeoutSeconds": {
+                "label": "超时（秒）",
+                "type": "vuex-input",
+                "default": "120"
+              }
+            },
+            "output": {
+              "filesUploaded": {
+                "type": "string",
+                "description": "传输的文件数（publish）"
+              },
+              "bytes": {
+                "type": "string",
+                "description": "传输的字节数（未压缩的 tar，publish）"
+              },
+              "remoteDir": {
+                "type": "string",
+                "description": "远端目录（publish）"
+              },
+              "host": {
+                "type": "string",
+                "description": "主机（publish）"
+              },
+              "exitCode": {
+                "type": "string",
+                "description": "远端命令的退出码（exec）"
+              },
+              "durationMs": {
+                "type": "string",
+                "description": "耗时（毫秒，exec）"
+              },
+              "stdoutBytes": {
+                "type": "string",
+                "description": "标准输出字节数（exec）"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.3.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "SSH",
+            "summary": "Copies files to another machine over SSH, or runs a shell command over there: one connection, two verbs.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-ssh",
+            "license": "MIT",
+            "tags": [
+              "ssh",
+              "official-port"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.3.0"
+          }
+        }
+      ],
+      "category": "other",
+      "summary": "Copies files to another machine over SSH, or runs a shell command over there: one connection, two verbs.",
+      "tags": [
+        "ssh",
+        "official-port"
       ],
       "enabled": true
     },

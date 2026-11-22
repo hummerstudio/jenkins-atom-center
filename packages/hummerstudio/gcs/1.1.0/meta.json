@@ -1,0 +1,14 @@
+{
+  "name": "Google Cloud Storage",
+  "summary": "Uploads workspace files to a GCS bucket — the plugin's gs://bucket[/prefix] + pattern form or the absorbed gcs-upload form (bare bucket, files, objectPrefix, contentType, failOnError) — downloads objects by gs:// path or wildcard, and sets an expiring-bucket lifecycle rule, against the GCS JSON API with a service account.",
+  "author": "hummerstudio",
+  "license": "MIT",
+  "tags": [
+    "official-port",
+    "gcp",
+    "storage",
+    "gcs",
+    "upload"
+  ],
+  "homepage": "https://github.com/hummerstudio/jenkins-atom-gcs"
+}
