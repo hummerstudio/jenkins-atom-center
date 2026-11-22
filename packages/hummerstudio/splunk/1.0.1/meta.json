@@ -1,0 +1,11 @@
+{
+  "name": "Splunk",
+  "summary": "Sends one event, or this build's build/deployment payload, to Splunk's HTTP Event Collector with the HEC envelope, metadata, Splunk token header and verdict check.",
+  "author": "hummerstudio",
+  "license": "MIT",
+  "tags": [
+    "splunk",
+    "official-port"
+  ],
+  "homepage": "https://github.com/hummerstudio/jenkins-atom-splunk"
+}

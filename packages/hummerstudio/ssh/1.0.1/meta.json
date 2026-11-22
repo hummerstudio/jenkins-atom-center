@@ -1,0 +1,11 @@
+{
+  "name": "SSH",
+  "summary": "Copies files to another machine over SSH, or runs a shell command over there: one connection, two verbs.",
+  "author": "hummerstudio",
+  "license": "MIT",
+  "tags": [
+    "ssh",
+    "official-port"
+  ],
+  "homepage": "https://github.com/hummerstudio/jenkins-atom-ssh"
+}

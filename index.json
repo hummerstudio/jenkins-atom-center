@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-22T10:42:04Z",
+  "generatedAt": "2026-11-22T10:47:48Z",
   "atoms": [
     {
       "atomCode": "allure",
@@ -23279,7 +23279,7 @@
       "publisher": "hummerstudio",
       "name": "Splunk",
       "channels": {
-        "stable": "1.0.0"
+        "stable": "1.0.1"
       },
       "versions": [
         {
@@ -23568,6 +23568,294 @@
           },
           "requires": {
             "runner": ">=0.3.0"
+          }
+        },
+        {
+          "version": "1.0.1",
+          "publishedAt": "2026-11-22T10:47:48Z",
+          "package": {
+            "file": "packages/hummerstudio/splunk/1.0.1/splunk-1.0.1.zip",
+            "sha256": "5d85ffcf6b1f5cfd861d78098551420e2b53c15ccb2d24609acb422a54054b2f"
+          },
+          "task": {
+            "atomCode": "splunk",
+            "name": "Splunk",
+            "version": "1.0.1",
+            "description": "Sends one event, or this build's build/deployment payload, to Splunk's HTTP Event Collector: HEC envelope, metadata, token header, gzip above 1KiB and the collector's verdict.",
+            "execution": {
+              "packagePath": "splunk.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp splunk.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "action": {
+                "label": "动作：event（通用事件）/ build（构建事件）",
+                "type": "select",
+                "default": "build",
+                "options": [
+                  {
+                    "label": "构建事件（build）",
+                    "value": "build"
+                  },
+                  {
+                    "label": "通用事件（event）",
+                    "value": "event"
+                  }
+                ]
+              },
+              "url": {
+                "label": "Splunk HEC 地址（如 https://splunk.example.com:8088，自动补 /services/collector/event）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "token": {
+                "label": "HEC Token（Authorization: Splunk ***）",
+                "type": "password",
+                "default": ""
+              },
+              "eventKind": {
+                "label": "build：事件类型 job_event（构建事件）/ build_report（构建报告）/ custom（自定义 JSON）",
+                "type": "vuex-input",
+                "default": "job_event"
+              },
+              "jobEventType": {
+                "label": "build：job_event 阶段 completed / started",
+                "type": "vuex-input",
+                "default": "completed"
+              },
+              "jobName": {
+                "label": "build：job_name（默认 ${JOB_NAME}）",
+                "type": "vuex-input",
+                "default": "${JOB_NAME}"
+              },
+              "buildNumber": {
+                "label": "build：build_number（默认 ${BUILD_NUMBER}）",
+                "type": "vuex-input",
+                "default": "${BUILD_NUMBER}"
+              },
+              "buildUrl": {
+                "label": "build：build_url（插件写的是 run.getUrl() 的相对路径）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "jobResult": {
+                "label": "build：job_result SUCCESS/UNSTABLE/FAILURE/NOT_BUILT/ABORTED（默认 ${BUILD_STATUS}）",
+                "type": "vuex-input",
+                "default": "${BUILD_STATUS}"
+              },
+              "jobDurationMs": {
+                "label": "build：构建耗时毫秒（job_duration = 毫秒/1000，小于 10 时用 now - 开始时间）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "jobStartedTimeMs": {
+                "label": "build：开始时间（epoch 毫秒，用于 job_started_at 与 job_duration 兜底）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "jobStartedAt": {
+                "label": "build：job_started_at（留空则用开始时间格式化，yyyy-MM-dd'T'HH:mm:ss.SSSZ）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "queueId": {
+                "label": "build：queue_id（默认 0）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "queueTimeSeconds": {
+                "label": "build：queue_time 秒（默认 0）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "user": {
+                "label": "build：触发用户（留空记 anonymous，与插件 getTriggerUserName 一致）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "triggerBy": {
+                "label": "build：trigger_by（构建原因短描述，逗号分隔）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "upstream": {
+                "label": "build：upstream（上游构建 URL，可空）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "node": {
+                "label": "build：node（默认 ${NODE_NAME}）",
+                "type": "vuex-input",
+                "default": "${NODE_NAME}"
+              },
+              "label": {
+                "label": "build：节点标签（可空）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "jobType": {
+                "label": "build：job_type（如 Freestyle project，可空）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "parameters": {
+                "label": "build：构建参数（每行 key=value，写进 metadata）",
+                "type": "textarea",
+                "default": ""
+              },
+              "maskedParameters": {
+                "label": "build：需要打码的参数名（逗号分隔，值写成 ***）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "testsTotal": {
+                "label": "build：测试总数（留空则不写 test_summary）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "testsFailed": {
+                "label": "build：失败数",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "testsSkipped": {
+                "label": "build：跳过数",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "testsDurationSeconds": {
+                "label": "build：测试耗时秒",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "customEvent": {
+                "label": "eventKind=custom 时的 JSON 对象（即 build 的 event 字段；event 动作下与 event 同义）",
+                "type": "textarea",
+                "default": ""
+              },
+              "event": {
+                "label": "event：事件内容（JSON 或 key=value；留空用构建事实）",
+                "type": "textarea",
+                "default": ""
+              },
+              "mode": {
+                "label": "event：模式 event（JSON）/ raw（文本，走 /services/collector/raw）",
+                "type": "vuex-input",
+                "default": "event"
+              },
+              "channel": {
+                "label": "event：channel（写进报文，留空则不带）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "index": {
+                "label": "index（留空：event 不写该字段；build 按类型 job_event=jenkins_statistics，其余 jenkins）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "source": {
+                "label": "source（留空：event=jenkins；build=jenkins/<事件类型>）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "sourcetype": {
+                "label": "sourcetype（留空：event=jenkins；build=json:jenkins）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "host": {
+                "label": "host（留空则不写该字段，由 Splunk 决定）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "timestampMs": {
+                "label": "事件时间（epoch 毫秒，留空用当前时间；build 报文里是秒 + 三位小数）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "compress": {
+                "label": "超过 1KiB 时 gzip（true/false）",
+                "type": "vuex-input",
+                "default": "true"
+              },
+              "dryRun": {
+                "label": "只组报文不发请求（true/false）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "failOnError": {
+                "label": "build：被拒/连不上是否让构建失败（默认 true；插件只记日志）",
+                "type": "vuex-input",
+                "default": "true"
+              },
+              "timeoutSeconds": {
+                "label": "超时秒数",
+                "type": "vuex-input",
+                "default": "30"
+              }
+            },
+            "output": {
+              "action": {
+                "type": "string",
+                "description": "实际执行的动作（event / build）"
+              },
+              "eventKind": {
+                "type": "string",
+                "description": "build 发送的事件类型（job_event / build_report / custom）"
+              },
+              "endpoint": {
+                "type": "string",
+                "description": "实际请求的端点（event 为完整 URL，build 为路径）"
+              },
+              "httpStatus": {
+                "type": "string",
+                "description": "HTTP 状态（build 连不上时为空）"
+              },
+              "channel": {
+                "type": "string",
+                "description": "x-splunk-request-channel 的值（build）"
+              },
+              "code": {
+                "type": "string",
+                "description": "event：HEC 返回码（0 = 已接收）"
+              },
+              "text": {
+                "type": "string",
+                "description": "event：HEC 返回文本"
+              },
+              "bytes": {
+                "type": "string",
+                "description": "实际发出的字节数（压缩后）"
+              },
+              "gzipped": {
+                "type": "string",
+                "description": "build：是否 gzip"
+              },
+              "body": {
+                "type": "string",
+                "description": "实际发出的报文（也是 dry run 的唯一产物）"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "Splunk",
+            "summary": "Sends one event, or this build's build/deployment payload, to Splunk's HTTP Event Collector with the HEC envelope, metadata, Splunk token header and verdict check.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-splunk",
+            "license": "MIT",
+            "tags": [
+              "splunk",
+              "official-port"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
           }
         }
       ],
@@ -23971,7 +24259,7 @@
       "publisher": "hummerstudio",
       "name": "SSH",
       "channels": {
-        "stable": "1.0.0"
+        "stable": "1.0.1"
       },
       "versions": [
         {
@@ -24138,6 +24426,172 @@
           },
           "requires": {
             "runner": ">=0.3.0"
+          }
+        },
+        {
+          "version": "1.0.1",
+          "publishedAt": "2026-11-22T10:47:48Z",
+          "package": {
+            "file": "packages/hummerstudio/ssh/1.0.1/ssh-1.0.1.zip",
+            "sha256": "933016b67ac0740e2ff727c17a208f69c452f4984338ba31c3b2f9d50cab1d04"
+          },
+          "task": {
+            "atomCode": "ssh",
+            "name": "SSH",
+            "version": "1.0.1",
+            "description": "Copies files to another machine over SSH, or runs a shell command over there: one connection, two verbs.",
+            "execution": {
+              "packagePath": "ssh.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp ssh.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "action": {
+                "label": "动作",
+                "type": "select",
+                "default": "publish",
+                "options": [
+                  {
+                    "label": "发布文件（publish）",
+                    "value": "publish"
+                  },
+                  {
+                    "label": "执行命令（exec）",
+                    "value": "exec"
+                  }
+                ]
+              },
+              "host": {
+                "label": "主机",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "port": {
+                "label": "端口",
+                "type": "vuex-input",
+                "default": "22"
+              },
+              "user": {
+                "label": "用户名",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "command": {
+                "label": "要执行的命令（action=exec）",
+                "type": "textarea",
+                "default": ""
+              },
+              "expectedExitCode": {
+                "label": "期望退出码（action=exec）",
+                "type": "vuex-input",
+                "default": "0"
+              },
+              "failOnError": {
+                "label": "退出码不符就让这一步失败（action=exec）",
+                "type": "checkbox",
+                "default": "true"
+              },
+              "remoteDir": {
+                "label": "远端目录（不存在会创建，action=publish）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "sourceFiles": {
+                "label": "要传的文件（逗号分隔的 glob）",
+                "type": "vuex-input",
+                "default": "**/*"
+              },
+              "exclude": {
+                "label": "排除（逗号分隔的 glob）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "baseDir": {
+                "label": "相对目录（默认 workspace）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "deleteRemote": {
+                "label": "先清空远端目录",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "keyFile": {
+                "label": "私钥路径（workspace 内）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "key": {
+                "label": "或直接给私钥内容",
+                "type": "password",
+                "default": ""
+              },
+              "knownHostsFile": {
+                "label": "known_hosts 文件（留空用系统默认）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "strictHostKeyChecking": {
+                "label": "主机密钥校验（accept-new / yes / no）",
+                "type": "vuex-input",
+                "default": "accept-new"
+              },
+              "timeoutSeconds": {
+                "label": "超时（秒）",
+                "type": "vuex-input",
+                "default": "120"
+              }
+            },
+            "output": {
+              "filesUploaded": {
+                "type": "string",
+                "description": "传输的文件数（publish）"
+              },
+              "bytes": {
+                "type": "string",
+                "description": "传输的字节数（未压缩的 tar，publish）"
+              },
+              "remoteDir": {
+                "type": "string",
+                "description": "远端目录（publish）"
+              },
+              "host": {
+                "type": "string",
+                "description": "主机（publish）"
+              },
+              "exitCode": {
+                "type": "string",
+                "description": "远端命令的退出码（exec）"
+              },
+              "durationMs": {
+                "type": "string",
+                "description": "耗时（毫秒，exec）"
+              },
+              "stdoutBytes": {
+                "type": "string",
+                "description": "标准输出字节数（exec）"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              }
+            }
+          },
+          "meta": {
+            "name": "SSH",
+            "summary": "Copies files to another machine over SSH, or runs a shell command over there: one connection, two verbs.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-ssh",
+            "license": "MIT",
+            "tags": [
+              "ssh",
+              "official-port"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
           }
         }
       ],
