@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-22T07:43:07Z",
+  "generatedAt": "2026-11-22T09:32:11Z",
   "atoms": [
     {
       "atomCode": "allure",
@@ -21961,7 +21961,7 @@
       "publisher": "hummerstudio",
       "name": "SonarQube scan",
       "channels": {
-        "stable": "1.0.1"
+        "stable": "1.1.0"
       },
       "versions": [
         {
@@ -22032,6 +22032,180 @@
                 "type": "vuex-input",
                 "default": "",
                 "isSensitive": true
+              }
+            },
+            "output": {
+              "dashboardUrl": {
+                "type": "string",
+                "description": "SonarQube 项目看板地址"
+              },
+              "taskId": {
+                "type": "string",
+                "description": "计算引擎任务 id"
+              },
+              "qualityGate": {
+                "type": "string",
+                "description": "OK / ERROR / UNKNOWN"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "requires": {
+                "runner": ">=0.4.0"
+              },
+              "secrets": {
+                "sonarToken": ""
+              }
+            }
+          },
+          "meta": {
+            "name": "SonarQube scan",
+            "summary": "Runs sonarner and, unless told not to, holds the build until the quality gate answers.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-sonar",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "sonar"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
+        },
+        {
+          "version": "1.1.0",
+          "publishedAt": "2026-11-22T09:32:11Z",
+          "package": {
+            "file": "packages/hummerstudio/sonar/1.1.0/sonar-1.1.0.zip",
+            "sha256": "1d6f9889e9e0b11e7f7f7af4e3d6c2a5fc287793ea5484f5d10d0aa522def58a"
+          },
+          "task": {
+            "atomCode": "sonar",
+            "name": "SonarQube scan",
+            "version": "1.1.0",
+            "description": "Runs sonarner and, unless told not to, holds the build until the quality gate answers.",
+            "execution": {
+              "packagePath": "sonar.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp sonar.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "action": {
+                "label": "动作",
+                "type": "select",
+                "default": "scan",
+                "options": [
+                  {
+                    "label": "扫描（scan）",
+                    "value": "scan"
+                  },
+                  {
+                    "label": "只查质量门禁（gate）",
+                    "value": "gate"
+                  }
+                ]
+              },
+              "projectKey": {
+                "label": "项目 key（必填）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "hostUrl": {
+                "label": "SonarQube 地址",
+                "type": "vuex-input",
+                "default": "https://sonarcloud.io"
+              },
+              "scanner": {
+                "label": "scanner 命令",
+                "type": "vuex-input",
+                "default": "sonarner"
+              },
+              "sources": {
+                "label": "源码目录",
+                "type": "vuex-input",
+                "default": "."
+              },
+              "exclusions": {
+                "label": "排除规则（sonar.exclusions）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "extraArgs": {
+                "label": "额外 -D 参数（空格分隔）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "waitForQualityGate": {
+                "label": "等待质量门禁结果",
+                "type": "checkbox",
+                "default": "true"
+              },
+              "gateTimeoutSeconds": {
+                "label": "等待超时（秒）",
+                "type": "vuex-input-number",
+                "default": "300"
+              },
+              "failOnGate": {
+                "label": "门禁未通过让构建失败",
+                "type": "checkbox",
+                "default": "true"
+              },
+              "sonarToken": {
+                "label": "SonarQube Token（凭据 id，Secret text）",
+                "type": "vuex-input",
+                "default": "",
+                "isSensitive": true
+              },
+              "sonarUrl": {
+                "label": "SonarQube 地址",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "componentKey": {
+                "label": "分析组件 Key（默认同项目 Key）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "branch": {
+                "label": "分支（可选）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "pullRequest": {
+                "label": "Pull Request 号（可选）",
+                "type": "vuex-input",
+                "default": ""
+              },
+              "failOnWarning": {
+                "label": "WARN 也让这一步失败",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "timeoutSeconds": {
+                "label": "超时（秒）",
+                "type": "vuex-input",
+                "default": "60"
+              },
+              "waitForAnalysis": {
+                "label": "先等这次的分析跑完（CE 任务）",
+                "type": "checkbox",
+                "default": "false"
+              },
+              "waitTimeoutSeconds": {
+                "label": "等分析的超时（秒，默认 300）",
+                "type": "vuex-input",
+                "default": "300"
+              },
+              "pollIntervalSeconds": {
+                "label": "查分析的间隔（秒，默认 10）",
+                "type": "vuex-input",
+                "default": "10"
+              },
+              "buildStatus": {
+                "label": "门禁红了怎么办（FAILURE / UNSTABLE）",
+                "type": "vuex-input",
+                "default": "FAILURE"
               }
             },
             "output": {
