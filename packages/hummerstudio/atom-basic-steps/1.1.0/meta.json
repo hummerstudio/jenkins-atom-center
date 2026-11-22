@@ -1,0 +1,14 @@
+{
+  "name": "Basic steps",
+  "summary": "把 rebuild、build-name-setter、zip-artifacts 与 compress-artifacts 合成一个原子：action=rename 改构建名/描述，rebuild 用同样的参数重跑，zip/unzip 打包解包，compress 原地打确定性 zip；构建页入口仍由 ui.json 声明。",
+  "author": "hummerstudio",
+  "license": "MIT",
+  "tags": [
+    "build",
+    "metadata",
+    "ui",
+    "archive",
+    "official-port"
+  ],
+  "homepage": "https://github.com/hummerstudio/jenkins-atom-basic-steps"
+}
