@@ -3529,7 +3529,7 @@
           }
         }
       ],
-      "category": "generic",
+      "category": "data",
       "summary": "把 build-name-setter、rebuild、zip-artifacts、compress-artifacts、text-file、text-finder、log-parser、json-tool、file-ops 与 files-tool 合成一个原子：action=rename 改构建名/描述，rebuild 用同样的参数重跑，zip/unzip 打包解包，compress 原地打确定性 zip，write-file 写文本文件，find-text 找正则，parse-log 按规则解析日志，json 读写 JSON，file-ops 复制/移动/删除，files-list 列文件/校验和/CSV；构建页入口仍由 ui.json 声明。",
       "tags": [
         "build",
@@ -5610,7 +5610,7 @@
           }
         }
       ],
-      "category": "other",
+      "category": "scm",
       "summary": "Posts a build status to a Bitbucket Server / Data Center or Bitbucket Cloud commit (pick the flavor) and reads it back; on Server it can also approve, withdraw, decline or comment on the pull request.",
       "tags": [
         "bitbucket",
@@ -6445,7 +6445,7 @@
           }
         }
       ],
-      "category": "deploy",
+      "category": "report",
       "summary": "导出 BROWSERSTACK_* 环境变量、把 .apk/.ipa 传到 App Automate、按 build 名汇总会话并写 buildResults.json（原 browserstack-integration 的步进部分）。",
       "tags": [],
       "enabled": true
@@ -9891,7 +9891,7 @@
           }
         }
       ],
-      "category": "report",
+      "category": "gate",
       "summary": "Reads JaCoCo or Cobertura XML, shows the numbers and gates the build on a threshold.",
       "tags": [
         "official-port",
@@ -10936,7 +10936,7 @@
           }
         }
       ],
-      "category": "report",
+      "category": "gate",
       "summary": "Reads an OWASP dependency-check XML report and gates on critical/high findings.",
       "tags": [
         "official-port",
@@ -26074,7 +26074,7 @@
           }
         }
       ],
-      "category": "other",
+      "category": "generic",
       "summary": "一个原子演示 SDK 的全部能力：输入、输出、报告、制品与脚本",
       "tags": [
         "demo",
@@ -26637,7 +26637,7 @@
           }
         }
       ],
-      "category": "report",
+      "category": "gate",
       "summary": "Runs sonarner and, unless told not to, holds the build until the quality gate answers.",
       "tags": [
         "official-port",
@@ -27892,7 +27892,7 @@
           }
         }
       ],
-      "category": "other",
+      "category": "observability",
       "summary": "Sends one event, or this build's build/deployment payload, to Splunk's HTTP Event Collector with the HEC envelope, metadata, Splunk token header and verdict check.",
       "tags": [
         "splunk",
@@ -28628,7 +28628,7 @@
           }
         }
       ],
-      "category": "other",
+      "category": "deploy",
       "summary": "Copies files to another machine over SSH, or runs a shell command over there: one connection, two verbs.",
       "tags": [
         "ssh",
