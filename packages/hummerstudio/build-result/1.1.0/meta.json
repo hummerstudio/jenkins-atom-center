@@ -1,0 +1,13 @@
+{
+  "name": "Set the build result",
+  "summary": "Sets the build result (unconditionally, per build number, or cycling by build number) — the Fail The Build plugin.",
+  "author": "hummerstudio",
+  "license": "MIT",
+  "tags": [
+    "official-port",
+    "fail-the-build",
+    "build-result",
+    "gating"
+  ],
+  "homepage": "https://github.com/hummerstudio/jenkins-atom-build-result"
+}

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-22T23:54:27Z",
+  "generatedAt": "2026-11-23T08:16:59Z",
   "atoms": [
     {
       "atomCode": "allure",
@@ -6757,7 +6757,7 @@
       "publisher": "hummerstudio",
       "name": "Set the build result",
       "channels": {
-        "stable": "1.0.0"
+        "stable": "1.1.0"
       },
       "versions": [
         {
@@ -6861,11 +6861,132 @@
           "requires": {
             "runner": ">=0.3.0"
           }
+        },
+        {
+          "version": "1.1.0",
+          "publishedAt": "2026-11-23T08:16:59Z",
+          "package": {
+            "file": "packages/hummerstudio/build-result/1.1.0/build-result-1.1.0.zip",
+            "sha256": "c9d9c24fd3111747260a33ff14fcf519f2c113e19a0e46d07a4ff29d46bf15a0"
+          },
+          "task": {
+            "atomCode": "build-result",
+            "name": "Set the build result",
+            "version": "1.1.0",
+            "description": "设置构建结果（SUCCESS / UNSTABLE / FAILURE），可整体设置或按构建号逐个指定，也能按构建号轮转 —— 对应 Fail The Build 插件。",
+            "execution": {
+              "packagePath": "build-result.jar",
+              "language": "java",
+              "target": "$atom_java_path -cp build-result.jar com.jenkinschina.atom.sdk.AtomRunner"
+            },
+            "input": {
+              "result": {
+                "label": "结果",
+                "type": "selector",
+                "default": "SUCCESS",
+                "options": [
+                  "SUCCESS",
+                  "UNSTABLE",
+                  "FAILURE",
+                  "ABORTED",
+                  "CYCLE"
+                ],
+                "description": "本次（或未在下面编号列表里的构建）要设置成什么结果。SUCCESS 表示不改动；FAILURE 以失败的步骤表达；UNSTABLE 通过 build.result 表达；ABORTED 无法由原子设置（会报错，需人工中断构建）；CYCLE 按构建号在 SUCCESS → UNSTABLE → FAILURE → ABORTED 之间轮转，用来演练通知/晋升配置。"
+              },
+              "successBuilds": {
+                "label": "这些构建号设为 SUCCESS",
+                "type": "vuex-input",
+                "default": "",
+                "description": "逗号或空格分隔的构建号。构建号已在 SUCCESS 或更差时不会被“改好”——Jenkins 的结果只会变差。"
+              },
+              "unstableBuilds": {
+                "label": "这些构建号设为 UNSTABLE",
+                "type": "vuex-input",
+                "default": "",
+                "description": "逗号或空格分隔的构建号；当前已是 FAILURE/ABORTED 时保持不变。"
+              },
+              "failureBuilds": {
+                "label": "这些构建号设为 FAILURE",
+                "type": "vuex-input",
+                "default": "",
+                "description": "逗号或空格分隔的构建号。"
+              },
+              "abortedBuilds": {
+                "label": "这些构建号设为 ABORTED",
+                "type": "vuex-input",
+                "default": "",
+                "description": "逗号或空格分隔的构建号。ABORTED 只能由中断构建产生，原子写不了，因此列在这里的构建号会明确报错而不是被降级成 FAILURE。"
+              },
+              "buildNumber": {
+                "label": "构建号（留空用本次构建号）",
+                "type": "vuex-input",
+                "default": "",
+                "description": "留空时依次取 runner 传来的 build.json 里的编号、环境变量 BUILD_NUMBER。只在演练/回放某次构建时才需要填。"
+              }
+            },
+            "output": {
+              "usedBuildNumber": {
+                "type": "string",
+                "description": "实际使用的构建号"
+              },
+              "configuredResult": {
+                "type": "string",
+                "description": "配置的结果（SUCCESS/UNSTABLE/FAILURE/ABORTED/CYCLE）"
+              },
+              "requestedResult": {
+                "type": "string",
+                "description": "这次构建解析出来的结果（编号列表覆盖已生效、CYCLE 已展开）"
+              },
+              "previousResult": {
+                "type": "string",
+                "description": "设置前构建的结果；构建仍在进行时为空"
+              },
+              "action": {
+                "type": "string",
+                "description": "no-change / unstable / failure / kept-worse / unsupported"
+              },
+              "applied": {
+                "type": "string",
+                "description": "这次调用是否改变了构建结果（true/false）"
+              }
+            },
+            "x-jenkins": {
+              "protocol": "jenkins-1",
+              "context": [
+                "build"
+              ],
+              "requires": {
+                "runner": ">=0.4.0"
+              },
+              "category": "gate"
+            }
+          },
+          "meta": {
+            "name": "Set the build result",
+            "summary": "Sets the build result (unconditionally, per build number, or cycling by build number) — the Fail The Build plugin.",
+            "author": "hummerstudio",
+            "homepage": "https://github.com/hummerstudio/jenkins-atom-build-result",
+            "license": "MIT",
+            "tags": [
+              "official-port",
+              "fail-the-build",
+              "build-result",
+              "gating"
+            ]
+          },
+          "requires": {
+            "runner": ">=0.4.0"
+          }
         }
       ],
       "category": "gate",
-      "summary": "设置构建结果（SUCCESS / UNSTABLE / FAILURE），可整体设置或按构建号逐个指定，也能按构建号轮转 —— 对应 Fail The Build 插件。",
-      "tags": [],
+      "summary": "Sets the build result (unconditionally, per build number, or cycling by build number) — the Fail The Build plugin.",
+      "tags": [
+        "official-port",
+        "fail-the-build",
+        "build-result",
+        "gating"
+      ],
       "enabled": true
     },
     {
